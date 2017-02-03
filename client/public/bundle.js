@@ -21586,6 +21586,7 @@
 	var PhoneNumberBox = __webpack_require__(181);
 	var CountryCodeBox = __webpack_require__(488);
 	var SubmitUserInfoButton = __webpack_require__(489);
+	var ValidationCodeBox = __webpack_require__(491);
 
 	var SignUpForm = function SignUpForm() {
 	  return React.createElement(
@@ -21593,7 +21594,8 @@
 	    null,
 	    React.createElement(CountryCodeBox, null),
 	    React.createElement(PhoneNumberBox, null),
-	    React.createElement(SubmitUserInfoButton, null)
+	    React.createElement(SubmitUserInfoButton, null),
+	    React.createElement(ValidationCodeBox, null)
 	  );
 	};
 
@@ -45826,6 +45828,43 @@
 	};
 
 	module.exports = Auth;
+
+/***/ },
+/* 491 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(182);
+
+	var React = __webpack_require__(1);
+
+
+	var ValidationCodeBox = React.createClass({
+	  displayName: 'ValidationCodeBox',
+	  getInitialState: function getInitialState() {
+	    return {
+	      code: ''
+	    };
+	  },
+	  handleCodeChange: function handleCodeChange(e) {
+	    this.setState({ code: e.target.value });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        null,
+	        'Digite o codigo'
+	      ),
+	      React.createElement(_reactBootstrap.FormControl, { type: 'text', value: this.state.code, placeholder: 'codigo', onChange: this.handleCodeChange })
+	    );
+	  }
+	});
+
+	module.exports = ValidationCodeBox;
 
 /***/ }
 /******/ ]);
