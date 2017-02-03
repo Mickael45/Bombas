@@ -2,7 +2,7 @@ const React = require('react')
 import { Button } from 'react-bootstrap'
 const { browserHistory } = require('react-router')
 
-const SubmitUserInfoButton = React.createClass({
+const SubmitValidationCodeButton = React.createClass({
   handleSubmitEvent (event) {
     browserHistory.push('/auth')
   },
@@ -13,4 +13,4 @@ const SubmitUserInfoButton = React.createClass({
   }
 })
 
-module.exports = SubmitUserInfoButton
+module.exports = SubmitValidationCodeButton
