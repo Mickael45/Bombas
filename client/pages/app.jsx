@@ -1,8 +1,9 @@
 const React = require('react')
+const SignUpForm = require('./../components/auth/signUpForm/signUpForm')
 
 const App = () => (
   <div>
-    <h1>App</h1>
+    <SignUpForm />
   </div>
 )
 
