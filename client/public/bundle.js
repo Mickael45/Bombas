@@ -40662,14 +40662,10 @@
 
 	var React = __webpack_require__(1);
 
-	var _require = __webpack_require__(437),
-	    browserHistory = _require.browserHistory;
 
 	var SubmitUserInfoButton = React.createClass({
 	  displayName: 'SubmitUserInfoButton',
-	  handleSubmitEvent: function handleSubmitEvent(event) {
-	    browserHistory.push('/auth');
-	  },
+	  handleSubmitEvent: function handleSubmitEvent(event) {},
 	  render: function render() {
 	    return React.createElement(
 	      _reactBootstrap.Button,
@@ -45816,13 +45812,15 @@
 	var React = __webpack_require__(1);
 	var ValidationCodeBox = __webpack_require__(516);
 	var SubmitValidationCodeButton = __webpack_require__(517);
+	var ResendValidationCodeButton = __webpack_require__(519);
 
 	var ValidationCodeForm = function ValidationCodeForm() {
 	  return React.createElement(
 	    'div',
 	    null,
 	    React.createElement(ValidationCodeBox, null),
-	    React.createElement(SubmitValidationCodeButton, null)
+	    React.createElement(SubmitValidationCodeButton, null),
+	    React.createElement(ResendValidationCodeButton, null)
 	  );
 	};
 
@@ -45900,14 +45898,10 @@
 
 	var React = __webpack_require__(1);
 
-	var _require = __webpack_require__(437),
-	    browserHistory = _require.browserHistory;
 
 	var SubmitValidationCodeButton = React.createClass({
 	  displayName: 'SubmitValidationCodeButton',
-	  handleSubmitEvent: function handleSubmitEvent(event) {
-	    browserHistory.push('/auth');
-	  },
+	  handleSubmitEvent: function handleSubmitEvent(event) {},
 	  render: function render() {
 	    return React.createElement(
 	      _reactBootstrap.Button,
@@ -45940,6 +45934,35 @@
 	};
 
 	module.exports = Auth;
+
+/***/ },
+/* 519 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(182);
+
+	var React = __webpack_require__(1);
+
+	var _require = __webpack_require__(437),
+	    browserHistory = _require.browserHistory;
+
+	var ResendValidationCodeButton = React.createClass({
+	  displayName: 'ResendValidationCodeButton',
+	  handleSubmitEvent: function handleSubmitEvent(event) {
+	    browserHistory.push('/auth');
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.Button,
+	      { bsStyle: 'primary', bsSize: 'large', onClick: this.handleSubmitEvent },
+	      'Resend'
+	    );
+	  }
+	});
+
+	module.exports = ResendValidationCodeButton;
 
 /***/ }
 /******/ ]);
