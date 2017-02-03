@@ -21536,6 +21536,7 @@
 
 	var React = __webpack_require__(1);
 	var App = __webpack_require__(179);
+	var Auth = __webpack_require__(490);
 
 	var _require = __webpack_require__(435),
 	    Router = _require.Router,
@@ -21548,7 +21549,8 @@
 	    return React.createElement(
 	      Router,
 	      { history: browserHistory },
-	      React.createElement(Route, { path: '/', component: App })
+	      React.createElement(Route, { path: '/', component: App }),
+	      React.createElement(Route, { path: '/auth', component: Auth })
 	    );
 	  }
 	});
@@ -21583,13 +21585,15 @@
 	var React = __webpack_require__(1);
 	var PhoneNumberBox = __webpack_require__(181);
 	var CountryCodeBox = __webpack_require__(488);
+	var SubmitUserInfoButton = __webpack_require__(489);
 
 	var SignUpForm = function SignUpForm() {
 	  return React.createElement(
 	    'div',
 	    null,
 	    React.createElement(CountryCodeBox, null),
-	    React.createElement(PhoneNumberBox, null)
+	    React.createElement(PhoneNumberBox, null),
+	    React.createElement(SubmitUserInfoButton, null)
 	  );
 	};
 
@@ -45771,6 +45775,57 @@
 	});
 
 	module.exports = CountryCodeBox;
+
+/***/ },
+/* 489 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(182);
+
+	var React = __webpack_require__(1);
+
+	var _require = __webpack_require__(435),
+	    browserHistory = _require.browserHistory;
+
+	var SubmitButton = React.createClass({
+	  displayName: 'SubmitButton',
+	  handleSubmitEvent: function handleSubmitEvent(event) {
+	    browserHistory.push('/auth');
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.Button,
+	      { bsStyle: 'primary', bsSize: 'large', onClick: this.handleSubmitEvent },
+	      'Submit'
+	    );
+	  }
+	});
+
+	module.exports = SubmitButton;
+
+/***/ },
+/* 490 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var Auth = function Auth() {
+	  return React.createElement(
+	    'div',
+	    null,
+	    React.createElement(
+	      'h1',
+	      null,
+	      'Auth'
+	    )
+	  );
+	};
+
+	module.exports = Auth;
 
 /***/ }
 /******/ ]);
