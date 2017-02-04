@@ -46211,6 +46211,7 @@
 	var RegistrationNumberBox = __webpack_require__(503);
 	var RegistrationCountryBox = __webpack_require__(504);
 	var NFCCardNumberBox = __webpack_require__(505);
+	var GasTypeBox = __webpack_require__(506);
 
 	var VehicleInfoTile = React.createClass({
 	  displayName: 'VehicleInfoTile',
@@ -46220,7 +46221,8 @@
 	      null,
 	      React.createElement(RegistrationNumberBox, null),
 	      React.createElement(RegistrationCountryBox, null),
-	      React.createElement(NFCCardNumberBox, null)
+	      React.createElement(NFCCardNumberBox, null),
+	      React.createElement(GasTypeBox, null)
 	    );
 	  }
 	});
@@ -46325,6 +46327,39 @@
 	});
 
 	module.exports = NFCCardNumberBox;
+
+/***/ },
+/* 506 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var GasTypeBox = React.createClass({
+	  displayName: 'GasTypeBox',
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'Tipo de combust\xEDvel'
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        'Gas\xF3leo'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = GasTypeBox;
 
 /***/ }
 /******/ ]);
