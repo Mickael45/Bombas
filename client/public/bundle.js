@@ -21537,7 +21537,7 @@
 	var React = __webpack_require__(1);
 	var App = __webpack_require__(179);
 	var Auth = __webpack_require__(487);
-	var Profile = __webpack_require__(496);
+	var Profile = __webpack_require__(492);
 
 	var _require = __webpack_require__(180),
 	    Router = _require.Router,
@@ -45764,7 +45764,7 @@
 
 	var React = __webpack_require__(1);
 	var SignUpForm = __webpack_require__(488);
-	var ValidationCodeForm = __webpack_require__(492);
+	var ValidationCodeForm = __webpack_require__(491);
 
 	var Auth = function Auth() {
 	  return React.createElement(
@@ -45784,27 +45784,43 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var PhoneNumberInput = __webpack_require__(489);
-	var CountryCodeInput = __webpack_require__(490);
-	var SubmitUserInfoButton = __webpack_require__(491);
+	var DefaultInput = __webpack_require__(489);
+	var DefaultButton = __webpack_require__(490);
+	var _React$PropTypes = React.PropTypes,
+	    string = _React$PropTypes.string,
+	    func = _React$PropTypes.func;
 
-	var _require = __webpack_require__(236),
-	    Col = _require.Col,
-	    Form = _require.Form;
 
-	var SignUpForm = function SignUpForm() {
-	  return React.createElement(
-	    Col,
-	    { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
-	    React.createElement(
-	      Form,
+	var SignUpForm = React.createClass({
+	  displayName: 'SignUpForm',
+
+	  propTypes: {
+	    phoneNumber: string,
+	    onPhoneNumberChangeEvent: func,
+	    onPhoneNumberSubmit: func,
+	    countryCode: string,
+	    onCountryCodeChangeEvent: func
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
 	      null,
-	      React.createElement(CountryCodeInput, null),
-	      React.createElement(PhoneNumberInput, null),
-	      React.createElement(SubmitUserInfoButton, null)
-	    )
-	  );
-	};
+	      React.createElement(DefaultInput, {
+	        title: 'Numero de telem\xF3vel',
+	        placeholder: 'telem\xF3vel',
+	        value: this.props.phoneNumber,
+	        onChange: this.props.onPhoneNumberChangeEvent }),
+	      React.createElement(DefaultInput, {
+	        title: 'Indicativo',
+	        placeholder: 'indicativo',
+	        value: this.props.countryCode,
+	        onChange: this.props.onCountryCodeChangeEvent }),
+	      React.createElement(DefaultButton, {
+	        title: 'Enviar',
+	        onSubmit: this.props.onPhoneNumberSubmit })
+	    );
+	  }
+	});
 
 	module.exports = SignUpForm;
 
@@ -45817,63 +45833,19 @@
 	var _reactBootstrap = __webpack_require__(236);
 
 	var React = __webpack_require__(1);
+	var _React$PropTypes = React.PropTypes,
+	    string = _React$PropTypes.string,
+	    func = _React$PropTypes.func;
 
 
-	var PhoneNumberBox = React.createClass({
-	  displayName: 'PhoneNumberBox',
-	  getInitialState: function getInitialState() {
-	    return {
-	      phoneNumber: ''
-	    };
-	  },
-	  getPhoneNumberValidationState: function getPhoneNumberValidationState() {
-	    var length = this.state.phoneNumber.length;
-	    if (length === 9) {
-	      return 'success';
-	    } else if (length > 0) {
-	      return 'error';
-	    }
-	  },
-	  handlePhoneNumberChange: function handlePhoneNumberChange(e) {
-	    this.setState({ phoneNumber: e.target.value });
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText', validationState: this.getPhoneNumberValidationState() },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Telem\xF3vel'
-	      ),
-	      React.createElement(_reactBootstrap.FormControl, { type: 'text', value: this.state.phoneNumber, placeholder: 'N\xFAmero de telem\xF3vel', className: 'tile', onChange: this.handlePhoneNumberChange }),
-	      React.createElement(_reactBootstrap.FormControl.Feedback, null)
-	    );
-	  }
-	});
+	var DefaultInput = React.createClass({
+	  displayName: 'DefaultInput',
 
-	module.exports = PhoneNumberBox;
-
-/***/ },
-/* 490 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var CountryCodeBox = React.createClass({
-	  displayName: 'CountryCodeBox',
-	  getInitialState: function getInitialState() {
-	    return {
-	      countryCode: ''
-	    };
-	  },
-	  handleCountryCodeChange: function handleCountryCodeChange(e) {
-	    this.setState({ countryCode: e.target.value });
+	  propTypes: {
+	    title: string,
+	    value: string,
+	    placeholder: string,
+	    onChange: func
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -45881,15 +45853,53 @@
 	      { controlId: 'formBasicText' },
 	      React.createElement(
 	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Indicativo'
+	        null,
+	        this.props.title
 	      ),
-	      React.createElement(_reactBootstrap.FormControl, { type: 'text', className: 'tile', value: this.state.countryCode, placeholder: 'Indicativo', onChange: this.handleCountryCodeChange })
+	      React.createElement(_reactBootstrap.FormControl, {
+	        type: 'text',
+	        value: this.props.value,
+	        placeholder: this.props.placeholder,
+	        onChange: this.props.onChange })
 	    );
 	  }
 	});
 
-	module.exports = CountryCodeBox;
+	module.exports = DefaultInput;
+
+/***/ },
+/* 490 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var _React$PropTypes = React.PropTypes,
+	    string = _React$PropTypes.string,
+	    func = _React$PropTypes.func;
+
+	var _require = __webpack_require__(236),
+	    Button = _require.Button;
+
+	var DefaultButton = React.createClass({
+	  displayName: 'DefaultButton',
+
+	  propTypes: {
+	    title: string,
+	    onSubmit: func
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      Button,
+	      {
+	        bsStyle: 'primary',
+	        onClick: this.props.onSubmit },
+	      this.props.title
+	    );
+	  }
+	});
+
+	module.exports = DefaultButton;
 
 /***/ },
 /* 491 */
@@ -45897,28 +45907,42 @@
 
 	'use strict';
 
-	var _reactBootstrap = __webpack_require__(236);
-
 	var React = __webpack_require__(1);
+	var DefaultInput = __webpack_require__(489);
+	var DefaultButton = __webpack_require__(490);
+	var _React$PropTypes = React.PropTypes,
+	    string = _React$PropTypes.string,
+	    func = _React$PropTypes.func;
 
-	var _require = __webpack_require__(180),
-	    browserHistory = _require.browserHistory;
 
-	var SubmitUserInfoButton = React.createClass({
-	  displayName: 'SubmitUserInfoButton',
-	  handleSubmitEvent: function handleSubmitEvent(event) {
-	    browserHistory.push('/profile');
+	var ValidationCodeForm = React.createClass({
+	  displayName: 'ValidationCodeForm',
+
+	  propTypes: {
+	    validationCode: string,
+	    onValidationCodeChange: func,
+	    onValidationCodeSubmit: func,
+	    onResendCodeSubmit: func
 	  },
 	  render: function render() {
 	    return React.createElement(
-	      _reactBootstrap.Button,
-	      { bsStyle: 'primary', onClick: this.handleSubmitEvent },
-	      'Enviar'
+	      'div',
+	      null,
+	      React.createElement(DefaultInput, {
+	        title: 'Indica o c\xF3digo',
+	        placeholder: 'c\xF3digo', value: this.props.validationCode,
+	        onChange: this.props.onValidationCodeChange }),
+	      React.createElement(DefaultButton, {
+	        title: 'Enviar',
+	        onSubmit: this.props.onValidationCodeSubmit }),
+	      React.createElement(DefaultButton, {
+	        title: 'Novo c\xF3digo',
+	        onSubmit: this.props.onResendCodeSubmit })
 	    );
 	  }
 	});
 
-	module.exports = SubmitUserInfoButton;
+	module.exports = ValidationCodeForm;
 
 /***/ },
 /* 492 */
@@ -45927,124 +45951,7 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var ValidationCodeInput = __webpack_require__(493);
-	var SubmitValidationCodeButton = __webpack_require__(494);
-	var ResendValidationCodeButton = __webpack_require__(495);
-
-	var _require = __webpack_require__(236),
-	    Col = _require.Col;
-
-	var ValidationCodeForm = function ValidationCodeForm() {
-	  return React.createElement(
-	    Col,
-	    { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
-	    React.createElement(ValidationCodeInput, null),
-	    React.createElement(SubmitValidationCodeButton, null),
-	    React.createElement(ResendValidationCodeButton, null)
-	  );
-	};
-
-	module.exports = ValidationCodeForm;
-
-/***/ },
-/* 493 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var ValidationCodeBox = React.createClass({
-	  displayName: 'ValidationCodeBox',
-	  getInitialState: function getInitialState() {
-	    return {
-	      code: ''
-	    };
-	  },
-	  handleCodeChange: function handleCodeChange(e) {
-	    this.setState({ code: e.target.value });
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Digite o c\xF3digo'
-	      ),
-	      React.createElement(_reactBootstrap.FormControl, { type: 'text', className: 'tile', value: this.state.code, placeholder: 'C\xF3digo', onChange: this.handleCodeChange })
-	    );
-	  }
-	});
-
-	module.exports = ValidationCodeBox;
-
-/***/ },
-/* 494 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var SubmitValidationCodeButton = React.createClass({
-	  displayName: 'SubmitValidationCodeButton',
-	  handleSubmitEvent: function handleSubmitEvent(event) {},
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.Button,
-	      { bsStyle: 'primary', onClick: this.handleSubmitEvent },
-	      'Enviar'
-	    );
-	  }
-	});
-
-	module.exports = SubmitValidationCodeButton;
-
-/***/ },
-/* 495 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-	var _require = __webpack_require__(180),
-	    browserHistory = _require.browserHistory;
-
-	var ResendValidationCodeButton = React.createClass({
-	  displayName: 'ResendValidationCodeButton',
-	  handleSubmitEvent: function handleSubmitEvent(event) {
-	    browserHistory.push('/auth');
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.Button,
-	      { bsStyle: 'primary', onClick: this.handleSubmitEvent },
-	      'Novo c\xF3digo'
-	    );
-	  }
-	});
-
-	module.exports = ResendValidationCodeButton;
-
-/***/ },
-/* 496 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var ProfileComp = __webpack_require__(497);
+	var ProfileComp = __webpack_require__(493);
 
 	var createObject = function createObject() {
 	  return {
@@ -46071,19 +45978,23 @@
 	module.exports = Profile;
 
 /***/ },
-/* 497 */
+/* 493 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var React = __webpack_require__(1);
-	var GasStationInfoTile = __webpack_require__(498);
-	var VehicleInfoTile = __webpack_require__(502);
-	var SupplyInfoTile = __webpack_require__(509);
-	var InvoiceInfoTile = __webpack_require__(514);
+	var GasStationInfoTile = __webpack_require__(494);
+	var VehicleInfoTile = __webpack_require__(496);
+	var SupplyInfoTile = __webpack_require__(497);
+	var InvoiceInfoTile = __webpack_require__(498);
+	var DefaultButton = __webpack_require__(490);
 
 	var _require = __webpack_require__(236),
-	    Col = _require.Col;
+	    Col = _require.Col,
+	    Row = _require.Row;
 
 	var object = React.PropTypes.object;
 
@@ -46094,30 +46005,52 @@
 	  propTypes: {
 	    data: object
 	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      distance: ''
+	    };
+	  },
+	  onDistanceChangeEvent: function onDistanceChangeEvent(e) {
+	    console.log('distanceChanged');
+	    this.setState({ distance: e.target.value });
+	  },
+	  onValidationEvent: function onValidationEvent() {
+	    console.log('----------Validation event----------');
+	    console.log(this.state.distance);
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
-	        Col,
-	        { md: 3, xs: 3 },
-	        React.createElement(GasStationInfoTile, null)
+	        Row,
+	        null,
+	        React.createElement(
+	          Col,
+	          { md: 3, xs: 3 },
+	          React.createElement(GasStationInfoTile, this.props.data)
+	        ),
+	        React.createElement(
+	          Col,
+	          { md: 3, xs: 3 },
+	          React.createElement(VehicleInfoTile, _extends({}, this.props.data, {
+	            distance: this.state.distance,
+	            onDistanceChangeEvent: this.onDistanceChangeEvent }))
+	        ),
+	        React.createElement(
+	          Col,
+	          { md: 3, xs: 3 },
+	          React.createElement(SupplyInfoTile, this.props.data)
+	        ),
+	        React.createElement(
+	          Col,
+	          { md: 3, xs: 3 },
+	          React.createElement(InvoiceInfoTile, this.props.data)
+	        )
 	      ),
-	      React.createElement(
-	        Col,
-	        { md: 3, xs: 3 },
-	        React.createElement(VehicleInfoTile, this.props.data)
-	      ),
-	      React.createElement(
-	        Col,
-	        { md: 3, xs: 3 },
-	        React.createElement(SupplyInfoTile, null)
-	      ),
-	      React.createElement(
-	        Col,
-	        { md: 3, xs: 3 },
-	        React.createElement(InvoiceInfoTile, null)
-	      )
+	      React.createElement(DefaultButton, {
+	        onSubmit: this.onValidationEvent,
+	        title: 'Enviar' })
 	    );
 	  }
 	});
@@ -46125,15 +46058,15 @@
 	module.exports = Profile;
 
 /***/ },
-/* 498 */
+/* 494 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var CodeBox = __webpack_require__(517);
-	var NIFBox = __webpack_require__(517);
-	var NIFCountryBox = __webpack_require__(517);
+	var CodeBox = __webpack_require__(495);
+	var NIFBox = __webpack_require__(495);
+	var NIFCountryBox = __webpack_require__(495);
 
 	var GasStationInfoTile = React.createClass({
 	  displayName: 'GasStationInfoTile',
@@ -46146,9 +46079,15 @@
 	        null,
 	        'Estabelecimento'
 	      ),
-	      React.createElement(CodeBox, { title: 'C\xF3digo do estabelecimento', value: '978546311' }),
-	      React.createElement(NIFBox, { title: 'NIF do estabelecimento', value: 'faf79f48af9f4a9f4af9' }),
-	      React.createElement(NIFCountryBox, { title: 'Pa\xEDs emissor do NIF', value: 'Portugal' })
+	      React.createElement(CodeBox, {
+	        title: 'C\xF3digo do estabelecimento',
+	        value: '978546311' }),
+	      React.createElement(NIFBox, {
+	        title: 'NIF do estabelecimento',
+	        value: 'faf79f48af9f4a9f4af9' }),
+	      React.createElement(NIFCountryBox, {
+	        title: 'Pa\xEDs emissor do NIF',
+	        value: 'Portugal' })
 	    );
 	  }
 	});
@@ -46156,18 +46095,56 @@
 	module.exports = GasStationInfoTile;
 
 /***/ },
-/* 499 */,
-/* 500 */,
-/* 501 */,
-/* 502 */
+/* 495 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+	var string = React.PropTypes.string;
+
+
+	var DefaultBox = React.createClass({
+	  displayName: 'DefaultBox',
+
+	  propTypes: {
+	    title: string,
+	    value: string
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        null,
+	        this.props.title
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        this.props.value
+	      )
+	    );
+	  }
+	});
+
+	module.exports = DefaultBox;
+
+/***/ },
+/* 496 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(517);
-	var DefaultInput = __webpack_require__(518);
-	var string = React.PropTypes.string;
+	var DefaultBox = __webpack_require__(495);
+	var DefaultInput = __webpack_require__(489);
+	var _React$PropTypes = React.PropTypes,
+	    string = _React$PropTypes.string,
+	    func = _React$PropTypes.func;
 
 
 	var VehicleInfoTile = React.createClass({
@@ -46178,7 +46155,9 @@
 	    registrationCountry: string,
 	    NFCCardNumber: string,
 	    gasType: string,
-	    maxWeightCapacity: string
+	    distance: string,
+	    maxWeightCapacity: string,
+	    onDistanceChangeEvent: func
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -46189,12 +46168,25 @@
 	        null,
 	        'Ve\xEDculo'
 	      ),
-	      React.createElement(DefaultBox, { title: 'Matr\xEDcula', value: this.props.registrationNumber }),
-	      React.createElement(DefaultBox, { title: 'Pa\xEDs emissor da matr\xEDcula', value: this.props.registrationCountry }),
-	      React.createElement(DefaultBox, { title: 'Numero do cart\xE3o NFC', value: this.props.NFCCardNumber }),
-	      React.createElement(DefaultBox, { title: 'Tipo de combust\xEDvel', value: this.props.gasType }),
-	      React.createElement(DefaultInput, { title: 'Quilometragem' }),
-	      React.createElement(DefaultBox, { title: 'Peso total em carga permitido', value: this.props.maxWeightCapacity })
+	      React.createElement(DefaultBox, {
+	        title: 'Matr\xEDcula',
+	        value: this.props.registrationNumber }),
+	      React.createElement(DefaultBox, {
+	        title: 'Pa\xEDs emissor da matr\xEDcula',
+	        alue: this.props.registrationCountry }),
+	      React.createElement(DefaultBox, {
+	        title: 'Numero do cart\xE3o NFC',
+	        value: this.props.NFCCardNumber }),
+	      React.createElement(DefaultBox, {
+	        title: 'Tipo de combust\xEDvel',
+	        value: this.props.gasType }),
+	      React.createElement(DefaultInput, {
+	        title: 'Indica a quilometragem do ve\xEDculo',
+	        placeholder: 'Quilometragem',
+	        onChange: this.props.onDistanceChangeEvent }),
+	      React.createElement(DefaultBox, {
+	        title: 'Peso total em carga permitido',
+	        value: this.props.maxWeightCapacity })
 	    );
 	  }
 	});
@@ -46202,21 +46194,15 @@
 	module.exports = VehicleInfoTile;
 
 /***/ },
-/* 503 */,
-/* 504 */,
-/* 505 */,
-/* 506 */,
-/* 507 */,
-/* 508 */,
-/* 509 */
+/* 497 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DateAndTimeBox = __webpack_require__(517);
-	var GasAmountBox = __webpack_require__(517);
-	var GasPriceBox = __webpack_require__(517);
+	var DateAndTimeBox = __webpack_require__(495);
+	var GasAmountBox = __webpack_require__(495);
+	var GasPriceBox = __webpack_require__(495);
 
 	var SupplyInfoTile = React.createClass({
 	  displayName: 'SupplyInfoTile',
@@ -46229,9 +46215,15 @@
 	        null,
 	        'Abastecimento'
 	      ),
-	      React.createElement(DateAndTimeBox, { title: 'Data e hora', value: '12/03/17' }),
-	      React.createElement(GasAmountBox, { title: 'Litros', value: '800' }),
-	      React.createElement(GasPriceBox, { title: 'Pre\xE7o', value: '1.22' })
+	      React.createElement(DateAndTimeBox, {
+	        title: 'Data e hora',
+	        value: '12/03/17' }),
+	      React.createElement(GasAmountBox, {
+	        title: 'Litros',
+	        value: '800' }),
+	      React.createElement(GasPriceBox, {
+	        title: 'Pre\xE7o',
+	        value: '1.22' })
 	    );
 	  }
 	});
@@ -46239,18 +46231,14 @@
 	module.exports = SupplyInfoTile;
 
 /***/ },
-/* 510 */,
-/* 511 */,
-/* 512 */,
-/* 513 */,
-/* 514 */
+/* 498 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var InvoiceNumberBox = __webpack_require__(517);
-	var DateAndTimeBox = __webpack_require__(517);
+	var InvoiceNumberBox = __webpack_require__(495);
+	var DateAndTimeBox = __webpack_require__(495);
 
 	var InvoiceInfoTile = React.createClass({
 	  displayName: 'InvoiceInfoTile',
@@ -46263,96 +46251,17 @@
 	        null,
 	        'Fatura'
 	      ),
-	      React.createElement(InvoiceNumberBox, { title: 'N\xFAmero da fatura', value: '35-01/17' }),
-	      React.createElement(DateAndTimeBox, { title: 'Data e hora', value: '13/02/17' })
+	      React.createElement(InvoiceNumberBox, {
+	        title: 'N\xFAmero da fatura',
+	        value: '35-01/17' }),
+	      React.createElement(DateAndTimeBox, {
+	        title: 'Data e hora',
+	        value: '13/02/17' })
 	    );
 	  }
 	});
 
 	module.exports = InvoiceInfoTile;
-
-/***/ },
-/* 515 */,
-/* 516 */,
-/* 517 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-	var string = React.PropTypes.string;
-
-
-	var Testbox = React.createClass({
-	  displayName: 'Testbox',
-
-	  propTypes: {
-	    title: string,
-	    value: string
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        this.props.title
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        this.props.value
-	      )
-	    );
-	  }
-	});
-
-	module.exports = Testbox;
-
-/***/ },
-/* 518 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-	var string = React.PropTypes.string;
-
-
-	var DistanceBox = React.createClass({
-	  displayName: 'DistanceBox',
-
-	  propTypes: {
-	    title: string
-	  },
-	  getInitialState: function getInitialState() {
-	    return {
-	      value: ''
-	    };
-	  },
-	  handleDistanceChange: function handleDistanceChange(e) {
-	    this.setState({ value: e.target.value });
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        this.props.title
-	      ),
-	      React.createElement(_reactBootstrap.FormControl, { type: 'text', className: 'tile', value: this.state.value, placeholder: 'Quilometragem', onChange: this.handleDistanceChange })
-	    );
-	  }
-	});
-
-	module.exports = DistanceBox;
 
 /***/ }
 /******/ ]);
