@@ -1,10 +1,14 @@
 const React = require('react')
 const GasStationCodeBox = require('./gasStationCodeBox/gasStationCodeBox')
+const GasStationNIFBox = require('./gasStationNIFBox/gasStationNIFBox')
 
 const GasStationInfoTile = React.createClass({
   render () {
     return (
-      <GasStationCodeBox />
+      <div>
+        <GasStationCodeBox />
+        <GasStationNIFBox />
+      </div>
     )
   }
 })
