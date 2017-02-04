@@ -7,8 +7,12 @@ const InvoiceInfoTile = React.createClass({
     return (
       <div>
         <h3>Fatura</h3>
-        <InvoiceNumberBox title='Número da fatura' value='35-01/17' />
-        <DateAndTimeBox title='Data e hora' value='13/02/17' />
+        <InvoiceNumberBox
+          title='Número da fatura'
+          value='35-01/17' />
+        <DateAndTimeBox
+          title='Data e hora'
+          value='13/02/17' />
       </div>
     )
   }

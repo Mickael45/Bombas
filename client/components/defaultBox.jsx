@@ -2,7 +2,7 @@ const React = require('react')
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 const { string } = React.PropTypes
 
-const Testbox = React.createClass({
+const DefaultBox = React.createClass({
   propTypes: {
     title: string,
     value: string
@@ -10,7 +10,7 @@ const Testbox = React.createClass({
   render () {
     return (
       <FormGroup controlId='formBasicText'>
-        <ControlLabel className='fontt'>{this.props.title}</ControlLabel>
+        <ControlLabel>{this.props.title}</ControlLabel>
         <FormControl.Static>
           {this.props.value}
         </FormControl.Static>
@@ -19,4 +19,4 @@ const Testbox = React.createClass({
   }
 })
 
-module.exports = Testbox
+module.exports = DefaultBox

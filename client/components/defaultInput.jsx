@@ -1,27 +1,28 @@
 const React = require('react')
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
-const { string } = React.PropTypes
+const { string, func } = React.PropTypes
 
-const DistanceBox = React.createClass({
+const DefaultInput = React.createClass({
   propTypes: {
-    title: string
-  },
-  getInitialState () {
-    return {
-      value: ''
-    }
-  },
-  handleDistanceChange (e) {
-    this.setState({ value: e.target.value })
+    title: string,
+    value: string,
+    placeholder: string,
+    onChange: func
   },
   render () {
     return (
       <FormGroup controlId='formBasicText'>
-        <ControlLabel className='fontt'>{this.props.title}</ControlLabel>
-        <FormControl type='text' className='tile' value={this.state.value} placeholder='Quilometragem' onChange={this.handleDistanceChange} />
+        <ControlLabel>
+          {this.props.title}
+        </ControlLabel>
+        <FormControl
+          type='text'
+          value={this.props.value}
+          placeholder={this.props.placeholder}
+          onChange={this.props.onChange} />
       </FormGroup>
     )
   }
 })
 
-module.exports = DistanceBox
+module.exports = DefaultInput
