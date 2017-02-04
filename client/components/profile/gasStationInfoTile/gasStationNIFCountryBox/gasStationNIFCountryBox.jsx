@@ -7,7 +7,7 @@ const GasStationNIFCountry = React.createClass({
       <FormGroup controlId='formBasicText'>
         <ControlLabel className='fontt'>País emissor do NIF</ControlLabel>
         <FormControl.Static>
-          'Portugal'
+          Portugal
         </FormControl.Static>
       </FormGroup>
     )

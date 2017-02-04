@@ -46060,11 +46060,17 @@
 
 	var React = __webpack_require__(1);
 	var GasStationInfoTile = __webpack_require__(498);
+	var VehicleInfoTile = __webpack_require__(502);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
 	  render: function render() {
-	    return React.createElement(GasStationInfoTile, null);
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(GasStationInfoTile, null),
+	      React.createElement(VehicleInfoTile, null)
+	    );
 	  }
 	});
 
@@ -46121,7 +46127,7 @@
 	      React.createElement(
 	        _reactBootstrap.FormControl.Static,
 	        null,
-	        '\'978546311\''
+	        '978546311'
 	      )
 	    );
 	  }
@@ -46154,7 +46160,7 @@
 	      React.createElement(
 	        _reactBootstrap.FormControl.Static,
 	        null,
-	        '\'faf79f48af9f4a9f4af9\''
+	        'faf79f48af9f4a9f4af9'
 	      )
 	    );
 	  }
@@ -46187,13 +46193,68 @@
 	      React.createElement(
 	        _reactBootstrap.FormControl.Static,
 	        null,
-	        '\'Portugal\''
+	        'Portugal'
 	      )
 	    );
 	  }
 	});
 
 	module.exports = GasStationNIFCountry;
+
+/***/ },
+/* 502 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var VehicleRegistrationNumberBox = __webpack_require__(503);
+
+	var VehicleInfoTile = React.createClass({
+	  displayName: 'VehicleInfoTile',
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(VehicleRegistrationNumberBox, null)
+	    );
+	  }
+	});
+
+	module.exports = VehicleInfoTile;
+
+/***/ },
+/* 503 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var VehicleRegistrationNumberBox = React.createClass({
+	  displayName: 'VehicleRegistrationNumberBox',
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'Matr\xEDcula'
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        '78-BH-98'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = VehicleRegistrationNumberBox;
 
 /***/ }
 /******/ ]);
