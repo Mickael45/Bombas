@@ -45784,8 +45784,8 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var PhoneNumberBox = __webpack_require__(489);
-	var CountryCodeBox = __webpack_require__(490);
+	var PhoneNumberInput = __webpack_require__(489);
+	var CountryCodeInput = __webpack_require__(490);
 	var SubmitUserInfoButton = __webpack_require__(491);
 
 	var _require = __webpack_require__(236),
@@ -45799,8 +45799,8 @@
 	    React.createElement(
 	      Form,
 	      null,
-	      React.createElement(CountryCodeBox, null),
-	      React.createElement(PhoneNumberBox, null),
+	      React.createElement(CountryCodeInput, null),
+	      React.createElement(PhoneNumberInput, null),
 	      React.createElement(SubmitUserInfoButton, null)
 	    )
 	  );
@@ -45927,7 +45927,7 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var ValidationCodeBox = __webpack_require__(493);
+	var ValidationCodeInput = __webpack_require__(493);
 	var SubmitValidationCodeButton = __webpack_require__(494);
 	var ResendValidationCodeButton = __webpack_require__(495);
 
@@ -45938,7 +45938,7 @@
 	  return React.createElement(
 	    Col,
 	    { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
-	    React.createElement(ValidationCodeBox, null),
+	    React.createElement(ValidationCodeInput, null),
 	    React.createElement(SubmitValidationCodeButton, null),
 	    React.createElement(ResendValidationCodeButton, null)
 	  );
@@ -46212,7 +46212,8 @@
 	var RegistrationCountryBox = __webpack_require__(504);
 	var NFCCardNumberBox = __webpack_require__(505);
 	var GasTypeBox = __webpack_require__(506);
-	var DistanceBox = __webpack_require__(507);
+	var DistanceInput = __webpack_require__(507);
+	var TotalWeightBox = __webpack_require__(508);
 
 	var VehicleInfoTile = React.createClass({
 	  displayName: 'VehicleInfoTile',
@@ -46224,7 +46225,8 @@
 	      React.createElement(RegistrationCountryBox, null),
 	      React.createElement(NFCCardNumberBox, null),
 	      React.createElement(GasTypeBox, null),
-	      React.createElement(DistanceBox, null)
+	      React.createElement(DistanceInput, null),
+	      React.createElement(TotalWeightBox, null)
 	    );
 	  }
 	});
@@ -46399,6 +46401,39 @@
 	});
 
 	module.exports = DistanceBox;
+
+/***/ },
+/* 508 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var TotalWeightBox = React.createClass({
+	  displayName: 'TotalWeightBox',
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'Peso total em carga permitido'
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        '500'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = TotalWeightBox;
 
 /***/ }
 /******/ ]);
