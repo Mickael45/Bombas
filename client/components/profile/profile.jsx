@@ -1,6 +1,7 @@
 const React = require('react')
 const GasStationInfoTile = require('./gasStationInfoTile/gasStationInfoTile')
 const VehicleInfoTile = require('./vehicleInfoTile/vehicleInfoTile')
+const SupplyInfoTile = require('./supplyInfoTile/supplyInfoTile')
 
 const Profile = React.createClass({
   render () {
@@ -8,6 +9,7 @@ const Profile = React.createClass({
       <div>
         <GasStationInfoTile />
         <VehicleInfoTile />
+        <SupplyInfoTile />
       </div>
     )
   }
