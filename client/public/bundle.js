@@ -46063,15 +46063,30 @@
 	var VehicleInfoTile = __webpack_require__(502);
 	var SupplyInfoTile = __webpack_require__(509);
 
+	var _require = __webpack_require__(236),
+	    Col = _require.Col;
+
 	var Profile = React.createClass({
 	  displayName: 'Profile',
 	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(GasStationInfoTile, null),
-	      React.createElement(VehicleInfoTile, null),
-	      React.createElement(SupplyInfoTile, null)
+	      React.createElement(
+	        Col,
+	        { md: 4, xs: 4 },
+	        React.createElement(GasStationInfoTile, null)
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 4, xs: 4 },
+	        React.createElement(VehicleInfoTile, null)
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 4, xs: 4 },
+	        React.createElement(SupplyInfoTile, null)
+	      )
 	    );
 	  }
 	});
@@ -46444,7 +46459,8 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DateAndTimeBox = __webpack_require__(510);
+	var DateAndTimeBox = __webpack_require__(511);
+	var GasAmountBox = __webpack_require__(512);
 
 	var SupplyInfoTile = React.createClass({
 	  displayName: 'SupplyInfoTile',
@@ -46452,7 +46468,8 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(DateAndTimeBox, null)
+	      React.createElement(DateAndTimeBox, null),
+	      React.createElement(GasAmountBox, null)
 	    );
 	  }
 	});
@@ -46460,7 +46477,8 @@
 	module.exports = SupplyInfoTile;
 
 /***/ },
-/* 510 */
+/* 510 */,
+/* 511 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46491,6 +46509,39 @@
 	});
 
 	module.exports = DateAndTimeBox;
+
+/***/ },
+/* 512 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var GasAmountBox = React.createClass({
+	  displayName: 'GasAmountBox',
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'Litros'
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        '580'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = GasAmountBox;
 
 /***/ }
 /******/ ]);
