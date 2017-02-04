@@ -1,15 +1,15 @@
 const React = require('react')
-const GasStationCodeBox = require('./gasStationCodeBox/gasStationCodeBox')
-const GasStationNIFBox = require('./gasStationNIFBox/gasStationNIFBox')
-const GasStationNIFCountryBox = require('./gasStationNIFCountryBox/gasStationNIFCountryBox')
+const CodeBox = require('./CodeBox/CodeBox')
+const NIFBox = require('./NIFBox/NIFBox')
+const NIFCountryBox = require('./NIFCountryBox/NIFCountryBox')
 
 const GasStationInfoTile = React.createClass({
   render () {
     return (
       <div>
-        <GasStationCodeBox />
-        <GasStationNIFBox />
-        <GasStationNIFCountryBox />
+        <CodeBox />
+        <NIFBox />
+        <NIFCountryBox />
       </div>
     )
   }

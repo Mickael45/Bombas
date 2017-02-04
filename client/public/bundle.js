@@ -46083,9 +46083,9 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var GasStationCodeBox = __webpack_require__(499);
-	var GasStationNIFBox = __webpack_require__(500);
-	var GasStationNIFCountryBox = __webpack_require__(501);
+	var CodeBox = __webpack_require__(499);
+	var NIFBox = __webpack_require__(500);
+	var NIFCountryBox = __webpack_require__(501);
 
 	var GasStationInfoTile = React.createClass({
 	  displayName: 'GasStationInfoTile',
@@ -46093,9 +46093,9 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(GasStationCodeBox, null),
-	      React.createElement(GasStationNIFBox, null),
-	      React.createElement(GasStationNIFCountryBox, null)
+	      React.createElement(CodeBox, null),
+	      React.createElement(NIFBox, null),
+	      React.createElement(NIFCountryBox, null)
 	    );
 	  }
 	});
@@ -46208,7 +46208,8 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var VehicleRegistrationNumberBox = __webpack_require__(503);
+	var RegistrationNumberBox = __webpack_require__(503);
+	var RegistrationCountryBox = __webpack_require__(504);
 
 	var VehicleInfoTile = React.createClass({
 	  displayName: 'VehicleInfoTile',
@@ -46216,7 +46217,8 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(VehicleRegistrationNumberBox, null)
+	      React.createElement(RegistrationNumberBox, null),
+	      React.createElement(RegistrationCountryBox, null)
 	    );
 	  }
 	});
@@ -46255,6 +46257,39 @@
 	});
 
 	module.exports = VehicleRegistrationNumberBox;
+
+/***/ },
+/* 504 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var RegistrationCountryBox = React.createClass({
+	  displayName: 'RegistrationCountryBox',
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'Pa\xEDs emissor da matr\xEDcula'
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        'Portugal'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = RegistrationCountryBox;
 
 /***/ }
 /******/ ]);
