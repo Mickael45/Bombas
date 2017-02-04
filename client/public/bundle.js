@@ -46210,6 +46210,7 @@
 	var React = __webpack_require__(1);
 	var RegistrationNumberBox = __webpack_require__(503);
 	var RegistrationCountryBox = __webpack_require__(504);
+	var NFCCardNumberBox = __webpack_require__(505);
 
 	var VehicleInfoTile = React.createClass({
 	  displayName: 'VehicleInfoTile',
@@ -46218,7 +46219,8 @@
 	      'div',
 	      null,
 	      React.createElement(RegistrationNumberBox, null),
-	      React.createElement(RegistrationCountryBox, null)
+	      React.createElement(RegistrationCountryBox, null),
+	      React.createElement(NFCCardNumberBox, null)
 	    );
 	  }
 	});
@@ -46290,6 +46292,39 @@
 	});
 
 	module.exports = RegistrationCountryBox;
+
+/***/ },
+/* 505 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var NFCCardNumberBox = React.createClass({
+	  displayName: 'NFCCardNumberBox',
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'Numero do cart\xE3o NFC'
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        '789456321'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = NFCCardNumberBox;
 
 /***/ }
 /******/ ]);
