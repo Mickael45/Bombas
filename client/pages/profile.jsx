@@ -1,9 +1,8 @@
 const React = require('react')
+const ProfileComp = require('./../components/profile/profile')
 
 const Profile = () => (
-  <div>
-    <h1>Profile</h1>
-  </div>
+  <ProfileComp />
 )
 
 module.exports = Profile
