@@ -46061,6 +46061,7 @@
 	var React = __webpack_require__(1);
 	var GasStationInfoTile = __webpack_require__(498);
 	var VehicleInfoTile = __webpack_require__(502);
+	var SupplyInfoTile = __webpack_require__(509);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -46069,7 +46070,8 @@
 	      'div',
 	      null,
 	      React.createElement(GasStationInfoTile, null),
-	      React.createElement(VehicleInfoTile, null)
+	      React.createElement(VehicleInfoTile, null),
+	      React.createElement(SupplyInfoTile, null)
 	    );
 	  }
 	});
@@ -46434,6 +46436,61 @@
 	});
 
 	module.exports = TotalWeightBox;
+
+/***/ },
+/* 509 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var DateAndTimeBox = __webpack_require__(510);
+
+	var SupplyInfoTile = React.createClass({
+	  displayName: 'SupplyInfoTile',
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(DateAndTimeBox, null)
+	    );
+	  }
+	});
+
+	module.exports = SupplyInfoTile;
+
+/***/ },
+/* 510 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var DateAndTimeBox = React.createClass({
+	  displayName: 'DateAndTimeBox',
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'Data e hora'
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        '15/02/17-14h59'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = DateAndTimeBox;
 
 /***/ }
 /******/ ]);
