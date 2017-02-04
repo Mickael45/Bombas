@@ -1,12 +1,21 @@
 const React = require('react')
-const SignUpForm = require('./../components/auth/signUpForm/signUpForm')
-const ValidationCodeForm = require('./../components/auth/validationCodeForm/validationCodeForm')
+const { browserHistory } = require('react-router')
 
-const App = () => (
-  <div>
-    <SignUpForm />
-    <ValidationCodeForm />
-  </div>
-)
+class App extends React.Component {
+  componentDidMount () {
+    browserHistory.push('/auth')
+  }
+  render () {
+    return (
+      <div>
+        {this.props.children}
+      </div>
+    )
+  }
+}
+
+App.propTypes = {
+  children: React.PropTypes.element
+}
 
 module.exports = App

@@ -6,7 +6,7 @@ const SubmitValidationCodeButton = React.createClass({
   },
   render () {
     return (
-      <Button bsStyle='primary' bsSize='large' onClick={this.handleSubmitEvent}>Submit</Button>
+      <Button bsStyle='primary' onClick={this.handleSubmitEvent}>Enviar</Button>
     )
   }
 })

@@ -8,7 +8,7 @@ const ResendValidationCodeButton = React.createClass({
   },
   render () {
     return (
-      <Button bsStyle='primary' bsSize='large' onClick={this.handleSubmitEvent}>Resend</Button>
+      <Button bsStyle='primary' onClick={this.handleSubmitEvent}>Novo código</Button>
     )
   }
 })

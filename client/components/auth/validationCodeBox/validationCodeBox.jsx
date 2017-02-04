@@ -13,8 +13,8 @@ const ValidationCodeBox = React.createClass({
   render () {
     return (
       <FormGroup controlId='formBasicText'>
-        <ControlLabel>Digite o codigo</ControlLabel>
-        <FormControl type='text' value={this.state.code} placeholder='codigo' onChange={this.handleCodeChange} />
+        <ControlLabel className='fontt'>Digite o código</ControlLabel>
+        <FormControl type='text' className='tile' value={this.state.code} placeholder='Código' onChange={this.handleCodeChange} />
       </FormGroup>
     )
   }

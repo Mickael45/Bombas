@@ -21,8 +21,8 @@ const PhoneNumberBox = React.createClass({
   render () {
     return (
       <FormGroup controlId='formBasicText' validationState={this.getPhoneNumberValidationState()}>
-        <ControlLabel>Digite seu número de telemóvel</ControlLabel>
-        <FormControl type='text' value={this.state.phoneNumber} placeholder='Número de telemóvel' onChange={this.handlePhoneNumberChange} />
+        <ControlLabel className='fontt'>Telemóvel</ControlLabel>
+        <FormControl type='text' value={this.state.phoneNumber} placeholder='Número de telemóvel' className='tile' onChange={this.handlePhoneNumberChange} />
         <FormControl.Feedback />
       </FormGroup>
     )
