@@ -7,7 +7,7 @@ const GasStationCodeBox = React.createClass({
       <FormGroup controlId='formBasicText'>
         <ControlLabel className='fontt'>Código do estabelecimento</ControlLabel>
         <FormControl.Static>
-          '978546311'
+          978546311
         </FormControl.Static>
       </FormGroup>
     )
