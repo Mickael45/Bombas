@@ -46062,6 +46062,7 @@
 	var GasStationInfoTile = __webpack_require__(498);
 	var VehicleInfoTile = __webpack_require__(502);
 	var SupplyInfoTile = __webpack_require__(509);
+	var InvoiceInfoTile = __webpack_require__(514);
 
 	var _require = __webpack_require__(236),
 	    Col = _require.Col;
@@ -46074,18 +46075,23 @@
 	      null,
 	      React.createElement(
 	        Col,
-	        { md: 4, xs: 4 },
+	        { md: 3, xs: 3 },
 	        React.createElement(GasStationInfoTile, null)
 	      ),
 	      React.createElement(
 	        Col,
-	        { md: 4, xs: 4 },
+	        { md: 3, xs: 3 },
 	        React.createElement(VehicleInfoTile, null)
 	      ),
 	      React.createElement(
 	        Col,
-	        { md: 4, xs: 4 },
+	        { md: 3, xs: 3 },
 	        React.createElement(SupplyInfoTile, null)
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 3, xs: 3 },
+	        React.createElement(InvoiceInfoTile, null)
 	      )
 	    );
 	  }
@@ -46577,6 +46583,31 @@
 	});
 
 	module.exports = GasPriceBox;
+
+/***/ },
+/* 514 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var InvoiceInfoTile = React.createClass({
+	  displayName: 'InvoiceInfoTile',
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Invoice'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = InvoiceInfoTile;
 
 /***/ }
 /******/ ]);
