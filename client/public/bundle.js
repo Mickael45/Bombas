@@ -46079,6 +46079,7 @@
 	var React = __webpack_require__(1);
 	var GasStationCodeBox = __webpack_require__(499);
 	var GasStationNIFBox = __webpack_require__(500);
+	var GasStationNIFCountryBox = __webpack_require__(501);
 
 	var GasStationInfoTile = React.createClass({
 	  displayName: 'GasStationInfoTile',
@@ -46087,7 +46088,8 @@
 	      'div',
 	      null,
 	      React.createElement(GasStationCodeBox, null),
-	      React.createElement(GasStationNIFBox, null)
+	      React.createElement(GasStationNIFBox, null),
+	      React.createElement(GasStationNIFCountryBox, null)
 	    );
 	  }
 	});
@@ -46159,6 +46161,39 @@
 	});
 
 	module.exports = GasStationNIFBox;
+
+/***/ },
+/* 501 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var GasStationNIFCountry = React.createClass({
+	  displayName: 'GasStationNIFCountry',
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'Pa\xEDs emissor do NIF'
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        '\'Portugal\''
+	      )
+	    );
+	  }
+	});
+
+	module.exports = GasStationNIFCountry;
 
 /***/ }
 /******/ ]);
