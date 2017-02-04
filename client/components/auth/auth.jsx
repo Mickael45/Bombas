@@ -2,10 +2,10 @@ const React = require('react')
 const SignUpForm = require('./signUpForm/signUpForm')
 const ValidationCodeForm = require('./validationCodeForm/validationCodeForm')
 const { Col } = require('react-bootstrap')
+const { browserHistory } = require('react-router')
 
 const Auth = React.createClass({
   getInitialState () {
-    console.log('poil')
     return {
       phoneNumber: '',
       countryCode: '',
@@ -14,11 +14,15 @@ const Auth = React.createClass({
     }
   },
   onPhoneNumberSubmit () {
+    console.log('----------Phone submit----------')
+    console.log(this.state.phoneNumber)
+    console.log(this.state.countryCode)
     this.setState({ status: 'authenticated' })
   },
   onValidationCodeSubmit () {
     console.log('----------Validation code submit----------')
     console.log(this.state.validationCode)
+    browserHistory.push('/profile')
   },
   onResendCodeSubmit () {
     console.log('----------Resend code submit----------')

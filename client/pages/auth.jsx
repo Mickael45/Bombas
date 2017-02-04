@@ -1,11 +1,9 @@
 const React = require('react')
-const SignUpForm = require('./../components/auth/signUpForm/signUpForm')
-const ValidationCodeForm = require('./../components/auth/validationCodeForm/validationCodeForm')
+const AuthComp = require('./../components/auth/auth')
 
 const Auth = () => (
   <div>
-    <SignUpForm />
-    <ValidationCodeForm />
+    <AuthComp />
   </div>
 )
 
