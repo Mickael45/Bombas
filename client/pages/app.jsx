@@ -1,5 +1,6 @@
 const React = require('react')
 const { browserHistory } = require('react-router')
+const NavBar = require('./../components/navBar')
 
 class App extends React.Component {
   componentDidMount () {
@@ -8,6 +9,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
+        <NavBar />
         {this.props.children}
       </div>
     )

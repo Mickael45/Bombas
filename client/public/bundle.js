@@ -21587,6 +21587,8 @@
 	var _require = __webpack_require__(180),
 	    browserHistory = _require.browserHistory;
 
+	var NavBar = __webpack_require__(496);
+
 	var App = function (_React$Component) {
 	  _inherits(App, _React$Component);
 
@@ -21607,6 +21609,7 @@
 	      return React.createElement(
 	        'div',
 	        null,
+	        React.createElement(NavBar, null),
 	        this.props.children
 	      );
 	    }
@@ -46017,6 +46020,44 @@
 	};
 
 	module.exports = Profile;
+
+/***/ },
+/* 496 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var _require = __webpack_require__(238),
+	    Navbar = _require.Navbar;
+
+	var NavBar = function NavBar() {
+	  return React.createElement(
+	    'div',
+	    null,
+	    React.createElement(
+	      Navbar,
+	      { inverse: true, collapseOnSelect: true },
+	      React.createElement(
+	        Navbar.Header,
+	        null,
+	        React.createElement(
+	          Navbar.Brand,
+	          null,
+	          React.createElement(
+	            'a',
+	            null,
+	            'React-Bootstrap'
+	          )
+	        ),
+	        React.createElement(Navbar.Toggle, null)
+	      )
+	    )
+	  );
+	};
+
+	module.exports = NavBar;
 
 /***/ }
 /******/ ]);
