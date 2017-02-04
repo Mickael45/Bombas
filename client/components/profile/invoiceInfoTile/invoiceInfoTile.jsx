@@ -1,10 +1,13 @@
 const React = require('react')
+const InvoiceNumberBox = require('./invoiceNumberBox/invoiceNumberBox')
+const DateAndTimeBox = require('./../supplyInfoTile/dateAndTimeBox/dateAndTimeBox')
 
 const InvoiceInfoTile = React.createClass({
   render () {
     return (
       <div>
-        <h1>Invoice</h1>
+        <InvoiceNumberBox />
+        <DateAndTimeBox />
       </div>
     )
   }
