@@ -13,8 +13,8 @@ const CountryCodeBox = React.createClass({
   render () {
     return (
       <FormGroup controlId='formBasicText'>
-        <ControlLabel>Digite o indicativo</ControlLabel>
-        <FormControl type='text' value={this.state.countryCode} placeholder='indicativo' onChange={this.handleCountryCodeChange} />
+        <ControlLabel className='fontt'>Indicativo</ControlLabel>
+        <FormControl type='text' className='tile' value={this.state.countryCode} placeholder='Indicativo' onChange={this.handleCountryCodeChange} />
       </FormGroup>
     )
   }
