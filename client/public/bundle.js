@@ -46212,6 +46212,7 @@
 	var RegistrationCountryBox = __webpack_require__(504);
 	var NFCCardNumberBox = __webpack_require__(505);
 	var GasTypeBox = __webpack_require__(506);
+	var DistanceBox = __webpack_require__(507);
 
 	var VehicleInfoTile = React.createClass({
 	  displayName: 'VehicleInfoTile',
@@ -46222,7 +46223,8 @@
 	      React.createElement(RegistrationNumberBox, null),
 	      React.createElement(RegistrationCountryBox, null),
 	      React.createElement(NFCCardNumberBox, null),
-	      React.createElement(GasTypeBox, null)
+	      React.createElement(GasTypeBox, null),
+	      React.createElement(DistanceBox, null)
 	    );
 	  }
 	});
@@ -46360,6 +46362,43 @@
 	});
 
 	module.exports = GasTypeBox;
+
+/***/ },
+/* 507 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var DistanceBox = React.createClass({
+	  displayName: 'DistanceBox',
+	  getInitialState: function getInitialState() {
+	    return {
+	      distance: ''
+	    };
+	  },
+	  handleDistanceChange: function handleDistanceChange(e) {
+	    this.setState({ distance: e.target.value });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'Quilometragem'
+	      ),
+	      React.createElement(_reactBootstrap.FormControl, { type: 'text', className: 'tile', value: this.state.distance, placeholder: 'Quilometragem', onChange: this.handleDistanceChange })
+	    );
+	  }
+	});
+
+	module.exports = DistanceBox;
 
 /***/ }
 /******/ ]);
