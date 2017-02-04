@@ -1,7 +1,7 @@
 const React = require('react')
-const ValidationCodeBox = require('./../validationCodeBox/validationCodeBox')
-const SubmitValidationCodeButton = require('./../submitValidationCodeButton/submitValidationCodeButton')
-const ResendValidationCodeButton = require('./../resendValidationCodeButton/resendValidationCodeButton')
+const ValidationCodeBox = require('./validationCodeBox/validationCodeBox')
+const SubmitValidationCodeButton = require('./submitValidationCodeButton/submitValidationCodeButton')
+const ResendValidationCodeButton = require('./resendValidationCodeButton/resendValidationCodeButton')
 const { Col } = require('react-bootstrap')
 
 const ValidationCodeForm = () => (
