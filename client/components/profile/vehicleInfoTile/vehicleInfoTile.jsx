@@ -3,6 +3,7 @@ const RegistrationNumberBox = require('./registrationNumberBox/registrationNumbe
 const RegistrationCountryBox = require('./registrationCountryBox/registrationCountryBox')
 const NFCCardNumberBox = require('./NFCCardNumberBox/NFCCardNumberBox')
 const GasTypeBox = require('./gasTypeBox/gasTypeBox')
+const DistanceBox = require('./distanceBox/distanceBox')
 
 const VehicleInfoTile = React.createClass({
   render () {
@@ -12,6 +13,7 @@ const VehicleInfoTile = React.createClass({
         <RegistrationCountryBox />
         <NFCCardNumberBox />
         <GasTypeBox />
+        <DistanceBox />
       </div>
     )
   }
