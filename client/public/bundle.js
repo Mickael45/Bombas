@@ -46461,6 +46461,7 @@
 	var React = __webpack_require__(1);
 	var DateAndTimeBox = __webpack_require__(511);
 	var GasAmountBox = __webpack_require__(512);
+	var GasPriceBox = __webpack_require__(513);
 
 	var SupplyInfoTile = React.createClass({
 	  displayName: 'SupplyInfoTile',
@@ -46469,7 +46470,8 @@
 	      'div',
 	      null,
 	      React.createElement(DateAndTimeBox, null),
-	      React.createElement(GasAmountBox, null)
+	      React.createElement(GasAmountBox, null),
+	      React.createElement(GasPriceBox, null)
 	    );
 	  }
 	});
@@ -46542,6 +46544,39 @@
 	});
 
 	module.exports = GasAmountBox;
+
+/***/ },
+/* 513 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var GasPriceBox = React.createClass({
+	  displayName: 'GasPriceBox',
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'Pre\xE7o'
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        '1.35'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = GasPriceBox;
 
 /***/ }
 /******/ ]);
