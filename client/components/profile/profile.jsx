@@ -4,8 +4,12 @@ const VehicleInfoTile = require('./vehicleInfoTile/vehicleInfoTile')
 const SupplyInfoTile = require('./supplyInfoTile/supplyInfoTile')
 const InvoiceInfoTile = require('./invoiceInfoTile/invoiceInfoTile')
 const { Col } = require('react-bootstrap')
+const { object } = React.PropTypes
 
 const Profile = React.createClass({
+  propTypes: {
+    data: object
+  },
   render () {
     return (
       <div>
@@ -13,7 +17,7 @@ const Profile = React.createClass({
           <GasStationInfoTile />
         </Col>
         <Col md={3} xs={3}>
-          <VehicleInfoTile />
+          <VehicleInfoTile {...this.props.data} />
         </Col>
         <Col md={3} xs={3}>
           <SupplyInfoTile />

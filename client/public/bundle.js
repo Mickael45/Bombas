@@ -46046,9 +46046,27 @@
 	var React = __webpack_require__(1);
 	var ProfileComp = __webpack_require__(497);
 
-	var Profile = function Profile() {
-	  return React.createElement(ProfileComp, null);
+	var createObject = function createObject() {
+	  return {
+	    registrationNumber: '78-KB-84',
+	    registrationCountry: 'Portugal',
+	    NFCCardNumber: '78456123',
+	    gasType: 'Gasoléo',
+	    maxWeightCapacity: 900
+	  };
 	};
+
+	var Profile = React.createClass({
+	  displayName: 'Profile',
+	  getInitialState: function getInitialState() {
+	    return {
+	      data: createObject()
+	    };
+	  },
+	  render: function render() {
+	    return React.createElement(ProfileComp, { data: this.state.data });
+	  }
+	});
 
 	module.exports = Profile;
 
@@ -46067,8 +46085,15 @@
 	var _require = __webpack_require__(236),
 	    Col = _require.Col;
 
+	var object = React.PropTypes.object;
+
+
 	var Profile = React.createClass({
 	  displayName: 'Profile',
+
+	  propTypes: {
+	    data: object
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -46081,7 +46106,7 @@
 	      React.createElement(
 	        Col,
 	        { md: 3, xs: 3 },
-	        React.createElement(VehicleInfoTile, null)
+	        React.createElement(VehicleInfoTile, this.props.data)
 	      ),
 	      React.createElement(
 	        Col,
@@ -46106,9 +46131,9 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var CodeBox = __webpack_require__(499);
-	var NIFBox = __webpack_require__(500);
-	var NIFCountryBox = __webpack_require__(501);
+	var CodeBox = __webpack_require__(517);
+	var NIFBox = __webpack_require__(517);
+	var NIFCountryBox = __webpack_require__(517);
 
 	var GasStationInfoTile = React.createClass({
 	  displayName: 'GasStationInfoTile',
@@ -46116,9 +46141,14 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(CodeBox, null),
-	      React.createElement(NIFBox, null),
-	      React.createElement(NIFCountryBox, null)
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Estabelecimento'
+	      ),
+	      React.createElement(CodeBox, { title: 'C\xF3digo do estabelecimento', value: '978546311' }),
+	      React.createElement(NIFBox, { title: 'NIF do estabelecimento', value: 'faf79f48af9f4a9f4af9' }),
+	      React.createElement(NIFCountryBox, { title: 'Pa\xEDs emissor do NIF', value: 'Portugal' })
 	    );
 	  }
 	});
@@ -46126,130 +46156,45 @@
 	module.exports = GasStationInfoTile;
 
 /***/ },
-/* 499 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var GasStationCodeBox = React.createClass({
-	  displayName: 'GasStationCodeBox',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'C\xF3digo do estabelecimento'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        '978546311'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = GasStationCodeBox;
-
-/***/ },
-/* 500 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var GasStationNIFBox = React.createClass({
-	  displayName: 'GasStationNIFBox',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'NIF do estabelecimento'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        'faf79f48af9f4a9f4af9'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = GasStationNIFBox;
-
-/***/ },
-/* 501 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var GasStationNIFCountry = React.createClass({
-	  displayName: 'GasStationNIFCountry',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Pa\xEDs emissor do NIF'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        'Portugal'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = GasStationNIFCountry;
-
-/***/ },
+/* 499 */,
+/* 500 */,
+/* 501 */,
 /* 502 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var RegistrationNumberBox = __webpack_require__(503);
-	var RegistrationCountryBox = __webpack_require__(504);
-	var NFCCardNumberBox = __webpack_require__(505);
-	var GasTypeBox = __webpack_require__(506);
-	var DistanceInput = __webpack_require__(507);
-	var TotalWeightBox = __webpack_require__(508);
+	var DefaultBox = __webpack_require__(517);
+	var DefaultInput = __webpack_require__(518);
+	var string = React.PropTypes.string;
+
 
 	var VehicleInfoTile = React.createClass({
 	  displayName: 'VehicleInfoTile',
+
+	  propTypes: {
+	    registrationNumber: string,
+	    registrationCountry: string,
+	    NFCCardNumber: string,
+	    gasType: string,
+	    maxWeightCapacity: string
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(RegistrationNumberBox, null),
-	      React.createElement(RegistrationCountryBox, null),
-	      React.createElement(NFCCardNumberBox, null),
-	      React.createElement(GasTypeBox, null),
-	      React.createElement(DistanceInput, null),
-	      React.createElement(TotalWeightBox, null)
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Ve\xEDculo'
+	      ),
+	      React.createElement(DefaultBox, { title: 'Matr\xEDcula', value: this.props.registrationNumber }),
+	      React.createElement(DefaultBox, { title: 'Pa\xEDs emissor da matr\xEDcula', value: this.props.registrationCountry }),
+	      React.createElement(DefaultBox, { title: 'Numero do cart\xE3o NFC', value: this.props.NFCCardNumber }),
+	      React.createElement(DefaultBox, { title: 'Tipo de combust\xEDvel', value: this.props.gasType }),
+	      React.createElement(DefaultInput, { title: 'Quilometragem' }),
+	      React.createElement(DefaultBox, { title: 'Peso total em carga permitido', value: this.props.maxWeightCapacity })
 	    );
 	  }
 	});
@@ -46257,217 +46202,21 @@
 	module.exports = VehicleInfoTile;
 
 /***/ },
-/* 503 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var VehicleRegistrationNumberBox = React.createClass({
-	  displayName: 'VehicleRegistrationNumberBox',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Matr\xEDcula'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        '78-BH-98'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = VehicleRegistrationNumberBox;
-
-/***/ },
-/* 504 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var RegistrationCountryBox = React.createClass({
-	  displayName: 'RegistrationCountryBox',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Pa\xEDs emissor da matr\xEDcula'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        'Portugal'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = RegistrationCountryBox;
-
-/***/ },
-/* 505 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var NFCCardNumberBox = React.createClass({
-	  displayName: 'NFCCardNumberBox',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Numero do cart\xE3o NFC'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        '789456321'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = NFCCardNumberBox;
-
-/***/ },
-/* 506 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var GasTypeBox = React.createClass({
-	  displayName: 'GasTypeBox',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Tipo de combust\xEDvel'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        'Gas\xF3leo'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = GasTypeBox;
-
-/***/ },
-/* 507 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var DistanceBox = React.createClass({
-	  displayName: 'DistanceBox',
-	  getInitialState: function getInitialState() {
-	    return {
-	      distance: ''
-	    };
-	  },
-	  handleDistanceChange: function handleDistanceChange(e) {
-	    this.setState({ distance: e.target.value });
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Quilometragem'
-	      ),
-	      React.createElement(_reactBootstrap.FormControl, { type: 'text', className: 'tile', value: this.state.distance, placeholder: 'Quilometragem', onChange: this.handleDistanceChange })
-	    );
-	  }
-	});
-
-	module.exports = DistanceBox;
-
-/***/ },
-/* 508 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var TotalWeightBox = React.createClass({
-	  displayName: 'TotalWeightBox',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Peso total em carga permitido'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        '500'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = TotalWeightBox;
-
-/***/ },
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
 /* 509 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DateAndTimeBox = __webpack_require__(511);
-	var GasAmountBox = __webpack_require__(512);
-	var GasPriceBox = __webpack_require__(513);
+	var DateAndTimeBox = __webpack_require__(517);
+	var GasAmountBox = __webpack_require__(517);
+	var GasPriceBox = __webpack_require__(517);
 
 	var SupplyInfoTile = React.createClass({
 	  displayName: 'SupplyInfoTile',
@@ -46475,9 +46224,14 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(DateAndTimeBox, null),
-	      React.createElement(GasAmountBox, null),
-	      React.createElement(GasPriceBox, null)
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Abastecimento'
+	      ),
+	      React.createElement(DateAndTimeBox, { title: 'Data e hora', value: '12/03/17' }),
+	      React.createElement(GasAmountBox, { title: 'Litros', value: '800' }),
+	      React.createElement(GasPriceBox, { title: 'Pre\xE7o', value: '1.22' })
 	    );
 	  }
 	});
@@ -46486,113 +46240,17 @@
 
 /***/ },
 /* 510 */,
-/* 511 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var DateAndTimeBox = React.createClass({
-	  displayName: 'DateAndTimeBox',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Data e hora'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        '15/02/17-14h59'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = DateAndTimeBox;
-
-/***/ },
-/* 512 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var GasAmountBox = React.createClass({
-	  displayName: 'GasAmountBox',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Litros'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        '580'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = GasAmountBox;
-
-/***/ },
-/* 513 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactBootstrap = __webpack_require__(236);
-
-	var React = __webpack_require__(1);
-
-
-	var GasPriceBox = React.createClass({
-	  displayName: 'GasPriceBox',
-	  render: function render() {
-	    return React.createElement(
-	      _reactBootstrap.FormGroup,
-	      { controlId: 'formBasicText' },
-	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'fontt' },
-	        'Pre\xE7o'
-	      ),
-	      React.createElement(
-	        _reactBootstrap.FormControl.Static,
-	        null,
-	        '1.35'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = GasPriceBox;
-
-/***/ },
+/* 511 */,
+/* 512 */,
+/* 513 */,
 /* 514 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var InvoiceNumberBox = __webpack_require__(515);
-	var DateAndTimeBox = __webpack_require__(511);
+	var InvoiceNumberBox = __webpack_require__(517);
+	var DateAndTimeBox = __webpack_require__(517);
 
 	var InvoiceInfoTile = React.createClass({
 	  displayName: 'InvoiceInfoTile',
@@ -46600,8 +46258,13 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(InvoiceNumberBox, null),
-	      React.createElement(DateAndTimeBox, null)
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Fatura'
+	      ),
+	      React.createElement(InvoiceNumberBox, { title: 'N\xFAmero da fatura', value: '35-01/17' }),
+	      React.createElement(DateAndTimeBox, { title: 'Data e hora', value: '13/02/17' })
 	    );
 	  }
 	});
@@ -46609,7 +46272,9 @@
 	module.exports = InvoiceInfoTile;
 
 /***/ },
-/* 515 */
+/* 515 */,
+/* 516 */,
+/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46617,10 +46282,16 @@
 	var _reactBootstrap = __webpack_require__(236);
 
 	var React = __webpack_require__(1);
+	var string = React.PropTypes.string;
 
 
-	var InvoiceNumberBox = React.createClass({
-	  displayName: 'InvoiceNumberBox',
+	var Testbox = React.createClass({
+	  displayName: 'Testbox',
+
+	  propTypes: {
+	    title: string,
+	    value: string
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      _reactBootstrap.FormGroup,
@@ -46628,18 +46299,60 @@
 	      React.createElement(
 	        _reactBootstrap.ControlLabel,
 	        { className: 'fontt' },
-	        'N\xFAmero da fatura'
+	        this.props.title
 	      ),
 	      React.createElement(
 	        _reactBootstrap.FormControl.Static,
 	        null,
-	        '35-01/17'
+	        this.props.value
 	      )
 	    );
 	  }
 	});
 
-	module.exports = InvoiceNumberBox;
+	module.exports = Testbox;
+
+/***/ },
+/* 518 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+	var string = React.PropTypes.string;
+
+
+	var DistanceBox = React.createClass({
+	  displayName: 'DistanceBox',
+
+	  propTypes: {
+	    title: string
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      value: ''
+	    };
+	  },
+	  handleDistanceChange: function handleDistanceChange(e) {
+	    this.setState({ value: e.target.value });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        this.props.title
+	      ),
+	      React.createElement(_reactBootstrap.FormControl, { type: 'text', className: 'tile', value: this.state.value, placeholder: 'Quilometragem', onChange: this.handleDistanceChange })
+	    );
+	  }
+	});
+
+	module.exports = DistanceBox;
 
 /***/ }
 /******/ ]);
