@@ -46591,6 +46591,8 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
+	var InvoiceNumberBox = __webpack_require__(515);
+	var DateAndTimeBox = __webpack_require__(511);
 
 	var InvoiceInfoTile = React.createClass({
 	  displayName: 'InvoiceInfoTile',
@@ -46598,16 +46600,46 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Invoice'
-	      )
+	      React.createElement(InvoiceNumberBox, null),
+	      React.createElement(DateAndTimeBox, null)
 	    );
 	  }
 	});
 
 	module.exports = InvoiceInfoTile;
+
+/***/ },
+/* 515 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(236);
+
+	var React = __webpack_require__(1);
+
+
+	var InvoiceNumberBox = React.createClass({
+	  displayName: 'InvoiceNumberBox',
+	  render: function render() {
+	    return React.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: 'formBasicText' },
+	      React.createElement(
+	        _reactBootstrap.ControlLabel,
+	        { className: 'fontt' },
+	        'N\xFAmero da fatura'
+	      ),
+	      React.createElement(
+	        _reactBootstrap.FormControl.Static,
+	        null,
+	        '35-01/17'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = InvoiceNumberBox;
 
 /***/ }
 /******/ ]);
