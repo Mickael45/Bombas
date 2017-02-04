@@ -1,11 +1,13 @@
 const React = require('react')
-const DateAndTimeBox = require('./dateAndTimebox/dateAndTimebox')
+const DateAndTimeBox = require('./dateAndTimeBox/dateAndTimeBox')
+const GasAmountBox = require('./gasAmountBox/gasAmountBox')
 
 const SupplyInfoTile = React.createClass({
   render () {
     return (
       <div>
         <DateAndTimeBox />
+        <GasAmountBox />
       </div>
     )
   }
