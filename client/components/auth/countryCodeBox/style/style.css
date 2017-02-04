@@ -1,0 +1,9 @@
+.tile {
+  height: 5vh;
+}
+
+@media only screen and (max-width: 1440px) {
+  .fontt {
+    font-size: 25px;
+  }
+}
