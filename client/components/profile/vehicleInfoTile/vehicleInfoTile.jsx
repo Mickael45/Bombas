@@ -1,11 +1,13 @@
 const React = require('react')
-const VehicleRegistrationNumberBox = require('./vehicleRegistrationNumberBox/vehicleRegistrationNumberBox')
+const RegistrationNumberBox = require('./registrationNumberBox/registrationNumberBox')
+const RegistrationCountryBox = require('./registrationCountryBox/registrationCountryBox')
 
 const VehicleInfoTile = React.createClass({
   render () {
     return (
       <div>
-        <VehicleRegistrationNumberBox />
+        <RegistrationNumberBox />
+        <RegistrationCountryBox />
       </div>
     )
   }
