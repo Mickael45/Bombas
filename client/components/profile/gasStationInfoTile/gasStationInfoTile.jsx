@@ -1,22 +1,26 @@
 const React = require('react')
-const CodeBox = require('./../../defaultBox')
-const NIFBox = require('./../../defaultBox')
-const NIFCountryBox = require('./../../defaultBox')
+const DefaultBox = require('./../../defaultBox')
+const { string } = React.PropTypes
 
 const GasStationInfoTile = React.createClass({
+  propTypes: {
+    code: string,
+    NIF: string,
+    country: string
+  },
   render () {
     return (
       <div>
         <h3>Estabelecimento</h3>
-        <CodeBox
+        <DefaultBox
           title='Código do estabelecimento'
-          value='978546311' />
-        <NIFBox
+          value={this.props.code} />
+        <DefaultBox
           title='NIF do estabelecimento'
-          value='faf79f48af9f4a9f4af9' />
-        <NIFCountryBox
+          value={this.props.NIF} />
+        <DefaultBox
           title='País emissor do NIF'
-          value='Portugal' />
+          value={this.props.country} />
       </div>
     )
   }

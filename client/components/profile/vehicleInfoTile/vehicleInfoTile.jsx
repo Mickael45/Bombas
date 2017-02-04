@@ -22,7 +22,7 @@ const VehicleInfoTile = React.createClass({
           value={this.props.registrationNumber} />
         <DefaultBox
           title='País emissor da matrícula'
-          alue={this.props.registrationCountry} />
+          value={this.props.registrationCountry} />
         <DefaultBox
           title='Numero do cartão NFC'
           value={this.props.NFCCardNumber} />

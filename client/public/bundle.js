@@ -21537,7 +21537,7 @@
 	var React = __webpack_require__(1);
 	var App = __webpack_require__(179);
 	var Auth = __webpack_require__(487);
-	var Profile = __webpack_require__(492);
+	var Profile = __webpack_require__(493);
 
 	var _require = __webpack_require__(180),
 	    Router = _require.Router,
@@ -45763,15 +45763,13 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var SignUpForm = __webpack_require__(488);
-	var ValidationCodeForm = __webpack_require__(491);
+	var AuthComp = __webpack_require__(488);
 
 	var Auth = function Auth() {
 	  return React.createElement(
 	    'div',
 	    null,
-	    React.createElement(SignUpForm, null),
-	    React.createElement(ValidationCodeForm, null)
+	    React.createElement(AuthComp, null)
 	  );
 	};
 
@@ -45784,8 +45782,77 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultInput = __webpack_require__(489);
-	var DefaultButton = __webpack_require__(490);
+	var SignUpForm = __webpack_require__(489);
+	var ValidationCodeForm = __webpack_require__(492);
+
+	var _require = __webpack_require__(236),
+	    Col = _require.Col;
+
+	var _require2 = __webpack_require__(180),
+	    browserHistory = _require2.browserHistory;
+
+	var Auth = React.createClass({
+	  displayName: 'Auth',
+	  getInitialState: function getInitialState() {
+	    return {
+	      phoneNumber: '',
+	      countryCode: '',
+	      validationCode: '',
+	      status: 'waiting'
+	    };
+	  },
+	  onPhoneNumberSubmit: function onPhoneNumberSubmit() {
+	    console.log('----------Phone submit----------');
+	    console.log(this.state.phoneNumber);
+	    console.log(this.state.countryCode);
+	    this.setState({ status: 'authenticated' });
+	  },
+	  onValidationCodeSubmit: function onValidationCodeSubmit() {
+	    console.log('----------Validation code submit----------');
+	    console.log(this.state.validationCode);
+	    browserHistory.push('/profile');
+	  },
+	  onResendCodeSubmit: function onResendCodeSubmit() {
+	    console.log('----------Resend code submit----------');
+	  },
+	  onPhoneNumberChangeEvent: function onPhoneNumberChangeEvent(e) {
+	    this.setState({ phoneNumber: e.target.value });
+	  },
+	  onCountryCodeChangeEvent: function onCountryCodeChangeEvent(e) {
+	    this.setState({ countryCode: e.target.value });
+	  },
+	  onValidationCodeChange: function onValidationCodeChange(e) {
+	    this.setState({ validationCode: e.target.value });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      Col,
+	      { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
+	      this.state.status === 'authenticated' ? React.createElement(ValidationCodeForm, {
+	        validationCode: this.state.validationCode,
+	        onValidationCodeChange: this.onValidationCodeChange,
+	        onValidationCodeSubmit: this.onValidationCodeSubmit,
+	        onResendCodeSubmit: this.onResendCodeSubmit }) : React.createElement(SignUpForm, {
+	        phoneNumber: this.state.phoneNumber,
+	        onPhoneNumberChangeEvent: this.onPhoneNumberChangeEvent,
+	        countryCode: this.state.countryCode,
+	        onCountryCodeChangeEvent: this.onCountryCodeChangeEvent,
+	        onPhoneNumberSubmit: this.onPhoneNumberSubmit })
+	    );
+	  }
+	});
+
+	module.exports = Auth;
+
+/***/ },
+/* 489 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var DefaultInput = __webpack_require__(490);
+	var DefaultButton = __webpack_require__(491);
 	var _React$PropTypes = React.PropTypes,
 	    string = _React$PropTypes.string,
 	    func = _React$PropTypes.func;
@@ -45825,7 +45892,7 @@
 	module.exports = SignUpForm;
 
 /***/ },
-/* 489 */
+/* 490 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45868,7 +45935,7 @@
 	module.exports = DefaultInput;
 
 /***/ },
-/* 490 */
+/* 491 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45902,14 +45969,14 @@
 	module.exports = DefaultButton;
 
 /***/ },
-/* 491 */
+/* 492 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultInput = __webpack_require__(489);
-	var DefaultButton = __webpack_require__(490);
+	var DefaultInput = __webpack_require__(490);
+	var DefaultButton = __webpack_require__(491);
 	var _React$PropTypes = React.PropTypes,
 	    string = _React$PropTypes.string,
 	    func = _React$PropTypes.func;
@@ -45945,40 +46012,25 @@
 	module.exports = ValidationCodeForm;
 
 /***/ },
-/* 492 */
+/* 493 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var ProfileComp = __webpack_require__(493);
-
-	var createObject = function createObject() {
-	  return {
-	    registrationNumber: '78-KB-84',
-	    registrationCountry: 'Portugal',
-	    NFCCardNumber: '78456123',
-	    gasType: 'Gasoléo',
-	    maxWeightCapacity: 900
-	  };
-	};
+	var ProfileComp = __webpack_require__(494);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
-	  getInitialState: function getInitialState() {
-	    return {
-	      data: createObject()
-	    };
-	  },
 	  render: function render() {
-	    return React.createElement(ProfileComp, { data: this.state.data });
+	    return React.createElement(ProfileComp, null);
 	  }
 	});
 
 	module.exports = Profile;
 
 /***/ },
-/* 493 */
+/* 494 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45986,27 +46038,47 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var React = __webpack_require__(1);
-	var GasStationInfoTile = __webpack_require__(494);
-	var VehicleInfoTile = __webpack_require__(496);
-	var SupplyInfoTile = __webpack_require__(497);
-	var InvoiceInfoTile = __webpack_require__(498);
-	var DefaultButton = __webpack_require__(490);
+	var GasStationInfoTile = __webpack_require__(495);
+	var VehicleInfoTile = __webpack_require__(497);
+	var SupplyInfoTile = __webpack_require__(498);
+	var InvoiceInfoTile = __webpack_require__(499);
+	var DefaultButton = __webpack_require__(491);
 
 	var _require = __webpack_require__(236),
 	    Col = _require.Col,
 	    Row = _require.Row;
 
-	var object = React.PropTypes.object;
-
+	var createObject = function createObject() {
+	  return {
+	    gasStation: {
+	      code: '978546311',
+	      NIF: 'faf79f48af9f4a9f4af9',
+	      country: 'Portugao'
+	    },
+	    vehicle: {
+	      registrationNumber: '78-KB-84',
+	      registrationCountry: 'Portugal',
+	      NFCCardNumber: '78456123',
+	      gasType: 'Gasoléo',
+	      maxWeightCapacity: '900'
+	    },
+	    supply: {
+	      date: '12/01/17 - 12h47',
+	      liters: '800',
+	      price: '1.44'
+	    },
+	    invoice: {
+	      number: '35 - 01/15',
+	      date: '14/02/14 - 13h48'
+	    }
+	  };
+	};
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
-
-	  propTypes: {
-	    data: object
-	  },
 	  getInitialState: function getInitialState() {
 	    return {
+	      data: createObject(),
 	      distance: ''
 	    };
 	  },
@@ -46028,24 +46100,24 @@
 	        React.createElement(
 	          Col,
 	          { md: 3, xs: 3 },
-	          React.createElement(GasStationInfoTile, this.props.data)
+	          React.createElement(GasStationInfoTile, this.state.data.gasStation)
 	        ),
 	        React.createElement(
 	          Col,
 	          { md: 3, xs: 3 },
-	          React.createElement(VehicleInfoTile, _extends({}, this.props.data, {
+	          React.createElement(VehicleInfoTile, _extends({}, this.state.data.vehicle, {
 	            distance: this.state.distance,
 	            onDistanceChangeEvent: this.onDistanceChangeEvent }))
 	        ),
 	        React.createElement(
 	          Col,
 	          { md: 3, xs: 3 },
-	          React.createElement(SupplyInfoTile, this.props.data)
+	          React.createElement(SupplyInfoTile, this.state.data.supply)
 	        ),
 	        React.createElement(
 	          Col,
 	          { md: 3, xs: 3 },
-	          React.createElement(InvoiceInfoTile, this.props.data)
+	          React.createElement(InvoiceInfoTile, this.state.data.invoice)
 	        )
 	      ),
 	      React.createElement(DefaultButton, {
@@ -46058,18 +46130,24 @@
 	module.exports = Profile;
 
 /***/ },
-/* 494 */
+/* 495 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var CodeBox = __webpack_require__(495);
-	var NIFBox = __webpack_require__(495);
-	var NIFCountryBox = __webpack_require__(495);
+	var DefaultBox = __webpack_require__(496);
+	var string = React.PropTypes.string;
+
 
 	var GasStationInfoTile = React.createClass({
 	  displayName: 'GasStationInfoTile',
+
+	  propTypes: {
+	    code: string,
+	    NIF: string,
+	    country: string
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -46079,15 +46157,15 @@
 	        null,
 	        'Estabelecimento'
 	      ),
-	      React.createElement(CodeBox, {
+	      React.createElement(DefaultBox, {
 	        title: 'C\xF3digo do estabelecimento',
-	        value: '978546311' }),
-	      React.createElement(NIFBox, {
+	        value: this.props.code }),
+	      React.createElement(DefaultBox, {
 	        title: 'NIF do estabelecimento',
-	        value: 'faf79f48af9f4a9f4af9' }),
-	      React.createElement(NIFCountryBox, {
+	        value: this.props.NIF }),
+	      React.createElement(DefaultBox, {
 	        title: 'Pa\xEDs emissor do NIF',
-	        value: 'Portugal' })
+	        value: this.props.country })
 	    );
 	  }
 	});
@@ -46095,7 +46173,7 @@
 	module.exports = GasStationInfoTile;
 
 /***/ },
-/* 495 */
+/* 496 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46134,14 +46212,14 @@
 	module.exports = DefaultBox;
 
 /***/ },
-/* 496 */
+/* 497 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(495);
-	var DefaultInput = __webpack_require__(489);
+	var DefaultBox = __webpack_require__(496);
+	var DefaultInput = __webpack_require__(490);
 	var _React$PropTypes = React.PropTypes,
 	    string = _React$PropTypes.string,
 	    func = _React$PropTypes.func;
@@ -46173,7 +46251,7 @@
 	        value: this.props.registrationNumber }),
 	      React.createElement(DefaultBox, {
 	        title: 'Pa\xEDs emissor da matr\xEDcula',
-	        alue: this.props.registrationCountry }),
+	        value: this.props.registrationCountry }),
 	      React.createElement(DefaultBox, {
 	        title: 'Numero do cart\xE3o NFC',
 	        value: this.props.NFCCardNumber }),
@@ -46194,18 +46272,26 @@
 	module.exports = VehicleInfoTile;
 
 /***/ },
-/* 497 */
+/* 498 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DateAndTimeBox = __webpack_require__(495);
-	var GasAmountBox = __webpack_require__(495);
-	var GasPriceBox = __webpack_require__(495);
+	var DateAndTimeBox = __webpack_require__(496);
+	var GasAmountBox = __webpack_require__(496);
+	var GasPriceBox = __webpack_require__(496);
+	var string = React.PropTypes.string;
+
 
 	var SupplyInfoTile = React.createClass({
 	  displayName: 'SupplyInfoTile',
+
+	  propTypes: {
+	    date: string,
+	    liters: string,
+	    price: string
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -46217,13 +46303,13 @@
 	      ),
 	      React.createElement(DateAndTimeBox, {
 	        title: 'Data e hora',
-	        value: '12/03/17' }),
+	        value: this.props.date }),
 	      React.createElement(GasAmountBox, {
 	        title: 'Litros',
-	        value: '800' }),
+	        value: this.props.liters }),
 	      React.createElement(GasPriceBox, {
 	        title: 'Pre\xE7o',
-	        value: '1.22' })
+	        value: this.props.price })
 	    );
 	  }
 	});
@@ -46231,17 +46317,24 @@
 	module.exports = SupplyInfoTile;
 
 /***/ },
-/* 498 */
+/* 499 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var InvoiceNumberBox = __webpack_require__(495);
-	var DateAndTimeBox = __webpack_require__(495);
+	var InvoiceNumberBox = __webpack_require__(496);
+	var DateAndTimeBox = __webpack_require__(496);
+	var string = React.PropTypes.string;
+
 
 	var InvoiceInfoTile = React.createClass({
 	  displayName: 'InvoiceInfoTile',
+
+	  propTypes: {
+	    number: string,
+	    date: string
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -46253,10 +46346,10 @@
 	      ),
 	      React.createElement(InvoiceNumberBox, {
 	        title: 'N\xFAmero da fatura',
-	        value: '35-01/17' }),
+	        value: this.props.number }),
 	      React.createElement(DateAndTimeBox, {
 	        title: 'Data e hora',
-	        value: '13/02/17' })
+	        value: this.props.date })
 	    );
 	  }
 	});
