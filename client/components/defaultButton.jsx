@@ -9,7 +9,7 @@ const DefaultButton = React.createClass({
   },
   render () {
     return (
-      <Button
+      <Button className='button'
         bsStyle='primary'
         onClick={this.props.onSubmit}>
         {this.props.title}

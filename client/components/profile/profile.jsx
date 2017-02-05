@@ -51,19 +51,19 @@ const Profile = React.createClass({
     return (
       <div>
         <Row>
-          <Col md={3} xs={3}>
+          <Col md={3} xs={8} xsOffset={2}>
             <GasStationInfoTile {...this.state.data.gasStation} />
           </Col>
-          <Col md={3} xs={3}>
+          <Col md={3} xs={8} xsOffset={2}>
             <VehicleInfoTile
               {...this.state.data.vehicle}
               distance={this.state.distance}
               onDistanceChangeEvent={this.onDistanceChangeEvent} />
           </Col>
-          <Col md={3} xs={3}>
+          <Col md={3} xs={8} xsOffset={2}>
             <SupplyInfoTile {...this.state.data.supply} />
           </Col>
-          <Col md={3} xs={3}>
+          <Col md={3} xs={8} xsOffset={2}>
             <InvoiceInfoTile {...this.state.data.invoice} />
           </Col>
         </Row>

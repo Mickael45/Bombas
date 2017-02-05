@@ -45920,10 +45920,11 @@
 	      { controlId: 'formBasicText' },
 	      React.createElement(
 	        _reactBootstrap.ControlLabel,
-	        null,
+	        { className: 'title' },
 	        this.props.title
 	      ),
 	      React.createElement(_reactBootstrap.FormControl, {
+	        className: 'input',
 	        type: 'text',
 	        value: this.props.value,
 	        placeholder: this.props.placeholder,
@@ -45958,7 +45959,7 @@
 	  render: function render() {
 	    return React.createElement(
 	      Button,
-	      {
+	      { className: 'button',
 	        bsStyle: 'primary',
 	        onClick: this.props.onSubmit },
 	      this.props.title
@@ -46099,24 +46100,24 @@
 	        null,
 	        React.createElement(
 	          Col,
-	          { md: 3, xs: 3 },
+	          { md: 3, xs: 8, xsOffset: 2 },
 	          React.createElement(GasStationInfoTile, this.state.data.gasStation)
 	        ),
 	        React.createElement(
 	          Col,
-	          { md: 3, xs: 3 },
+	          { md: 3, xs: 8, xsOffset: 2 },
 	          React.createElement(VehicleInfoTile, _extends({}, this.state.data.vehicle, {
 	            distance: this.state.distance,
 	            onDistanceChangeEvent: this.onDistanceChangeEvent }))
 	        ),
 	        React.createElement(
 	          Col,
-	          { md: 3, xs: 3 },
+	          { md: 3, xs: 8, xsOffset: 2 },
 	          React.createElement(SupplyInfoTile, this.state.data.supply)
 	        ),
 	        React.createElement(
 	          Col,
-	          { md: 3, xs: 3 },
+	          { md: 3, xs: 8, xsOffset: 2 },
 	          React.createElement(InvoiceInfoTile, this.state.data.invoice)
 	        )
 	      ),
@@ -46196,13 +46197,13 @@
 	      _reactBootstrap.FormGroup,
 	      { controlId: 'formBasicText' },
 	      React.createElement(
-	        _reactBootstrap.ControlLabel,
+	        'h3',
 	        null,
 	        this.props.title
 	      ),
 	      React.createElement(
 	        _reactBootstrap.FormControl.Static,
-	        null,
+	        { className: 'title' },
 	        this.props.value
 	      )
 	    );
@@ -46220,6 +46221,10 @@
 	var React = __webpack_require__(1);
 	var DefaultBox = __webpack_require__(496);
 	var DefaultInput = __webpack_require__(490);
+
+	var _require = __webpack_require__(236),
+	    Col = _require.Col;
+
 	var _React$PropTypes = React.PropTypes,
 	    string = _React$PropTypes.string,
 	    func = _React$PropTypes.func;
@@ -46246,25 +46251,49 @@
 	        null,
 	        'Ve\xEDculo'
 	      ),
-	      React.createElement(DefaultBox, {
-	        title: 'Matr\xEDcula',
-	        value: this.props.registrationNumber }),
-	      React.createElement(DefaultBox, {
-	        title: 'Pa\xEDs emissor da matr\xEDcula',
-	        value: this.props.registrationCountry }),
-	      React.createElement(DefaultBox, {
-	        title: 'Numero do cart\xE3o NFC',
-	        value: this.props.NFCCardNumber }),
-	      React.createElement(DefaultBox, {
-	        title: 'Tipo de combust\xEDvel',
-	        value: this.props.gasType }),
-	      React.createElement(DefaultInput, {
-	        title: 'Indica a quilometragem do ve\xEDculo',
-	        placeholder: 'Quilometragem',
-	        onChange: this.props.onDistanceChangeEvent }),
-	      React.createElement(DefaultBox, {
-	        title: 'Peso total em carga permitido',
-	        value: this.props.maxWeightCapacity })
+	      React.createElement(
+	        Col,
+	        { md: 3, xs: 3 },
+	        React.createElement(DefaultBox, {
+	          title: 'Matr\xEDcula',
+	          value: this.props.registrationNumber })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 4, xs: 4 },
+	        React.createElement(DefaultBox, {
+	          title: 'Pa\xEDs emissor',
+	          value: this.props.registrationCountry })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 5, xs: 5 },
+	        React.createElement(DefaultBox, {
+	          title: 'Numero NFC',
+	          value: this.props.NFCCardNumber })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 6, xs: 6 },
+	        React.createElement(DefaultBox, {
+	          title: 'Tipo de combust\xEDvel',
+	          value: this.props.gasType })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 6, xs: 6 },
+	        React.createElement(DefaultInput, {
+	          title: 'Quilometragem',
+	          placeholder: 'Quilometragem',
+	          onChange: this.props.onDistanceChangeEvent })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 8, mdOffset: 2, xs: 8, xsOffset: 2 },
+	        React.createElement(DefaultBox, {
+	          title: 'Peso total em carga permitido',
+	          value: this.props.maxWeightCapacity })
+	      )
 	    );
 	  }
 	});
@@ -46281,6 +46310,10 @@
 	var DateAndTimeBox = __webpack_require__(496);
 	var GasAmountBox = __webpack_require__(496);
 	var GasPriceBox = __webpack_require__(496);
+
+	var _require = __webpack_require__(236),
+	    Col = _require.Col;
+
 	var string = React.PropTypes.string;
 
 
@@ -46301,15 +46334,27 @@
 	        null,
 	        'Abastecimento'
 	      ),
-	      React.createElement(DateAndTimeBox, {
-	        title: 'Data e hora',
-	        value: this.props.date }),
-	      React.createElement(GasAmountBox, {
-	        title: 'Litros',
-	        value: this.props.liters }),
-	      React.createElement(GasPriceBox, {
-	        title: 'Pre\xE7o',
-	        value: this.props.price })
+	      React.createElement(
+	        Col,
+	        { md: 2, xs: 2 },
+	        React.createElement(GasPriceBox, {
+	          title: 'Pre\xE7o',
+	          value: this.props.price })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 2, xs: 2 },
+	        React.createElement(GasAmountBox, {
+	          title: 'Litros',
+	          value: this.props.liters })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 8, xs: 8 },
+	        React.createElement(DateAndTimeBox, {
+	          title: 'Data e hora',
+	          value: this.props.date })
+	      )
 	    );
 	  }
 	});

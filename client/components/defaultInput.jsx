@@ -12,10 +12,11 @@ const DefaultInput = React.createClass({
   render () {
     return (
       <FormGroup controlId='formBasicText'>
-        <ControlLabel>
+        <ControlLabel className='title'>
           {this.props.title}
         </ControlLabel>
         <FormControl
+          className='input'
           type='text'
           value={this.props.value}
           placeholder={this.props.placeholder}
