@@ -1,31 +1,34 @@
 const React = require('react')
 const SignUpForm = require('./signUpForm/signUpForm')
 const ValidationCodeForm = require('./validationCodeForm/validationCodeForm')
+const { func, string } = React.PropTypes
 const { Col } = require('react-bootstrap')
-const { browserHistory } = require('react-router')
 
 const Auth = React.createClass({
+  propTypes: {
+    signMeUpByPhone: func,
+    validateCode: func,
+    resendCode: func,
+    status: string
+  },
   getInitialState () {
     return {
       phoneNumber: '',
       countryCode: '',
-      validationCode: '',
-      status: 'waiting'
+      validationCode: ''
     }
   },
   onPhoneNumberSubmit () {
     console.log('----------Phone submit----------')
-    console.log(this.state.phoneNumber)
-    console.log(this.state.countryCode)
-    this.setState({ status: 'authenticated' })
+    this.props.signMeUpByPhone(this.state.phoneNumber, this.state.countryCode)
   },
   onValidationCodeSubmit () {
     console.log('----------Validation code submit----------')
-    console.log(this.state.validationCode)
-    browserHistory.push('/profile')
+    this.prpos.validateCode(this.state.validationCode)
   },
   onResendCodeSubmit () {
     console.log('----------Resend code submit----------')
+    this.props.resendCode()
   },
   onPhoneNumberChangeEvent (e) {
     this.setState({ phoneNumber: e.target.value })
@@ -40,7 +43,7 @@ const Auth = React.createClass({
     return (
       <Col md={6} mdOffset={3} xs={6} xsOffset={3}>
         {
-          (this.state.status === 'authenticated'
+          (this.props.status === 'authenticated'
           ? <ValidationCodeForm
             validationCode={this.state.validationCode}
             onValidationCodeChange={this.onValidationCodeChange}

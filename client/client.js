@@ -2,6 +2,8 @@ const React = require('react')
 const App = require('./pages/app')
 const Auth = require('./pages/auth')
 const Profile = require('./pages/profile')
+import { Provider } from 'react-redux'
+const store = require('./store/store')
 const { Router, Route, browserHistory } = require('react-router')
 
 const myRoutes = () => (
@@ -14,9 +16,11 @@ const myRoutes = () => (
 const Client = React.createClass({
   render () {
     return (
-      <Router history={browserHistory}>
-        {myRoutes()}
-      </Router>
+      <Provider store={store}>
+        <Router history={browserHistory}>
+          {myRoutes()}
+        </Router>
+      </Provider>
     )
   }
 })
