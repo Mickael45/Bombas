@@ -24,7 +24,7 @@ const Auth = React.createClass({
   },
   onValidationCodeSubmit () {
     console.log('----------Validation code submit----------')
-    this.prpos.validateCode(this.state.validationCode)
+    this.props.validateCode(this.state.validationCode)
   },
   onResendCodeSubmit () {
     console.log('----------Resend code submit----------')
@@ -43,7 +43,7 @@ const Auth = React.createClass({
     return (
       <Col md={6} mdOffset={3} xs={6} xsOffset={3}>
         {
-          (this.props.status === 'authenticated'
+          (this.props.status === 'waiting'
           ? <ValidationCodeForm
             validationCode={this.state.validationCode}
             onValidationCodeChange={this.onValidationCodeChange}

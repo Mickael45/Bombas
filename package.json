@@ -16,9 +16,13 @@
     "url": "https://github.com/Mickael45/Bombas/issues"
   },
   "dependencies": {
+    "authy": "^1.2.0",
     "babel-register": "^6.22.0",
+    "body-parser": "^1.16.0",
     "express": "^4.14.1",
     "lodash": "^4.17.4",
+    "mongoose": "^4.8.1",
+    "morgan": "^1.8.0",
     "nodemon": "^1.11.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
