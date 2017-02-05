@@ -1,10 +1,10 @@
 const React = require('react')
-const ProfileComp = require('./../components/profile/profile')
+const ProfileContainer = require('./../containers/infoContainer')
 
 const Profile = React.createClass({
   render () {
     return (
-      <ProfileComp />
+      <ProfileContainer />
     )
   }
 })

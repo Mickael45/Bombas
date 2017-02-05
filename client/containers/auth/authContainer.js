@@ -18,9 +18,6 @@ const mapDispatchToProps = (dispatch) => ({
       }
     })
   },
-  signUpFailed (dispatch, response) {
-    dispatch(signUpUserFailure(response.payload))
-  },
   validateCode (code) {
     dispatch(phoneValidateUser(code, userId))
     .then((response) => {
@@ -46,6 +43,7 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state) => {
+  console.log(state)
   if (state.authReducer.user) {
     userId = state.authReducer.user._id
   }
