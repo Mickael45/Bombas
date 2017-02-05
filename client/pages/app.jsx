@@ -1,16 +1,15 @@
 const React = require('react')
-const { browserHistory } = require('react-router')
 const NavBar = require('./../components/navBar')
+const AppContainer = require('./../containers/appContainer')
 
 class App extends React.Component {
-  componentDidMount () {
-    browserHistory.push('/auth')
-  }
   render () {
     return (
       <div>
         <NavBar />
-        {this.props.children}
+        <AppContainer>
+          {this.props.children}
+        </AppContainer>
       </div>
     )
   }

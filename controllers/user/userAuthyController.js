@@ -6,14 +6,12 @@ exports.sendAuthyToken = (user, cb) => {
     authy.register_user(user.countryCode.split('+')[1] + user.phone + '@gmail.com', user.phone, user.countryCode,
       function (err, response) {
         if (err || !response.user) {
-          console.log(err)
           cb.call(err, user)
           return
         }
         user.authyId = response.user.id
         user.save(function (err, doc) {
           if (err || !doc) {
-            console.log(err)
             cb.call(err, user)
           }
           user = doc
@@ -26,9 +24,6 @@ exports.sendAuthyToken = (user, cb) => {
 
   function sendToken () {
     authy.request_sms(user.authyId, true, function (err, response) {
-      console.log('----------RESPONSE-------------')
-      console.log(err)
-      console.log(user)
       cb.call(user, err)
     })
   }
@@ -36,6 +31,6 @@ exports.sendAuthyToken = (user, cb) => {
 
 exports.verifyAuthyToken = (otp, cb, user) => {
   authy.verify(user.authyId, otp, function (err, response) {
-    cb.call(err, user, response)
+    cb.call(user, err, response)
   })
 }

@@ -39,3 +39,9 @@ export function signUpUserFailure (error) {
     payload: error
   }
 }
+
+export function resetUser () {
+  return {
+    type: signUp.RESET_USER
+  }
+}
