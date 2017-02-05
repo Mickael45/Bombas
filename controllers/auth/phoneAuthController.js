@@ -1,4 +1,7 @@
 const User = require('./../../models/user')
+const tokenGenerator = require('./../../helpers/tokenGenerator')
+const jwt = require('jsonwebtoken')
+const config = require('./../../config/config')
 
 exports.send = (req, res) => {
   var user = new User({
@@ -9,17 +12,12 @@ exports.send = (req, res) => {
   })
   user.save(function (err, doc) {
     if (err) {
-      console.log(err)
       return res.status(424).json({ message: 'There was a problem creating your account - note that all fields are required. Please double-check your input and try again. ', error: err })
     } else {
       user.sendAuthyToken(doc, function (err, finalUser) {
         if (err) {
-          console.log(err)
           return res.status(424).json({ message: 'There was an error sending the token. Hit the resend button to receive a new validation code. ', error: err })
         }
-        console.log('+++++++++++++++++++++FINAL RESPONSE++++++++++++++++')
-        console.log(err)
-        console.log(user)
         return res.json({ message: 'The verification code has been sent.', user })
       })
     }
@@ -36,7 +34,7 @@ exports.verify = (req, res) => {
     user.verifyAuthyToken(req.body.code, postVerify, user)
   })
 
-  function postVerify (err, user, response) {
+  function postVerify (err) {
     if (err) {
       return res.status(400).json({ message: 'The token you entered was invalid - please retry.', error: err })
     }
@@ -48,7 +46,7 @@ exports.verify = (req, res) => {
     if (err) {
       return res.status(424).json({ message: 'There was a problem validating your account - please enter your validation code again.', error: err })
     }
-    return res.json({ message: 'You did it! Signup complete :)' })
+    return res.json({ message: 'You did it! Signup complete :)', user, token: tokenGenerator.generateToken(user) })
   }
 }
 
@@ -66,4 +64,30 @@ exports.resend = (req, res) => {
     }
     return res.json({ message: 'Code re-sent!' })
   }
+}
+
+exports.getByToken = (req, res) => {
+  console.log('----------------token--------------')
+  console.log(req.params.token)
+  jwt.verify(req.params.token, config.JWT_SECRET, function (err, user) {
+    console.log('------------error---------------')
+    console.log(err)
+    console.log('------------user---------------')
+    console.log(user)
+    if (err) {
+      return res.status(400).json({ message: 'Invalid token', error: err })
+    }
+    User.findById({
+      '_id': user._id
+    }, function (err, user) {
+      if (err) {
+        return res.status(404).json({ message: 'User not found', error: err })
+      }
+      return res.json({
+        message: 'User successfully found',
+        user: user,
+        token: tokenGenerator.generateToken(user)
+      })
+    })
+  })
 }
