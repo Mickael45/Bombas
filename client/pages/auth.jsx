@@ -1,9 +1,9 @@
 const React = require('react')
-const AuthComp = require('./../components/auth/auth')
+const AuthContainer = require('./../containers/auth/authContainer')
 
 const Auth = () => (
   <div>
-    <AuthComp />
+    <AuthContainer />
   </div>
 )
 

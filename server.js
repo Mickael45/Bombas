@@ -6,6 +6,9 @@ const ReactDOMServer = require('react-dom/server')
 const match = ReactRouter.match
 const RouterContext = ReactRouter.RouterContext
 const _ = require('lodash')
+const ReactRedux = require('react-redux')
+const Provider = ReactRedux.Provider
+const store = require('./client/store/store')
 const fs = require('fs')
 const baseTemplate = fs.readFileSync('./client/index.html')
 const template = _.template(baseTemplate)
@@ -24,7 +27,9 @@ app.use((req, res) => {
       res.redirect(302, redirectLocation.pathName + redirectLocation.search)
     } else if (renderProps) {
       const body = ReactDOMServer.renderToString(
+        React.createElement(Provider, {store},
           React.createElement(RouterContext, renderProps)
+        )
       )
       res.status(200).send(template({ body }))
     } else {
