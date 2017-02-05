@@ -6,7 +6,7 @@ const { browserHistory } = require('react-router')
 const mapDispatchToProps = (dispatch) => ({
   logout () {
     dispatch(resetUser())
-    browserHistory.push('./auth')
+    browserHistory.push('/auth')
   }
 })
 

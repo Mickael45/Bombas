@@ -24247,7 +24247,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var React = __webpack_require__(1);
-	var NavBar = __webpack_require__(281);
+	var NavBarContainer = __webpack_require__(593);
 	var AppContainer = __webpack_require__(590);
 
 	var App = function (_React$Component) {
@@ -24265,7 +24265,7 @@
 	      return React.createElement(
 	        'div',
 	        null,
-	        React.createElement(NavBar, null),
+	        React.createElement(NavBarContainer, null),
 	        React.createElement(
 	          AppContainer,
 	          null,
@@ -51560,14 +51560,14 @@
 	  switch (action.type) {
 	    case _constantStrings.token.ME_FROM_TOKEN:
 	      // loading currentUser("me") from jwttoken in local/session storage storage,
-	      return Object.assign({}, state, { user: null, status: 'storage', error: null, loading: true, token: '' });
+	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: null, loading: true, token: '' });
 	    case _constantStrings.token.ME_FROM_TOKEN_SUCCESS:
 	      // return user, status = authenticated and make loading = false
 	      return Object.assign({}, state, { user: action.payload.data.user, status: 'authenticated', error: null, loading: false, token: action.payload.data.token }); // <-- authenticated
 	    case _constantStrings.token.ME_FROM_TOKEN_FAILURE:
 	      // return error and make loading = false
 	      var tokenError = action.payload.data || { message: action.payload.message };
-	      return Object.assign({}, state, { user: null, status: 'storage', error: tokenError, loading: false, token: '' }); // 2nd one is network or server down errors
+	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: tokenError, loading: false, token: '' }); // 2nd one is network or server down errors
 	    case _constantStrings.signUp.WAITING_FOR_VALIDATION_CODE:
 	      if (action.error) {
 	        return state;
@@ -51581,6 +51581,8 @@
 	    case _constantStrings.signUp.SIGNUP_USER_FAILURE:
 	      var signUpError = action.payload.data || { message: action.payload.message };
 	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: signUpError, loading: false, token: '' });
+	    case _constantStrings.signUp.RESET_USER:
+	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: null, loading: false, token: '' });
 	    default:
 	      return state;
 	  }
@@ -51809,6 +51811,36 @@
 	};
 
 	module.exports = App;
+
+/***/ },
+/* 593 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactRedux = __webpack_require__(179);
+
+	var _phoneSignUp = __webpack_require__(535);
+
+	var _navBar = __webpack_require__(281);
+
+	var _navBar2 = _interopRequireDefault(_navBar);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var _require = __webpack_require__(228),
+	    browserHistory = _require.browserHistory;
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    logout: function logout() {
+	      dispatch((0, _phoneSignUp.resetUser)());
+	      browserHistory.push('/auth');
+	    }
+	  };
+	};
+
+	module.exports = (0, _reactRedux.connect)(null, mapDispatchToProps)(_navBar2.default);
 
 /***/ }
 /******/ ]);

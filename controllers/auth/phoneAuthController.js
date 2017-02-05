@@ -67,13 +67,7 @@ exports.resend = (req, res) => {
 }
 
 exports.getByToken = (req, res) => {
-  console.log('----------------token--------------')
-  console.log(req.params.token)
   jwt.verify(req.params.token, config.JWT_SECRET, function (err, user) {
-    console.log('------------error---------------')
-    console.log(err)
-    console.log('------------user---------------')
-    console.log(user)
     if (err) {
       return res.status(400).json({ message: 'Invalid token', error: err })
     }
