@@ -14,7 +14,15 @@ const authReducer = (state = INITIAL_STATE, action) => {
         return state
       }
       var user = !action.payload.data.user ? state.user : action.payload.data.user
-      return Object.assign({}, state, { user: user, status: 'waiting', error: null, loading: false, token: '' })
+      var newState = {}
+      console.log('action')
+      console.log(action)
+      console.log('state')
+      console.log(state)
+      Object.assign(newState, state, { user: user, status: 'waiting', error: null, loading: false, token: '' })
+      console.log('newState')
+      console.log(newState)
+      return newState
     case signUp.SIGNUP_USER:
       return Object.assign({}, state, { user: null, status: 'waiting', error: null, loading: true, token: '' })
     case signUp.SIGNUP_USER_SUCCESS:

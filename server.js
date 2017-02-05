@@ -16,6 +16,25 @@ const Client = require('./client/client.js')
 const Routes = Client.Routes
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+const appController = require('./controllers/appController')
+const routes = require('./routes')
+const config = require('./config/config')
+
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use('/*', appController.setHeaders)
+
+mongoose.connect(config.MONGOLAB_URI)
+
+app.use(morgan('dev'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+for (var route in routes) {
+  app.use('/', routes[route])
+}
 
 app.use(express.static('./client'))
 
@@ -38,6 +57,6 @@ app.use((req, res) => {
   })
 })
 
-app.listen(8080)
+app.listen(config.PORT)
 
 console.log('Ready')
