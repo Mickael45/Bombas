@@ -11,16 +11,12 @@ const Profile = React.createClass({
   propTypes: {
     data: object,
     getInfo: func,
-    resetState: func,
     status: string,
     lol: string,
     couilles: string
   },
   componentDidMount () {
     this.props.getInfo()
-  },
-  componentWillUnmount () {
-    this.props.resetState()
   },
   getInitialState () {
     return {

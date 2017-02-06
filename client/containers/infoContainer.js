@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getInfo, getInfoSuccess, getInfoFailure, reinitState } from './../actions/info'
+import { getInfo, getInfoSuccess, getInfoFailure } from './../actions/info'
 import Profile from './../components/profile/profile'
 
 const mapDispatchToProps = (dispatch) => ({
@@ -12,9 +12,6 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(getInfoSuccess(response.payload))
       }
     })
-  },
-  reinitState () {
-    dispatch(reinitState())
   }
 })
 

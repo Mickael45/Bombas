@@ -9,6 +9,8 @@ const authReducer = (state = INITIAL_STATE, action) => {
     case token.ME_FROM_TOKEN_FAILURE: // return error and make loading = false
       var tokenError = action.payload.data || { message: action.payload.message }
       return Object.assign({}, state, { user: null, status: 'not authenticated', error: tokenError, loading: false, token: '' }) // 2nd one is network or server down errors
+    case token.RESET_TOKEN:
+      return Object.assign({}, state, { user: null, status: 'not authenticated', error: '', loading: false, token: '' })
     case signUp.WAITING_FOR_VALIDATION_CODE:
       if (action.error) {
         return state
@@ -21,9 +23,9 @@ const authReducer = (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, { user: action.payload.data.user, status: 'authenticated', error: null, loading: false, token: action.payload.data.token })
     case signUp.SIGNUP_USER_FAILURE:
       var signUpError = action.payload.data || { message: action.payload.message }
-      return Object.assign({}, state, { user: null, status: 'not authenticated', error: signUpError, loading: false, token: '' })
+      return Object.assign({}, state, { user: null, status: 'not subscribed', error: signUpError, loading: false, token: '' })
     case signUp.RESET_USER:
-      return Object.assign({}, state, { user: null, status: 'not authenticated', error: null, loading: false, token: '' })
+      return INITIAL_STATE
     default:
       return state
   }
