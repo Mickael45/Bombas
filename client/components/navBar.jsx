@@ -22,15 +22,15 @@ const NavBar = React.createClass({
           {
             (this.props.status === 'authenticated'
             ? <Nav pullRight>
-              <NavItem onClick={this.props.logout}>Logout</NavItem>
+              <NavItem onClick={this.props.logout}>Sair</NavItem>
             </Nav>
           : this.props.status === 'not subscribed'
           ? <Nav pullRight>
-            <NavItem onClick={this.props.toSignInStatus}>Log in</NavItem>
+            <NavItem onClick={this.props.toSignInStatus}>Entrar</NavItem>
           </Nav>
           : this.props.status === 'not authenticated'
           ? <Nav pullRight>
-            <NavItem onClick={this.props.toSignUpStatus}>Sign up</NavItem>
+            <NavItem onClick={this.props.toSignUpStatus}>Registar</NavItem>
           </Nav>
           : <Nav />)
           }
