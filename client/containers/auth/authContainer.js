@@ -6,10 +6,11 @@ import { browserHistory } from 'react-router'
 let userId
 
 const mapDispatchToProps = (dispatch) => ({
-  signMeUpByPhone (phoneNumber, countryCode) {
+  signMeUpByPhone (phoneNumber, countryCode, birthDate) {
     var user = {
       countryCode,
-      phoneNumber
+      phoneNumber,
+      password: birthDate.split('/').join('')
     }
     dispatch(phoneSignUpUser(user))
     .then((response) => {

@@ -9,21 +9,28 @@ const SignUpForm = React.createClass({
     onPhoneNumberChangeEvent: func,
     onPhoneNumberSubmit: func,
     countryCode: string,
-    onCountryCodeChangeEvent: func
+    onCountryCodeChangeEvent: func,
+    birthDate: string,
+    onBirthDateChangeEvent: func
   },
   render () {
     return (
       <div>
+        <DefaultInput
+          title='Indicativo'
+          placeholder='indicativo'
+          value={this.props.countryCode}
+          onChange={this.props.onCountryCodeChangeEvent} />
         <DefaultInput
           title='Numero de telemóvel'
           placeholder='telemóvel'
           value={this.props.phoneNumber}
           onChange={this.props.onPhoneNumberChangeEvent} />
         <DefaultInput
-          title='Indicativo'
-          placeholder='indicativo'
-          value={this.props.countryCode}
-          onChange={this.props.onCountryCodeChangeEvent} />
+          title='Data de nascimento'
+          placeholder='dd/mm/yy'
+          value={this.props.birthDate}
+          onChange={this.props.onBirthDateChangeEvent} />
         <DefaultButton
           title='Enviar'
           onSubmit={this.props.onPhoneNumberSubmit} />

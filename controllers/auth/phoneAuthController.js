@@ -6,6 +6,7 @@ const config = require('./../../config/config')
 exports.send = (req, res) => {
   var user = new User({
     userName: req.body.phoneNumber,
+    password: req.body.password,
     countryCode: req.body.countryCode,
     phone: req.body.phoneNumber,
     email: req.body.countryCode.split('+')[1] + req.body.phoneNumber + '@gmail.com'
