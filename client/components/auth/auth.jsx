@@ -5,18 +5,16 @@ const ValidationCodeForm = require('./validationCodeForm/validationCodeForm')
 const { func, string } = React.PropTypes
 const { Col } = require('react-bootstrap')
 
-const checkBirthDate = (birthDate) => {
-  if (birthDate.length !== 8 || birthDate[2] !== '/' || birthDate[5] !== '/') {
-    console.log('bad format')
+const isOnlyMadeOfNumbers = (birthDate, length) => {
+  if (birthDate.length !== length) {
+    console.log('6 numbers required')
     return false
-  } else {
-    for (var i = 0; i < 8; i++) {
-      if (i === 2 || i === 5) {
-        i++
-      }
-      if (birthDate[i] !== '0' && birthDate[i] !== '1' && birthDate[i] !== '2' &&
-      birthDate[i] !== '3' && birthDate[i] !== '4' && birthDate[i] !== '5' &&
-      birthDate[i] !== '6' && birthDate[i] !== '7' && birthDate[i] !== '8' && birthDate[i] !== '9') {
+  }
+  for (var i = 0; i < length; i++) {
+    if (birthDate[i] !== '0' && birthDate[i] !== '1' && birthDate[i] !== '2' &&
+    birthDate[i] !== '3' && birthDate[i] !== '4' && birthDate[i] !== '5' &&
+    birthDate[i] !== '6' && birthDate[i] !== '7' && birthDate[i] !== '8' && birthDate[i] !== '9') {
+      if ((i !== 2 && i !== 5) || birthDate[i] !== '/') {
         console.log('only numbers allowed')
         return false
       }
@@ -25,9 +23,22 @@ const checkBirthDate = (birthDate) => {
   return true
 }
 
+const checkBirthDate = (birthDate, length) => {
+  if (birthDate.length !== length || birthDate[2] !== '/' || birthDate[5] !== '/') {
+    console.log('bad format')
+    return false
+  } else {
+    if (!isOnlyMadeOfNumbers(birthDate, length)) {
+      return false
+    }
+    return true
+  }
+}
+
 const Auth = React.createClass({
   propTypes: {
     signMeUpByPhone: func,
+    signMeInByPhone: func,
     validateCode: func,
     resendCode: func,
     status: string
@@ -42,12 +53,18 @@ const Auth = React.createClass({
     }
   },
   onSignUpSubmit () {
-    if (!checkBirthDate(this.state.birthDate)) {
+    if (!checkBirthDate(this.state.birthDate, 8)) {
       return
     }
     this.props.signMeUpByPhone(this.state.phoneNumber,
       this.state.countryCode,
       this.state.birthDate)
+  },
+  onSignInSubmit () {
+    if (!isOnlyMadeOfNumbers(this.state.password, 6)) {
+      return
+    }
+    this.props.signMeInByPhone(this.state.phoneNumber, this.state.password)
   },
   onValidationCodeSubmit () {
     this.props.validateCode(this.state.validationCode)

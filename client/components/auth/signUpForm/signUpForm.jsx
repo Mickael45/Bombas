@@ -7,7 +7,7 @@ const SignUpForm = React.createClass({
   propTypes: {
     phoneNumber: string,
     onPhoneNumberChangeEvent: func,
-    onPhoneNumberSubmit: func,
+    onSignUpSubmit: func,
     countryCode: string,
     onCountryCodeChangeEvent: func,
     birthDate: string,
@@ -34,7 +34,7 @@ const SignUpForm = React.createClass({
           onChange={this.props.onBirthDateChangeEvent} />
         <DefaultButton
           title='Enviar'
-          onSubmit={this.props.onPhoneNumberSubmit} />
+          onSubmit={this.props.onSignUpSubmit} />
       </div>
     )
   }

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { phoneSignUpUser, phoneValidateUser, phoneResendCode, signUpUserSuccess, signUpUserFailure } from '../../actions/users/phoneSignUp'
+import { phoneSignInUser, phoneSignUpUser, phoneValidateUser, phoneResendCode, signUpUserSuccess, signUpUserFailure } from '../../actions/users/phoneSignUp'
 import Auth from '../../components/auth/auth'
 import { browserHistory } from 'react-router'
 
@@ -34,6 +34,21 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(phoneResendCode(userId))
     .then((response) => {
       if (response.error) {
+        dispatch(signUpUserFailure(response.payload))
+      }
+    })
+  },
+  signMeInByPhone (phoneNumber, password) {
+    var user = {
+      phoneNumber,
+      password
+    }
+    dispatch(phoneSignInUser(user))
+    .then((response) => {
+      if (!response.error) {
+        dispatch(signUpUserSuccess(response.payload))
+        browserHistory.push('/profile')
+      } else {
         dispatch(signUpUserFailure(response.payload))
       }
     })
