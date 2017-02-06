@@ -31,3 +31,9 @@ export function meFromTokenFailure (error) {
     payload: error
   }
 }
+
+export function resetToken () {
+  return {
+    type: token.RESET_TOKEN
+  }
+}

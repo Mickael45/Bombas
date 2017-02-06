@@ -29428,14 +29428,19 @@
 	    Nav = _require.Nav,
 	    NavItem = _require.NavItem;
 
-	var func = React.PropTypes.func;
+	var _React$PropTypes = React.PropTypes,
+	    func = _React$PropTypes.func,
+	    string = _React$PropTypes.string;
 
 
 	var NavBar = React.createClass({
 	  displayName: 'NavBar',
 
 	  propTypes: {
-	    logout: func
+	    logout: func,
+	    status: string,
+	    toSignInStatus: func,
+	    toSignUpStatus: func
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -29458,7 +29463,7 @@
 	          ),
 	          React.createElement(Navbar.Toggle, null)
 	        ),
-	        React.createElement(
+	        this.props.status === 'authenticated' ? React.createElement(
 	          Nav,
 	          { pullRight: true },
 	          React.createElement(
@@ -29466,7 +29471,23 @@
 	            { onClick: this.props.logout },
 	            'Logout'
 	          )
-	        )
+	        ) : this.props.status === 'not subscribed' ? React.createElement(
+	          Nav,
+	          { pullRight: true },
+	          React.createElement(
+	            NavItem,
+	            { onClick: this.props.toSignInStatus },
+	            'Log in'
+	          )
+	        ) : this.props.status === 'not authenticated' ? React.createElement(
+	          Nav,
+	          { pullRight: true },
+	          React.createElement(
+	            NavItem,
+	            { onClick: this.props.toSignUpStatus },
+	            'Sign up'
+	          )
+	        ) : React.createElement(Nav, null)
 	      )
 	    );
 	  }
@@ -48490,7 +48511,8 @@
 	  token: { // Get current user(me) from token in localStorage
 	    ME_FROM_TOKEN: 'ME_FROM_TOKEN',
 	    ME_FROM_TOKEN_SUCCESS: 'ME_FROM_TOKEN_SUCCESS',
-	    ME_FROM_TOKEN_FAILURE: 'ME_FROM_TOKEN_FAILURE'
+	    ME_FROM_TOKEN_FAILURE: 'ME_FROM_TOKEN_FAILURE',
+	    RESET_TOKEN: 'RESET_TOKEN'
 	  },
 	  signUp: { // Sign Up User
 	    SIGNUP_USER: 'SIGNUP_USER',
@@ -48507,7 +48529,7 @@
 	  logout: { // log out user
 	    LOGOUT_USER: 'LOGOUT_USER'
 	  },
-	  INITIAL_STATE: { user: null, status: null, error: null, loading: false, token: null }
+	  INITIAL_STATE: { user: null, status: 'not subscribed', error: null, loading: false, token: null }
 	};
 
 /***/ },
@@ -50007,12 +50029,16 @@
 	        validationCode: this.state.validationCode,
 	        onValidationCodeChange: this.onValidationCodeChange,
 	        onValidationCodeSubmit: this.onValidationCodeSubmit,
-	        onResendCodeSubmit: this.onResendCodeSubmit }) : React.createElement(SignUpForm, {
+	        onResendCodeSubmit: this.onResendCodeSubmit }) : this.props.status === 'not subscribed' ? React.createElement(SignUpForm, {
 	        phoneNumber: this.state.phoneNumber,
 	        onPhoneNumberChangeEvent: this.onPhoneNumberChangeEvent,
 	        countryCode: this.state.countryCode,
 	        onCountryCodeChangeEvent: this.onCountryCodeChangeEvent,
-	        onPhoneNumberSubmit: this.onPhoneNumberSubmit })
+	        onPhoneNumberSubmit: this.onPhoneNumberSubmit }) : React.createElement(
+	        'h1',
+	        null,
+	        'Log in'
+	      )
 	    );
 	  }
 	});
@@ -50231,9 +50257,6 @@
 	          dispatch((0, _info.getInfoSuccess)(response.payload));
 	        }
 	      });
-	    },
-	    reinitState: function reinitState() {
-	      dispatch((0, _info.reinitState)());
 	    }
 	  };
 	};
@@ -50259,7 +50282,6 @@
 	exports.getInfo = getInfo;
 	exports.getInfoSuccess = getInfoSuccess;
 	exports.getInfoFailure = getInfoFailure;
-	exports.reinitState = reinitState;
 	var axios = __webpack_require__(537);
 	var strings = __webpack_require__(571);
 	var config = __webpack_require__(562);
@@ -50286,12 +50308,6 @@
 	  };
 	}
 
-	function reinitState() {
-	  return {
-	    type: strings.REINIT_STATE
-	  };
-	}
-
 /***/ },
 /* 571 */
 /***/ function(module, exports) {
@@ -50302,7 +50318,6 @@
 	  GETTING_INFO: 'GETTING_INFO',
 	  GETTING_INFO_SUCCESS: 'GETTING_INFO_SUCCESS',
 	  GETTING_INFO_FAILURE: 'GETTING_INFO_FAILURE',
-	  REINIT_STATE: 'REINIT_STATE',
 	  INITIAL_STATE: { data: null, status: null, error: null, loading: null }
 	};
 
@@ -50337,16 +50352,12 @@
 	  propTypes: {
 	    data: object,
 	    getInfo: func,
-	    resetState: func,
 	    status: string,
 	    lol: string,
 	    couilles: string
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this.props.getInfo();
-	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.props.resetState();
 	  },
 	  getInitialState: function getInitialState() {
 	    return {
@@ -51568,6 +51579,8 @@
 	      // return error and make loading = false
 	      var tokenError = action.payload.data || { message: action.payload.message };
 	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: tokenError, loading: false, token: '' }); // 2nd one is network or server down errors
+	    case _constantStrings.token.RESET_TOKEN:
+	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: '', loading: false, token: '' });
 	    case _constantStrings.signUp.WAITING_FOR_VALIDATION_CODE:
 	      if (action.error) {
 	        return state;
@@ -51580,9 +51593,9 @@
 	      return Object.assign({}, state, { user: action.payload.data.user, status: 'authenticated', error: null, loading: false, token: action.payload.data.token });
 	    case _constantStrings.signUp.SIGNUP_USER_FAILURE:
 	      var signUpError = action.payload.data || { message: action.payload.message };
-	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: signUpError, loading: false, token: '' });
+	      return Object.assign({}, state, { user: null, status: 'not subscribed', error: signUpError, loading: false, token: '' });
 	    case _constantStrings.signUp.RESET_USER:
-	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: null, loading: false, token: '' });
+	      return _constantStrings.INITIAL_STATE;
 	    default:
 	      return state;
 	  }
@@ -51611,8 +51624,6 @@
 	    case _constantStrings.GETTING_INFO_FAILURE:
 	      var err = action.payload.data || { message: action.payload.message };
 	      return Object.assign({}, state, { data: null, status: 'no data', error: err, loading: false });
-	    case _constantStrings.REINIT_STATE:
-	      return _constantStrings.INITIAL_STATE;
 	    default:
 	      return state;
 	  }
@@ -51715,6 +51726,7 @@
 	exports.meFromToken = meFromToken;
 	exports.meFromTokenSuccess = meFromTokenSuccess;
 	exports.meFromTokenFailure = meFromTokenFailure;
+	exports.resetToken = resetToken;
 
 	var _axios = __webpack_require__(537);
 
@@ -51753,6 +51765,12 @@
 	  return {
 	    type: _constantStrings.token.ME_FROM_TOKEN_FAILURE,
 	    payload: error
+	  };
+	}
+
+	function resetToken() {
+	  return {
+	    type: _constantStrings.token.RESET_TOKEN
 	  };
 	}
 
@@ -51822,6 +51840,8 @@
 
 	var _phoneSignUp = __webpack_require__(535);
 
+	var _token = __webpack_require__(591);
+
 	var _navBar = __webpack_require__(281);
 
 	var _navBar2 = _interopRequireDefault(_navBar);
@@ -51834,13 +51854,25 @@
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
 	    logout: function logout() {
-	      dispatch((0, _phoneSignUp.resetUser)());
+	      dispatch((0, _token.resetToken)());
 	      browserHistory.push('/auth');
+	    },
+	    toSignInStatus: function toSignInStatus() {
+	      dispatch((0, _token.resetToken)());
+	    },
+	    toSignUpStatus: function toSignUpStatus() {
+	      dispatch((0, _phoneSignUp.resetUser)());
 	    }
 	  };
 	};
 
-	module.exports = (0, _reactRedux.connect)(null, mapDispatchToProps)(_navBar2.default);
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    status: state.authReducer.status
+	  };
+	};
+
+	module.exports = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_navBar2.default);
 
 /***/ }
 /******/ ]);

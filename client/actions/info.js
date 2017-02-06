@@ -23,9 +23,3 @@ export function getInfoFailure (error) {
     payload: error
   }
 }
-
-export function reinitState () {
-  return {
-    type: strings.REINIT_STATE
-  }
-}

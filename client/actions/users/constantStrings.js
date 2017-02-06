@@ -2,7 +2,8 @@ module.exports = {
   token: { // Get current user(me) from token in localStorage
     ME_FROM_TOKEN: 'ME_FROM_TOKEN',
     ME_FROM_TOKEN_SUCCESS: 'ME_FROM_TOKEN_SUCCESS',
-    ME_FROM_TOKEN_FAILURE: 'ME_FROM_TOKEN_FAILURE'
+    ME_FROM_TOKEN_FAILURE: 'ME_FROM_TOKEN_FAILURE',
+    RESET_TOKEN: 'RESET_TOKEN'
   },
   signUp: { // Sign Up User
     SIGNUP_USER: 'SIGNUP_USER',
@@ -19,5 +20,5 @@ module.exports = {
   logout: { // log out user
     LOGOUT_USER: 'LOGOUT_USER'
   },
-  INITIAL_STATE: {user: null, status: null, error: null, loading: false, token: null}
+  INITIAL_STATE: {user: null, status: 'not subscribed', error: null, loading: false, token: null}
 }

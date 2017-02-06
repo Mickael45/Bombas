@@ -1,4 +1,4 @@
-import { GETTING_INFO, GETTING_INFO_SUCCESS, GETTING_INFO_FAILURE, REINIT_STATE, INITIAL_STATE } from './../actions/constantStrings'
+import { GETTING_INFO, GETTING_INFO_SUCCESS, GETTING_INFO_FAILURE, INITIAL_STATE } from './../actions/constantStrings'
 
 const infoReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -10,8 +10,6 @@ const infoReducer = (state = INITIAL_STATE, action) => {
     case GETTING_INFO_FAILURE:
       var err = action.payload.data || { message: action.payload.message }
       return Object.assign({}, state, { data: null, status: 'no data', error: err, loading: false })
-    case REINIT_STATE:
-      return INITIAL_STATE
     default:
       return state
   }

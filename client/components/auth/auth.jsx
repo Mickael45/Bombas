@@ -49,12 +49,14 @@ const Auth = React.createClass({
             onValidationCodeChange={this.onValidationCodeChange}
             onValidationCodeSubmit={this.onValidationCodeSubmit}
             onResendCodeSubmit={this.onResendCodeSubmit} />
-          : <SignUpForm
+          : this.props.status === 'not subscribed'
+          ? <SignUpForm
             phoneNumber={this.state.phoneNumber}
             onPhoneNumberChangeEvent={this.onPhoneNumberChangeEvent}
             countryCode={this.state.countryCode}
             onCountryCodeChangeEvent={this.onCountryCodeChangeEvent}
-            onPhoneNumberSubmit={this.onPhoneNumberSubmit} />)
+            onPhoneNumberSubmit={this.onPhoneNumberSubmit} />
+          : <h1>Log in</h1>)
         }
       </Col>
     )

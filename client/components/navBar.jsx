@@ -1,10 +1,13 @@
 const React = require('react')
 const { Navbar, Nav, NavItem } = require('react-bootstrap')
-const { func } = React.PropTypes
+const { func, string } = React.PropTypes
 
 const NavBar = React.createClass({
   propTypes: {
-    logout: func
+    logout: func,
+    status: string,
+    toSignInStatus: func,
+    toSignUpStatus: func
   },
   render () {
     return (
@@ -16,9 +19,21 @@ const NavBar = React.createClass({
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
-          <Nav pullRight>
-            <NavItem onClick={this.props.logout}>Logout</NavItem>
+          {
+            (this.props.status === 'authenticated'
+            ? <Nav pullRight>
+              <NavItem onClick={this.props.logout}>Logout</NavItem>
+            </Nav>
+          : this.props.status === 'not subscribed'
+          ? <Nav pullRight>
+            <NavItem onClick={this.props.toSignInStatus}>Log in</NavItem>
           </Nav>
+          : this.props.status === 'not authenticated'
+          ? <Nav pullRight>
+            <NavItem onClick={this.props.toSignUpStatus}>Sign up</NavItem>
+          </Nav>
+          : <Nav />)
+          }
         </Navbar>
       </div>
     )
