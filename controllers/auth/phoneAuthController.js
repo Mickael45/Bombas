@@ -86,3 +86,21 @@ exports.getByToken = (req, res) => {
     })
   })
 }
+
+exports.signIn = (req, res) => {
+  User.findOne({'phone': req.body.phoneNumber}, function (err, user) {
+    if (err || !user) {
+      return res.status(404).json({ message: 'User not found', error: err })
+    }
+    var result = user.comparePassword(req.body.password)
+    if (!result) {
+      return res.status(400).json({ message: 'Bad password', error: err })
+    }
+    console.log('Ok')
+    return res.json({
+      message: 'User successfully found',
+      user: user,
+      token: tokenGenerator.generateToken(user)
+    })
+  })
+}

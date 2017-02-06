@@ -4,7 +4,7 @@ const userTokenController = require('./../controllers/user/userAuthyController')
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, unique: true },
-  password: { type: String, select: false },
+  password: String,
   isAdmin: { type: Boolean, default: false, select: false },
   authyId: String,
   countryCode: String,
@@ -22,8 +22,9 @@ UserSchema.pre('save', function (next) {
     if (err) {
       return next(err)
     }
-    user.pasword = hash
-    next()
+
+    user.password = hash
+    next(user)
   })
 })
 

@@ -8,7 +8,8 @@ const SignUpForm = React.createClass({
     phoneNumber: string,
     onPhoneNumberChangeEvent: func,
     password: string,
-    onPasswordChangeEvent: func
+    onPasswordChangeEvent: func,
+    onSignInSubmit: func
   },
   render () {
     return (
@@ -23,10 +24,10 @@ const SignUpForm = React.createClass({
           title='PIN'
           placeholder='******'
           value={this.props.password}
-          onChange={this.props.onBirthDateChangeEvent} />
+          onChange={this.props.onPasswordChangeEvent} />
         <DefaultButton
           title='Enviar'
-          onSubmit={this.props.onPhoneNumberSubmit} />
+          onSubmit={this.props.onSignInSubmit} />
       </div>
     )
   }

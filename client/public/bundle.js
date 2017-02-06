@@ -24338,6 +24338,7 @@
 	  value: true
 	});
 	exports.phoneSignUpUser = phoneSignUpUser;
+	exports.phoneSignInUser = phoneSignInUser;
 	exports.phoneValidateUser = phoneValidateUser;
 	exports.phoneResendCode = phoneResendCode;
 	exports.signUpUserSuccess = signUpUserSuccess;
@@ -24354,6 +24355,14 @@
 	  var request = axios.post(config.SERVER_URL + '/auth/phone', user);
 	  return {
 	    type: _constantStrings.signUp.WAITING_FOR_VALIDATION_CODE,
+	    payload: request
+	  };
+	}
+
+	function phoneSignInUser(user) {
+	  var request = axios.post(config.SERVER_URL + '/auth/phone/signIn', user);
+	  return {
+	    type: _constantStrings.signUp.SIGNUP_USER,
 	    payload: request
 	  };
 	}
@@ -50165,6 +50174,20 @@
 	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload));
 	        }
 	      });
+	    },
+	    signMeInByPhone: function signMeInByPhone(phoneNumber, password) {
+	      var user = {
+	        phoneNumber: phoneNumber,
+	        password: password
+	      };
+	      dispatch((0, _phoneSignUp.phoneSignInUser)(user)).then(function (response) {
+	        if (!response.error) {
+	          dispatch((0, _phoneSignUp.signUpUserSuccess)(response.payload));
+	          _reactRouter.browserHistory.push('/profile');
+	        } else {
+	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload));
+	        }
+	      });
 	    }
 	  };
 	};
@@ -50199,16 +50222,14 @@
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
 
-	var checkBirthDate = function checkBirthDate(birthDate) {
-	  if (birthDate.length !== 8 || birthDate[2] !== '/' || birthDate[5] !== '/') {
-	    console.log('bad format');
+	var isOnlyMadeOfNumbers = function isOnlyMadeOfNumbers(birthDate, length) {
+	  if (birthDate.length !== length) {
+	    console.log('6 numbers required');
 	    return false;
-	  } else {
-	    for (var i = 0; i < 8; i++) {
-	      if (i === 2 || i === 5) {
-	        i++;
-	      }
-	      if (birthDate[i] !== '0' && birthDate[i] !== '1' && birthDate[i] !== '2' && birthDate[i] !== '3' && birthDate[i] !== '4' && birthDate[i] !== '5' && birthDate[i] !== '6' && birthDate[i] !== '7' && birthDate[i] !== '8' && birthDate[i] !== '9') {
+	  }
+	  for (var i = 0; i < length; i++) {
+	    if (birthDate[i] !== '0' && birthDate[i] !== '1' && birthDate[i] !== '2' && birthDate[i] !== '3' && birthDate[i] !== '4' && birthDate[i] !== '5' && birthDate[i] !== '6' && birthDate[i] !== '7' && birthDate[i] !== '8' && birthDate[i] !== '9') {
+	      if (i !== 2 && i !== 5 || birthDate[i] !== '/') {
 	        console.log('only numbers allowed');
 	        return false;
 	      }
@@ -50217,11 +50238,24 @@
 	  return true;
 	};
 
+	var checkBirthDate = function checkBirthDate(birthDate, length) {
+	  if (birthDate.length !== length || birthDate[2] !== '/' || birthDate[5] !== '/') {
+	    console.log('bad format');
+	    return false;
+	  } else {
+	    if (!isOnlyMadeOfNumbers(birthDate, length)) {
+	      return false;
+	    }
+	    return true;
+	  }
+	};
+
 	var Auth = React.createClass({
 	  displayName: 'Auth',
 
 	  propTypes: {
 	    signMeUpByPhone: func,
+	    signMeInByPhone: func,
 	    validateCode: func,
 	    resendCode: func,
 	    status: string
@@ -50236,10 +50270,16 @@
 	    };
 	  },
 	  onSignUpSubmit: function onSignUpSubmit() {
-	    if (!checkBirthDate(this.state.birthDate)) {
+	    if (!checkBirthDate(this.state.birthDate, 8)) {
 	      return;
 	    }
 	    this.props.signMeUpByPhone(this.state.phoneNumber, this.state.countryCode, this.state.birthDate);
+	  },
+	  onSignInSubmit: function onSignInSubmit() {
+	    if (!isOnlyMadeOfNumbers(this.state.password, 6)) {
+	      return;
+	    }
+	    this.props.signMeInByPhone(this.state.phoneNumber, this.state.password);
 	  },
 	  onValidationCodeSubmit: function onValidationCodeSubmit() {
 	    this.props.validateCode(this.state.validationCode);
@@ -50309,7 +50349,7 @@
 	  propTypes: {
 	    phoneNumber: string,
 	    onPhoneNumberChangeEvent: func,
-	    onPhoneNumberSubmit: func,
+	    onSignUpSubmit: func,
 	    countryCode: string,
 	    onCountryCodeChangeEvent: func,
 	    birthDate: string,
@@ -50341,7 +50381,7 @@
 	        onChange: this.props.onBirthDateChangeEvent }),
 	      React.createElement(DefaultButton, {
 	        title: 'Enviar',
-	        onSubmit: this.props.onPhoneNumberSubmit })
+	        onSubmit: this.props.onSignUpSubmit })
 	    );
 	  }
 	});
@@ -51938,7 +51978,8 @@
 	    phoneNumber: string,
 	    onPhoneNumberChangeEvent: func,
 	    password: string,
-	    onPasswordChangeEvent: func
+	    onPasswordChangeEvent: func,
+	    onSignInSubmit: func
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -51958,10 +51999,10 @@
 	        title: 'PIN',
 	        placeholder: '******',
 	        value: this.props.password,
-	        onChange: this.props.onBirthDateChangeEvent }),
+	        onChange: this.props.onPasswordChangeEvent }),
 	      React.createElement(DefaultButton, {
 	        title: 'Enviar',
-	        onSubmit: this.props.onPhoneNumberSubmit })
+	        onSubmit: this.props.onSignInSubmit })
 	    );
 	  }
 	});

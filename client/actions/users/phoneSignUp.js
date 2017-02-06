@@ -10,6 +10,14 @@ export function phoneSignUpUser (user) {
   }
 }
 
+export function phoneSignInUser (user) {
+  var request = axios.post(`${config.SERVER_URL}/auth/phone/signIn`, user)
+  return {
+    type: signUp.SIGNUP_USER,
+    payload: request
+  }
+}
+
 export function phoneValidateUser (code, userId) {
   var request = axios.post(`${config.SERVER_URL}/auth/phone/${userId}/verify`, {code})
   return {
