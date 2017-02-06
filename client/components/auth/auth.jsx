@@ -1,5 +1,6 @@
 const React = require('react')
 const SignUpForm = require('./signUpForm/signUpForm')
+const SignInForm = require('./signInForm/signInForm')
 const ValidationCodeForm = require('./validationCodeForm/validationCodeForm')
 const { func, string } = React.PropTypes
 const { Col } = require('react-bootstrap')
@@ -36,11 +37,11 @@ const Auth = React.createClass({
       phoneNumber: '',
       countryCode: '',
       validationCode: '',
-      birthDate: ''
+      birthDate: '',
+      password: ''
     }
   },
-  onPhoneNumberSubmit () {
-    console.log('----------Phone submit----------')
+  onSignUpSubmit () {
     if (!checkBirthDate(this.state.birthDate)) {
       return
     }
@@ -49,11 +50,9 @@ const Auth = React.createClass({
       this.state.birthDate)
   },
   onValidationCodeSubmit () {
-    console.log('----------Validation code submit----------')
     this.props.validateCode(this.state.validationCode)
   },
   onResendCodeSubmit () {
-    console.log('----------Resend code submit----------')
     this.props.resendCode()
   },
   onPhoneNumberChangeEvent (e) {
@@ -67,6 +66,9 @@ const Auth = React.createClass({
   },
   onBirthDateChangeEvent (e) {
     this.setState({ birthDate: e.target.value })
+  },
+  onPasswordChangeEvent (e) {
+    this.setState({ password: e.target.value })
   },
   render () {
     return (
@@ -84,10 +86,15 @@ const Auth = React.createClass({
             onPhoneNumberChangeEvent={this.onPhoneNumberChangeEvent}
             countryCode={this.state.countryCode}
             onCountryCodeChangeEvent={this.onCountryCodeChangeEvent}
-            onPhoneNumberSubmit={this.onPhoneNumberSubmit}
+            onSignUpSubmit={this.onSignUpSubmit}
             birthDate={this.state.birthDate}
             onBirthDateChangeEvent={this.onBirthDateChangeEvent} />
-          : <h1>Log in</h1>)
+          : <SignInForm
+            phoneNumber={this.state.phoneNumber}
+            onPhoneNumberChangeEvent={this.onPhoneNumberChangeEvent}
+            onSignInSubmit={this.onSignInSubmit}
+            password={this.state.password}
+            onPasswordChangeEvent={this.onPasswordChangeEvent} />)
         }
       </Col>
     )

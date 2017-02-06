@@ -25975,7 +25975,7 @@
 	          React.createElement(
 	            NavItem,
 	            { onClick: this.props.logout },
-	            'Logout'
+	            'Sair'
 	          )
 	        ) : this.props.status === 'not subscribed' ? React.createElement(
 	          Nav,
@@ -25983,7 +25983,7 @@
 	          React.createElement(
 	            NavItem,
 	            { onClick: this.props.toSignInStatus },
-	            'Log in'
+	            'Entrar'
 	          )
 	        ) : this.props.status === 'not authenticated' ? React.createElement(
 	          Nav,
@@ -25991,7 +25991,7 @@
 	          React.createElement(
 	            NavItem,
 	            { onClick: this.props.toSignUpStatus },
-	            'Sign up'
+	            'Registar'
 	          )
 	        ) : React.createElement(Nav, null)
 	      )
@@ -50190,6 +50190,7 @@
 
 	var React = __webpack_require__(1);
 	var SignUpForm = __webpack_require__(568);
+	var SignInForm = __webpack_require__(594);
 	var ValidationCodeForm = __webpack_require__(571);
 	var _React$PropTypes = React.PropTypes,
 	    func = _React$PropTypes.func,
@@ -50230,22 +50231,20 @@
 	      phoneNumber: '',
 	      countryCode: '',
 	      validationCode: '',
-	      birthDate: ''
+	      birthDate: '',
+	      password: ''
 	    };
 	  },
-	  onPhoneNumberSubmit: function onPhoneNumberSubmit() {
-	    console.log('----------Phone submit----------');
+	  onSignUpSubmit: function onSignUpSubmit() {
 	    if (!checkBirthDate(this.state.birthDate)) {
 	      return;
 	    }
 	    this.props.signMeUpByPhone(this.state.phoneNumber, this.state.countryCode, this.state.birthDate);
 	  },
 	  onValidationCodeSubmit: function onValidationCodeSubmit() {
-	    console.log('----------Validation code submit----------');
 	    this.props.validateCode(this.state.validationCode);
 	  },
 	  onResendCodeSubmit: function onResendCodeSubmit() {
-	    console.log('----------Resend code submit----------');
 	    this.props.resendCode();
 	  },
 	  onPhoneNumberChangeEvent: function onPhoneNumberChangeEvent(e) {
@@ -50260,6 +50259,9 @@
 	  onBirthDateChangeEvent: function onBirthDateChangeEvent(e) {
 	    this.setState({ birthDate: e.target.value });
 	  },
+	  onPasswordChangeEvent: function onPasswordChangeEvent(e) {
+	    this.setState({ password: e.target.value });
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      Col,
@@ -50273,13 +50275,14 @@
 	        onPhoneNumberChangeEvent: this.onPhoneNumberChangeEvent,
 	        countryCode: this.state.countryCode,
 	        onCountryCodeChangeEvent: this.onCountryCodeChangeEvent,
-	        onPhoneNumberSubmit: this.onPhoneNumberSubmit,
+	        onSignUpSubmit: this.onSignUpSubmit,
 	        birthDate: this.state.birthDate,
-	        onBirthDateChangeEvent: this.onBirthDateChangeEvent }) : React.createElement(
-	        'h1',
-	        null,
-	        'Log in'
-	      )
+	        onBirthDateChangeEvent: this.onBirthDateChangeEvent }) : React.createElement(SignInForm, {
+	        phoneNumber: this.state.phoneNumber,
+	        onPhoneNumberChangeEvent: this.onPhoneNumberChangeEvent,
+	        onSignInSubmit: this.onSignInSubmit,
+	        password: this.state.password,
+	        onPasswordChangeEvent: this.onPasswordChangeEvent })
 	    );
 	  }
 	});
@@ -50316,6 +50319,11 @@
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Registar'
+	      ),
 	      React.createElement(DefaultInput, {
 	        title: 'Indicativo',
 	        placeholder: 'indicativo',
@@ -51908,6 +51916,57 @@
 	    // Ignore write error
 	  }
 	};
+
+/***/ },
+/* 594 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var DefaultInput = __webpack_require__(569);
+	var DefaultButton = __webpack_require__(570);
+	var _React$PropTypes = React.PropTypes,
+	    string = _React$PropTypes.string,
+	    func = _React$PropTypes.func;
+
+
+	var SignUpForm = React.createClass({
+	  displayName: 'SignUpForm',
+
+	  propTypes: {
+	    phoneNumber: string,
+	    onPhoneNumberChangeEvent: func,
+	    password: string,
+	    onPasswordChangeEvent: func
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Entrar'
+	      ),
+	      React.createElement(DefaultInput, {
+	        title: 'Numero de telem\xF3vel',
+	        placeholder: 'telem\xF3vel',
+	        value: this.props.phoneNumber,
+	        onChange: this.props.onPhoneNumberChangeEvent }),
+	      React.createElement(DefaultInput, {
+	        title: 'PIN',
+	        placeholder: '******',
+	        value: this.props.password,
+	        onChange: this.props.onBirthDateChangeEvent }),
+	      React.createElement(DefaultButton, {
+	        title: 'Enviar',
+	        onSubmit: this.props.onPhoneNumberSubmit })
+	    );
+	  }
+	});
+
+	module.exports = SignUpForm;
 
 /***/ }
 /******/ ]);
