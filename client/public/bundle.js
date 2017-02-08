@@ -21539,9 +21539,9 @@
 	var React = __webpack_require__(1);
 	var App = __webpack_require__(227);
 	var Auth = __webpack_require__(565);
-	var Profile = __webpack_require__(573);
+	var Profile = __webpack_require__(578);
 
-	var store = __webpack_require__(583);
+	var store = __webpack_require__(587);
 
 	var _require = __webpack_require__(511),
 	    Router = _require.Router,
@@ -50117,7 +50117,7 @@
 
 	var React = __webpack_require__(1);
 	var AuthContainer = __webpack_require__(566);
-	var ButtonContainer = __webpack_require__(596);
+	var ButtonContainer = __webpack_require__(573);
 
 	var Auth = function Auth() {
 	  return React.createElement(
@@ -50576,8 +50576,298 @@
 
 	'use strict';
 
+	var _reactRedux = __webpack_require__(179);
+
+	var _xml = __webpack_require__(574);
+
+	var _xmlGeneratorButton = __webpack_require__(577);
+
+	var _xmlGeneratorButton2 = _interopRequireDefault(_xmlGeneratorButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    getXml: function getXml() {
+	      dispatch((0, _xml.getXml)()).then(function (response) {
+	        if (response.error) {
+	          dispatch((0, _xml.getXmlFailure)(response.payload));
+	        } else {
+	          dispatch((0, _xml.sendXmlToServer)(response.payload)).then(function (response) {
+	            if (response.error) {
+	              dispatch((0, _xml.getXmlFailure)(response.payload));
+	            }
+	            dispatch((0, _xml.getXmlSuccess)(response.payload));
+	          });
+	        }
+	      });
+	    }
+	  };
+	};
+
+	module.exports = (0, _reactRedux.connect)(null, mapDispatchToProps)(_xmlGeneratorButton2.default);
+
+/***/ },
+/* 574 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.sendXmlToServer = sendXmlToServer;
+	exports.getXml = getXml;
+	exports.getXmlSuccess = getXmlSuccess;
+	exports.getXmlFailure = getXmlFailure;
+	var axios = __webpack_require__(231);
+	var strings = __webpack_require__(575);
+	var config = __webpack_require__(256);
+	var jsonHelper = __webpack_require__(576);
+
+	function sendXmlToServer(obj) {
+	  var request = axios.get(config.SERVER_URL + '/auth/xml', obj);
+
+	  return {
+	    type: strings.GETTING_XML,
+	    payload: request
+	  };
+	}
+
+	var getClientIds = function getClientIds(obj, cb) {
+	  var clientsIds = [];
+
+	  obj.vehicles.forEach(function (vehicle) {
+	    clientsIds.push({ _id: vehicle.cliente_id });
+	  });
+	  axios.get(config.SERVER_URL + '/auth/clients', clientsIds).then(function (response) {
+	    if (response.error) {
+	      return getXmlFailure();
+	    }
+	    obj.clients = response.data;
+	    cb(obj, sendXmlToServer);
+	  });
+	};
+
+	var getVehiclesIds = function getVehiclesIds(obj, cb) {
+	  var vehicleIds = [];
+
+	  obj.supplies.forEach(function (supply) {
+	    vehicleIds.push({ _id: supply.veiculo_id });
+	  });
+	  axios.get(config.SERVER_URL + '/auth/vehicles', vehicleIds).then(function (response) {
+	    if (response.error) {
+	      return getXmlFailure();
+	    }
+	    obj.vehicles = response.data;
+	    cb(obj, jsonHelper.createJson);
+	  });
+	};
+
+	var getSuppliesIds = function getSuppliesIds(obj, cb) {
+	  var stationsIds = [];
+
+	  obj.stations.forEach(function (station) {
+	    stationsIds.push({ _id: station.Abastecimento });
+	  });
+	  axios.get(config.SERVER_URL + '/auth/supplies', stationsIds).then(function (response) {
+	    if (response.error) {
+	      return getXmlFailure();
+	    }
+	    obj.supplies = response.data;
+	    cb(obj, getClientIds);
+	  });
+	};
+
+	function getXml() {
+	  var obj = {};
+	  var request = axios.get(config.SERVER_URL + '/auth/stations').then(function (response) {
+	    if (response.error) {
+	      return getXmlSuccess(response.error);
+	    }
+	    obj.stations = response.data;
+	    getSuppliesIds(obj, getVehiclesIds);
+	  });
+	  return {
+	    type: strings.GETTING_XML,
+	    payload: request
+	  };
+	}
+
+	function getXmlSuccess(xml) {
+	  return {
+	    type: strings.GETTING_XML_SUCCESS,
+	    payload: xml
+	  };
+	}
+
+	function getXmlFailure(error) {
+	  return {
+	    type: strings.GETTING_XML_FAILURE,
+	    payload: error
+	  };
+	}
+
+/***/ },
+/* 575 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = {
+	  GETTING_INFO: 'GETTING_INFO',
+	  GETTING_INFO_SUCCESS: 'GETTING_INFO_SUCCESS',
+	  GETTING_INFO_FAILURE: 'GETTING_INFO_FAILURE',
+	  GETTING_XML: 'GETTING_XML',
+	  GETTING_XML_SUCCESS: 'GETTING_XML_SUCCESS',
+	  GETTING_XML_FAILURE: 'GETTING_XML_SUCCESS',
+	  SENDDING_INFO: 'SENDING_INFO_SUCCESS',
+	  SENDING_INFO_FAILURE: 'SENDING_INFO_FAILURE',
+	  SENDING_INFO_SUCCESS: 'SENDING_INFO_SUCCESS',
+	  INITIAL_STATE: { data: null, status: null, error: null, loading: null }
+	};
+
+/***/ },
+/* 576 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var findClientById = function findClientById(obj, clientId) {
+	  for (var i = 0; i < obj.clients.length; i++) {
+	    if (obj.clients[i]._id === clientId) {
+	      return obj.clients[i];
+	    }
+	  }
+	};
+
+	var createClientObject = function createClientObject(obj, vehicle) {
+	  var client = findClientById(obj, vehicle);
+
+	  return {
+	    pais: client.pais,
+	    vat: client.vat
+	  };
+	};
+
+	var findVehicleById = function findVehicleById(obj, vehicleId) {
+	  for (var i = 0; i < obj.vehicles.length; i++) {
+	    if (obj.vehicles[i]._id === vehicleId) {
+	      return obj.vehicles[i];
+	    }
+	  }
+	};
+
+	var createVehicleObject = function createVehicleObject(obj, vehicleId) {
+	  var foundVehicle = findVehicleById(obj, vehicleId);
+
+	  var vehicle = {
+	    vehicle: {
+	      pais: foundVehicle.pais,
+	      matricula: foundVehicle.matricula,
+	      combustivel: foundVehicle.combustivel,
+	      km: foundVehicle.km
+	    },
+	    client_id: foundVehicle.cliente_id
+	  };
+	  if (vehicle.pais !== 'PT') {
+	    vehicle.pesoBruto = foundVehicle.pesoBruto;
+	  }
+	  return vehicle;
+	};
+
+	var filterSupplyByStationId = function filterSupplyByStationId(obj, stationId) {
+	  var supplies = [];
+	  obj.supplies.forEach(function (supply) {
+	    if (supply.station_id === stationId) {
+	      supplies.push(supply);
+	    }
+	  });
+	  return supplies;
+	};
+
+	var createSupplyObj = function createSupplyObj(obj, stationId) {
+	  var stationSupplies = [];
+	  var supplyIndex = 0;
+	  var supplies = filterSupplyByStationId(obj, stationId);
+
+	  supplies.forEach(function (supply) {
+	    stationSupplies.push({
+	      _registo: supply._registo,
+	      _transacao: supply._transacao,
+	      dataAbastecimento: supply.dataAbastecimento,
+	      volumeAbastecimento: supply.volumeAbastecimento,
+	      cartaoProfissional: supply.cartaoProfissional
+	    });
+	    var vehicle = createVehicleObject(obj, supply.veiculo_id);
+	    stationSupplies[supplyIndex].veiculo = vehicle.vehicle;
+	    stationSupplies[supplyIndex++].sujeitoPassivo = createClientObject(obj, vehicle.client_id);
+	  });
+	  return stationSupplies;
+	};
+
+	var populateStations = function populateStations(obj, proSupply) {
+	  obj.stations.forEach(function (station) {
+	    proSupply.Abastecimentos.push({
+	      _idPosto: station._idPosto,
+	      Abastecimento: createSupplyObj(obj, station._id)
+	    });
+	  });
+	};
+
+	exports.createJson = function (obj, cb) {
+	  var proSupply = {
+	    '_xmlns': 'http://www.at.gov.pt/2016/AbastecimentoProfissional',
+	    '_xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+	    '_xsi:schemaLocation': 'http://www.at.gov.pt/2016/AbastecimentoProfissional AbastecimentoPro.xsd',
+	    '_versao': '1',
+	    'Abastecimentos': []
+	  };
+	  populateStations(obj, proSupply);
+	  cb(proSupply);
+	};
+
+/***/ },
+/* 577 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var React = __webpack_require__(1);
-	var ProfileContainer = __webpack_require__(574);
+	var func = React.PropTypes.func;
+
+	var _require = __webpack_require__(259),
+	    Button = _require.Button;
+
+	var DefaultButton = React.createClass({
+	  displayName: 'DefaultButton',
+
+	  propTypes: {
+	    getXml: func
+	  },
+	  onSubmit: function onSubmit() {
+	    this.props.getXml();
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      Button,
+	      { bsStyle: 'primary',
+	        onClick: this.onSubmit },
+	      'XML'
+	    );
+	  }
+	});
+
+	module.exports = DefaultButton;
+
+/***/ },
+/* 578 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var ProfileContainer = __webpack_require__(579);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -50589,16 +50879,16 @@
 	module.exports = Profile;
 
 /***/ },
-/* 574 */
+/* 579 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _reactRedux = __webpack_require__(179);
 
-	var _info = __webpack_require__(575);
+	var _info = __webpack_require__(580);
 
-	var _profile = __webpack_require__(577);
+	var _profile = __webpack_require__(581);
 
 	var _profile2 = _interopRequireDefault(_profile);
 
@@ -50637,7 +50927,7 @@
 	module.exports = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_profile2.default);
 
 /***/ },
-/* 575 */
+/* 580 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50652,7 +50942,7 @@
 	exports.sendInfoSuccess = sendInfoSuccess;
 	exports.sendInfoFailure = sendInfoFailure;
 	var axios = __webpack_require__(231);
-	var strings = __webpack_require__(576);
+	var strings = __webpack_require__(575);
 	var config = __webpack_require__(256);
 
 	function getInfo() {
@@ -50700,26 +50990,7 @@
 	}
 
 /***/ },
-/* 576 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = {
-	  GETTING_INFO: 'GETTING_INFO',
-	  GETTING_INFO_SUCCESS: 'GETTING_INFO_SUCCESS',
-	  GETTING_INFO_FAILURE: 'GETTING_INFO_FAILURE',
-	  GETTING_XML: 'GETTING_XML',
-	  GETTING_XML_SUCCESS: 'GETTING_XML_SUCCESS',
-	  GETTING_XML_FAILURE: 'GETTING_XML_SUCCESS',
-	  SENDDING_INFO: 'SENDING_INFO_SUCCESS',
-	  SENDING_INFO_FAILURE: 'SENDING_INFO_FAILURE',
-	  SENDING_INFO_SUCCESS: 'SENDING_INFO_SUCCESS',
-	  INITIAL_STATE: { data: null, status: null, error: null, loading: null }
-	};
-
-/***/ },
-/* 577 */
+/* 581 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50727,10 +50998,10 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var React = __webpack_require__(1);
-	var GasStationInfoTile = __webpack_require__(578);
-	var VehicleInfoTile = __webpack_require__(580);
-	var SupplyInfoTile = __webpack_require__(581);
-	var InvoiceInfoTile = __webpack_require__(582);
+	var GasStationInfoTile = __webpack_require__(582);
+	var VehicleInfoTile = __webpack_require__(584);
+	var SupplyInfoTile = __webpack_require__(585);
+	var InvoiceInfoTile = __webpack_require__(586);
 	var DefaultButton = __webpack_require__(570);
 
 	var _require = __webpack_require__(259),
@@ -50814,13 +51085,13 @@
 	module.exports = Profile;
 
 /***/ },
-/* 578 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(579);
+	var DefaultBox = __webpack_require__(583);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -50873,7 +51144,7 @@
 	module.exports = GasStationInfoTile;
 
 /***/ },
-/* 579 */
+/* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50912,13 +51183,13 @@
 	module.exports = DefaultBox;
 
 /***/ },
-/* 580 */
+/* 584 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(579);
+	var DefaultBox = __webpack_require__(583);
 	var DefaultInput = __webpack_require__(569);
 
 	var _require = __webpack_require__(259),
@@ -51000,15 +51271,15 @@
 	module.exports = VehicleInfoTile;
 
 /***/ },
-/* 581 */
+/* 585 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DateAndTimeBox = __webpack_require__(579);
-	var GasAmountBox = __webpack_require__(579);
-	var GasPriceBox = __webpack_require__(579);
+	var DateAndTimeBox = __webpack_require__(583);
+	var GasAmountBox = __webpack_require__(583);
+	var GasPriceBox = __webpack_require__(583);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -51061,14 +51332,14 @@
 	module.exports = SupplyInfoTile;
 
 /***/ },
-/* 582 */
+/* 586 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var InvoiceNumberBox = __webpack_require__(579);
-	var DateAndTimeBox = __webpack_require__(579);
+	var InvoiceNumberBox = __webpack_require__(583);
+	var DateAndTimeBox = __webpack_require__(583);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -51113,7 +51384,7 @@
 	module.exports = InvoiceInfoTile;
 
 /***/ },
-/* 583 */
+/* 587 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51122,15 +51393,15 @@
 
 	var _redux = __webpack_require__(190);
 
-	var _reduxPromise = __webpack_require__(584);
+	var _reduxPromise = __webpack_require__(588);
 
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 
-	var _reducers = __webpack_require__(591);
+	var _reducers = __webpack_require__(595);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _localStorage = __webpack_require__(595);
+	var _localStorage = __webpack_require__(599);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51151,7 +51422,7 @@
 	module.exports = store;
 
 /***/ },
-/* 584 */
+/* 588 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51170,7 +51441,7 @@
 
 	exports['default'] = promiseMiddleware;
 
-	var _fluxStandardAction = __webpack_require__(585);
+	var _fluxStandardAction = __webpack_require__(589);
 
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -51197,7 +51468,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 585 */
+/* 589 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51210,7 +51481,7 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 
-	var _lodashIsplainobject = __webpack_require__(586);
+	var _lodashIsplainobject = __webpack_require__(590);
 
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 
@@ -51229,7 +51500,7 @@
 	}
 
 /***/ },
-/* 586 */
+/* 590 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51244,9 +51515,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(587),
-	    isArguments = __webpack_require__(588),
-	    keysIn = __webpack_require__(589);
+	var baseFor = __webpack_require__(591),
+	    isArguments = __webpack_require__(592),
+	    keysIn = __webpack_require__(593);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -51340,7 +51611,7 @@
 	module.exports = isPlainObject;
 
 /***/ },
-/* 587 */
+/* 591 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -51395,7 +51666,7 @@
 	module.exports = baseFor;
 
 /***/ },
-/* 588 */
+/* 592 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -51631,7 +51902,7 @@
 	module.exports = isArguments;
 
 /***/ },
-/* 589 */
+/* 593 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51646,8 +51917,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(588),
-	    isArray = __webpack_require__(590);
+	var isArguments = __webpack_require__(592),
+	    isArray = __webpack_require__(594);
 
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -51770,7 +52041,7 @@
 	module.exports = keysIn;
 
 /***/ },
-/* 590 */
+/* 594 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -51956,20 +52227,20 @@
 	module.exports = isArray;
 
 /***/ },
-/* 591 */
+/* 595 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _authReducer = __webpack_require__(592);
+	var _authReducer = __webpack_require__(596);
 
 	var _authReducer2 = _interopRequireDefault(_authReducer);
 
-	var _infoReducer = __webpack_require__(593);
+	var _infoReducer = __webpack_require__(597);
 
 	var _infoReducer2 = _interopRequireDefault(_infoReducer);
 
-	var _xmlReducer = __webpack_require__(594);
+	var _xmlReducer = __webpack_require__(598);
 
 	var _xmlReducer2 = _interopRequireDefault(_xmlReducer);
 
@@ -51986,7 +52257,7 @@
 	module.exports = rootReducer;
 
 /***/ },
-/* 592 */
+/* 596 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52033,12 +52304,12 @@
 	module.exports = authReducer;
 
 /***/ },
-/* 593 */
+/* 597 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _constantStrings = __webpack_require__(576);
+	var _constantStrings = __webpack_require__(575);
 
 	var infoReducer = function infoReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constantStrings.INITIAL_STATE;
@@ -52069,12 +52340,12 @@
 	module.exports = infoReducer;
 
 /***/ },
-/* 594 */
+/* 598 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _constantStrings = __webpack_require__(576);
+	var _constantStrings = __webpack_require__(575);
 
 	var xmlReducer = function xmlReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constantStrings.INITIAL_STATE;
@@ -52096,7 +52367,7 @@
 	module.exports = xmlReducer;
 
 /***/ },
-/* 595 */
+/* 599 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -52123,271 +52394,6 @@
 	  } catch (err) {
 	    // Ignore write error
 	  }
-	};
-
-/***/ },
-/* 596 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactRedux = __webpack_require__(179);
-
-	var _xml = __webpack_require__(597);
-
-	var _xmlGeneratorButton = __webpack_require__(598);
-
-	var _xmlGeneratorButton2 = _interopRequireDefault(_xmlGeneratorButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    getXml: function getXml() {
-	      dispatch((0, _xml.getXml)()).then(function (response) {
-	        if (response.error) {
-	          dispatch((0, _xml.getXmlFailure)(response.payload));
-	        } else {
-	          dispatch((0, _xml.getXmlSuccess)(response.payload));
-	        }
-	      });
-	    }
-	  };
-	};
-
-	module.exports = (0, _reactRedux.connect)(null, mapDispatchToProps)(_xmlGeneratorButton2.default);
-
-/***/ },
-/* 597 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.getXml = getXml;
-	exports.getXmlSuccess = getXmlSuccess;
-	exports.getXmlFailure = getXmlFailure;
-	var axios = __webpack_require__(231);
-	var strings = __webpack_require__(576);
-	var config = __webpack_require__(256);
-	var jsonHelper = __webpack_require__(599);
-
-	var sendXmlToServer = function sendXmlToServer(obj) {
-	  axios.post(config.SERVER_URL + '/auth/xml', obj).then(function (response) {
-	    if (response.error) {
-	      return getXmlFailure();
-	    }
-	  });
-	};
-
-	var getClientIds = function getClientIds(obj, cb) {
-	  var clientsIds = [];
-
-	  obj.vehicles.forEach(function (vehicle) {
-	    clientsIds.push({ _id: vehicle.cliente_id });
-	  });
-	  axios.get(config.SERVER_URL + '/auth/clients', clientsIds).then(function (response) {
-	    if (response.error) {
-	      return getXmlFailure();
-	    }
-	    obj.clients = response.data;
-	    cb(obj, sendXmlToServer);
-	  });
-	};
-
-	var getVehiclesIds = function getVehiclesIds(obj, cb) {
-	  var vehicleIds = [];
-
-	  obj.supplies.forEach(function (supply) {
-	    vehicleIds.push({ _id: supply.veiculo_id });
-	  });
-	  axios.get(config.SERVER_URL + '/auth/vehicles', vehicleIds).then(function (response) {
-	    if (response.error) {
-	      return getXmlFailure();
-	    }
-	    obj.vehicles = response.data;
-	    cb(obj, jsonHelper.createJson);
-	  });
-	};
-
-	var getSuppliesIds = function getSuppliesIds(obj, cb) {
-	  var stationsIds = [];
-
-	  obj.stations.forEach(function (station) {
-	    stationsIds.push({ _id: station.Abastecimento });
-	  });
-	  axios.get(config.SERVER_URL + '/auth/supplies', stationsIds).then(function (response) {
-	    if (response.error) {
-	      return getXmlFailure();
-	    }
-	    obj.supplies = response.data;
-	    cb(obj, getClientIds);
-	  });
-	};
-
-	function getXml() {
-	  var obj = {};
-	  var request = axios.get(config.SERVER_URL + '/auth/stations').then(function (response) {
-	    if (response.error) {
-	      return getXmlSuccess(response.error);
-	    }
-	    obj.stations = response.data;
-	    getSuppliesIds(obj, getVehiclesIds);
-	    return getXmlSuccess(obj);
-	  });
-	  return {
-	    type: strings.GETTING_XML,
-	    payload: request
-	  };
-	}
-
-	function getXmlSuccess(xml) {
-	  return {
-	    type: strings.GETTING_XML_SUCCESS,
-	    payload: xml
-	  };
-	}
-
-	function getXmlFailure(error) {
-	  return {
-	    type: strings.GETTING_XML_FAILURE,
-	    payload: error
-	  };
-	}
-
-/***/ },
-/* 598 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var func = React.PropTypes.func;
-
-	var _require = __webpack_require__(259),
-	    Button = _require.Button;
-
-	var DefaultButton = React.createClass({
-	  displayName: 'DefaultButton',
-
-	  propTypes: {
-	    getXml: func
-	  },
-	  onSubmit: function onSubmit() {
-	    this.props.getXml();
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      Button,
-	      { bsStyle: 'primary',
-	        onClick: this.onSubmit },
-	      'XML'
-	    );
-	  }
-	});
-
-	module.exports = DefaultButton;
-
-/***/ },
-/* 599 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var findClientById = function findClientById(obj, clientId) {
-	  for (var i = 0; i < obj.clients.length; i++) {
-	    if (obj.clients[i]._id === clientId) {
-	      return obj.clients[i];
-	    }
-	  }
-	};
-
-	var createClientObject = function createClientObject(obj, vehicle) {
-	  var client = findClientById(obj, vehicle);
-
-	  return {
-	    pais: client.pais,
-	    vat: client.vat
-	  };
-	};
-
-	var findVehicleById = function findVehicleById(obj, vehicleId) {
-	  for (var i = 0; i < obj.vehicles.length; i++) {
-	    if (obj.vehicles[i]._id === vehicleId) {
-	      return obj.vehicles[i];
-	    }
-	  }
-	};
-
-	var createVehicleObject = function createVehicleObject(obj, vehicleId) {
-	  var foundVehicle = findVehicleById(obj, vehicleId);
-
-	  var vehicle = {
-	    vehicle: {
-	      pais: foundVehicle.pais,
-	      matricula: foundVehicle.matricula,
-	      combustivel: foundVehicle.combustivel,
-	      km: foundVehicle.km
-	    },
-	    client_id: foundVehicle.cliente_id
-	  };
-	  if (vehicle.pais !== 'PT') {
-	    vehicle.pesoBruto = foundVehicle.pesoBruto;
-	  }
-	  return vehicle;
-	};
-
-	var filterSupplyByStationId = function filterSupplyByStationId(obj, stationId) {
-	  var supplies = [];
-	  obj.supplies.forEach(function (supply) {
-	    if (supply.station_id === stationId) {
-	      supplies.push(supply);
-	    }
-	  });
-	  return supplies;
-	};
-
-	var createSupplyObj = function createSupplyObj(obj, stationId) {
-	  var stationSupplies = [];
-	  var supplyIndex = 0;
-	  var supplies = filterSupplyByStationId(obj, stationId);
-
-	  supplies.forEach(function (supply) {
-	    stationSupplies.push({
-	      _registo: supply._registo,
-	      _transacao: supply._transacao,
-	      dataAbastecimento: supply.dataAbastecimento,
-	      volumeAbastecimento: supply.volumeAbastecimento,
-	      cartaoProfissional: supply.cartaoProfissional
-	    });
-	    var vehicle = createVehicleObject(obj, supply.veiculo_id);
-	    stationSupplies[supplyIndex].veiculo = vehicle.vehicle;
-	    stationSupplies[supplyIndex++].sujeitoPassivo = createClientObject(obj, vehicle.client_id);
-	  });
-	  return stationSupplies;
-	};
-
-	var populateStations = function populateStations(obj, proSupply) {
-	  obj.stations.forEach(function (station) {
-	    proSupply.Abastecimentos.push({
-	      _idPosto: station._idPosto,
-	      Abastecimento: createSupplyObj(obj, station._id)
-	    });
-	  });
-	};
-
-	exports.createJson = function (obj, cb) {
-	  var proSupply = {
-	    '_xmlns': 'http://www.at.gov.pt/2016/AbastecimentoProfissional',
-	    '_xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-	    '_xsi:schemaLocation': 'http://www.at.gov.pt/2016/AbastecimentoProfissional AbastecimentoPro.xsd',
-	    '_versao': '1',
-	    'Abastecimentos': []
-	  };
-	  populateStations(obj, proSupply);
-	  cb(proSupply);
 	};
 
 /***/ }
