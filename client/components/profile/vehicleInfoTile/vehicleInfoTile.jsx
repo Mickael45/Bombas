@@ -17,25 +17,25 @@ const VehicleInfoTile = React.createClass({
   render () {
     return (
       <div>
-        <h3>Veículo</h3>
-        <Col md={3} xs={3}>
+        <h3 className='tile-title'>Veículo</h3>
+        <Col md={4} xs={4}>
           <DefaultBox
             title='Matrícula'
             value={this.props.registrationNumber} />
         </Col>
         <Col md={4} xs={4}>
           <DefaultBox
-            title='País emissor'
+            title='País'
             value={this.props.registrationCountry} />
         </Col>
-        <Col md={5} xs={5}>
+        <Col md={4} xs={4}>
           <DefaultBox
-            title='Numero NFC'
+            title='NFC'
             value={this.props.NFCCardNumber} />
         </Col>
         <Col md={6} xs={6}>
           <DefaultBox
-            title='Tipo de combustível'
+            title='Combustível'
             value={this.props.gasType} />
         </Col>
         <Col md={6} xs={6}>

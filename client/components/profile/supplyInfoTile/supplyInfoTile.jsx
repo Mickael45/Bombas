@@ -14,18 +14,18 @@ const SupplyInfoTile = React.createClass({
   render () {
     return (
       <div>
-        <h3>Abastecimento</h3>
-        <Col md={2} xs={2}>
+        <h3 className='tile-title'>Abastecimento</h3>
+        <Col md={3} xs={3}>
           <GasPriceBox
             title='Preço'
             value={this.props.price} />
         </Col>
-        <Col md={2} xs={2}>
+        <Col md={3} xs={3}>
           <GasAmountBox
             title='Litros'
             value={this.props.liters} />
         </Col>
-        <Col md={8} xs={8}>
+        <Col md={6} xs={6}>
           <DateAndTimeBox
             title='Data e hora'
             value={this.props.date} />

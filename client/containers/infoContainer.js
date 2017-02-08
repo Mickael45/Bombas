@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getInfo, getInfoSuccess, getInfoFailure } from './../actions/info'
+import { getInfo, getInfoSuccess, getInfoFailure, sendInfo, sendInfoSuccess, sendInfoFailure } from './../actions/info'
 import Profile from './../components/profile/profile'
 
 const mapDispatchToProps = (dispatch) => ({
@@ -10,6 +10,16 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(getInfoFailure(response.payload))
       } else {
         dispatch(getInfoSuccess(response.payload))
+      }
+    })
+  },
+  sendInfo (distance) {
+    dispatch(sendInfo(distance))
+    .then((response) => {
+      if (response.error) {
+        dispatch(sendInfoSuccess(response.payload))
+      } else {
+        dispatch(sendInfoFailure(response.payload))
       }
     })
   }

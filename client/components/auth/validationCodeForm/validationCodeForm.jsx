@@ -18,9 +18,11 @@ const ValidationCodeForm = React.createClass({
           placeholder='código' value={this.props.validationCode}
           onChange={this.props.onValidationCodeChange} />
         <DefaultButton
+          class='button'
           title='Enviar'
           onSubmit={this.props.onValidationCodeSubmit} />
         <DefaultButton
+          class='button'
           title='Novo código'
           onSubmit={this.props.onResendCodeSubmit} />
       </div>
