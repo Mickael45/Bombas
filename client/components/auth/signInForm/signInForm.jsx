@@ -26,6 +26,7 @@ const SignUpForm = React.createClass({
           value={this.props.password}
           onChange={this.props.onPasswordChangeEvent} />
         <DefaultButton
+          class='button'
           title='Enviar'
           onSubmit={this.props.onSignInSubmit} />
       </div>

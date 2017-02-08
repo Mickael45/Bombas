@@ -21539,9 +21539,9 @@
 	var React = __webpack_require__(1);
 	var App = __webpack_require__(227);
 	var Auth = __webpack_require__(565);
-	var Profile = __webpack_require__(572);
+	var Profile = __webpack_require__(573);
 
-	var store = __webpack_require__(582);
+	var store = __webpack_require__(583);
 
 	var _require = __webpack_require__(511),
 	    Router = _require.Router,
@@ -25972,37 +25972,41 @@
 	            null,
 	            React.createElement(
 	              'a',
-	              null,
+	              { className: 'navBar-title' },
 	              'React-Bootstrap'
 	            )
 	          ),
 	          React.createElement(Navbar.Toggle, null)
 	        ),
-	        this.props.status === 'authenticated' ? React.createElement(
-	          Nav,
-	          { pullRight: true },
-	          React.createElement(
-	            NavItem,
-	            { onClick: this.props.logout },
-	            'Sair'
-	          )
-	        ) : this.props.status === 'not subscribed' ? React.createElement(
-	          Nav,
-	          { pullRight: true },
-	          React.createElement(
-	            NavItem,
-	            { onClick: this.props.toSignInStatus },
-	            'Entrar'
-	          )
-	        ) : this.props.status === 'not authenticated' ? React.createElement(
-	          Nav,
-	          { pullRight: true },
-	          React.createElement(
-	            NavItem,
-	            { onClick: this.props.toSignUpStatus },
-	            'Registar'
-	          )
-	        ) : React.createElement(Nav, null)
+	        React.createElement(
+	          Navbar.Collapse,
+	          null,
+	          this.props.status === 'authenticated' ? React.createElement(
+	            Nav,
+	            { pullRight: true },
+	            React.createElement(
+	              NavItem,
+	              { onClick: this.props.logout, className: 'navBar-link' },
+	              'Sair'
+	            )
+	          ) : this.props.status === 'not subscribed' ? React.createElement(
+	            Nav,
+	            { pullRight: true },
+	            React.createElement(
+	              NavItem,
+	              { onClick: this.props.toSignInStatus, className: 'navBar-link' },
+	              'Entrar'
+	            )
+	          ) : this.props.status === 'not authenticated' ? React.createElement(
+	            Nav,
+	            { pullRight: true },
+	            React.createElement(
+	              NavItem,
+	              { onClick: this.props.toSignUpStatus, className: 'navBar-link' },
+	              'Registar'
+	            )
+	          ) : React.createElement(Nav, null)
+	        )
 	      )
 	    );
 	  }
@@ -50113,12 +50117,14 @@
 
 	var React = __webpack_require__(1);
 	var AuthContainer = __webpack_require__(566);
+	var ButtonContainer = __webpack_require__(596);
 
 	var Auth = function Auth() {
 	  return React.createElement(
 	    'div',
 	    null,
-	    React.createElement(AuthContainer, null)
+	    React.createElement(AuthContainer, null),
+	    React.createElement(ButtonContainer, null)
 	  );
 	};
 
@@ -50181,6 +50187,7 @@
 	        password: password
 	      };
 	      dispatch((0, _phoneSignUp.phoneSignInUser)(user)).then(function (response) {
+	        console.log(response);
 	        if (!response.error) {
 	          dispatch((0, _phoneSignUp.signUpUserSuccess)(response.payload));
 	          _reactRouter.browserHistory.push('/profile');
@@ -50213,8 +50220,8 @@
 
 	var React = __webpack_require__(1);
 	var SignUpForm = __webpack_require__(568);
-	var SignInForm = __webpack_require__(594);
-	var ValidationCodeForm = __webpack_require__(571);
+	var SignInForm = __webpack_require__(571);
+	var ValidationCodeForm = __webpack_require__(572);
 	var _React$PropTypes = React.PropTypes,
 	    func = _React$PropTypes.func,
 	    string = _React$PropTypes.string;
@@ -50276,9 +50283,6 @@
 	    this.props.signMeUpByPhone(this.state.phoneNumber, this.state.countryCode, this.state.birthDate);
 	  },
 	  onSignInSubmit: function onSignInSubmit() {
-	    if (!isOnlyMadeOfNumbers(this.state.password, 6)) {
-	      return;
-	    }
 	    this.props.signMeInByPhone(this.state.phoneNumber, this.state.password);
 	  },
 	  onValidationCodeSubmit: function onValidationCodeSubmit() {
@@ -50380,6 +50384,7 @@
 	        value: this.props.birthDate,
 	        onChange: this.props.onBirthDateChangeEvent }),
 	      React.createElement(DefaultButton, {
+	        'class': 'button',
 	        title: 'Enviar',
 	        onSubmit: this.props.onSignUpSubmit })
 	    );
@@ -50416,8 +50421,8 @@
 	      _reactBootstrap.FormGroup,
 	      { controlId: 'formBasicText' },
 	      React.createElement(
-	        _reactBootstrap.ControlLabel,
-	        { className: 'title' },
+	        'p',
+	        { className: 'input-title' },
 	        this.props.title
 	      ),
 	      React.createElement(_reactBootstrap.FormControl, {
@@ -50451,12 +50456,13 @@
 
 	  propTypes: {
 	    title: string,
-	    onSubmit: func
+	    onSubmit: func,
+	    class: string
 	  },
 	  render: function render() {
 	    return React.createElement(
 	      Button,
-	      { className: 'button',
+	      { className: this.props.class,
 	        bsStyle: 'primary',
 	        onClick: this.props.onSubmit },
 	      this.props.title
@@ -50468,6 +50474,59 @@
 
 /***/ },
 /* 571 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var DefaultInput = __webpack_require__(569);
+	var DefaultButton = __webpack_require__(570);
+	var _React$PropTypes = React.PropTypes,
+	    string = _React$PropTypes.string,
+	    func = _React$PropTypes.func;
+
+
+	var SignUpForm = React.createClass({
+	  displayName: 'SignUpForm',
+
+	  propTypes: {
+	    phoneNumber: string,
+	    onPhoneNumberChangeEvent: func,
+	    password: string,
+	    onPasswordChangeEvent: func,
+	    onSignInSubmit: func
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Entrar'
+	      ),
+	      React.createElement(DefaultInput, {
+	        title: 'Numero de telem\xF3vel',
+	        placeholder: 'telem\xF3vel',
+	        value: this.props.phoneNumber,
+	        onChange: this.props.onPhoneNumberChangeEvent }),
+	      React.createElement(DefaultInput, {
+	        title: 'PIN',
+	        placeholder: '******',
+	        value: this.props.password,
+	        onChange: this.props.onPasswordChangeEvent }),
+	      React.createElement(DefaultButton, {
+	        'class': 'button',
+	        title: 'Enviar',
+	        onSubmit: this.props.onSignInSubmit })
+	    );
+	  }
+	});
+
+	module.exports = SignUpForm;
+
+/***/ },
+/* 572 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50498,9 +50557,11 @@
 	        placeholder: 'c\xF3digo', value: this.props.validationCode,
 	        onChange: this.props.onValidationCodeChange }),
 	      React.createElement(DefaultButton, {
+	        'class': 'button',
 	        title: 'Enviar',
 	        onSubmit: this.props.onValidationCodeSubmit }),
 	      React.createElement(DefaultButton, {
+	        'class': 'button',
 	        title: 'Novo c\xF3digo',
 	        onSubmit: this.props.onResendCodeSubmit })
 	    );
@@ -50510,13 +50571,13 @@
 	module.exports = ValidationCodeForm;
 
 /***/ },
-/* 572 */
+/* 573 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var ProfileContainer = __webpack_require__(573);
+	var ProfileContainer = __webpack_require__(574);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -50528,16 +50589,16 @@
 	module.exports = Profile;
 
 /***/ },
-/* 573 */
+/* 574 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _reactRedux = __webpack_require__(179);
 
-	var _info = __webpack_require__(574);
+	var _info = __webpack_require__(575);
 
-	var _profile = __webpack_require__(576);
+	var _profile = __webpack_require__(577);
 
 	var _profile2 = _interopRequireDefault(_profile);
 
@@ -50551,6 +50612,15 @@
 	          dispatch((0, _info.getInfoFailure)(response.payload));
 	        } else {
 	          dispatch((0, _info.getInfoSuccess)(response.payload));
+	        }
+	      });
+	    },
+	    sendInfo: function sendInfo(distance) {
+	      dispatch((0, _info.sendInfo)(distance)).then(function (response) {
+	        if (response.error) {
+	          dispatch((0, _info.sendInfoSuccess)(response.payload));
+	        } else {
+	          dispatch((0, _info.sendInfoFailure)(response.payload));
 	        }
 	      });
 	    }
@@ -50567,7 +50637,7 @@
 	module.exports = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_profile2.default);
 
 /***/ },
-/* 574 */
+/* 575 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50578,8 +50648,11 @@
 	exports.getInfo = getInfo;
 	exports.getInfoSuccess = getInfoSuccess;
 	exports.getInfoFailure = getInfoFailure;
+	exports.sendInfo = sendInfo;
+	exports.sendInfoSuccess = sendInfoSuccess;
+	exports.sendInfoFailure = sendInfoFailure;
 	var axios = __webpack_require__(231);
-	var strings = __webpack_require__(575);
+	var strings = __webpack_require__(576);
 	var config = __webpack_require__(256);
 
 	function getInfo() {
@@ -50604,8 +50677,30 @@
 	  };
 	}
 
+	function sendInfo(distance) {
+	  var request = axios.post(config.SERVER_URL + '/auth/info');
+	  return {
+	    type: strings.SENDING_INFO,
+	    payload: request
+	  };
+	}
+
+	function sendInfoSuccess(data) {
+	  return {
+	    type: strings.SENDING_INFO_SUCCESS,
+	    payload: data
+	  };
+	}
+
+	function sendInfoFailure(err) {
+	  return {
+	    type: strings.SENDING_INFO_FAILURE,
+	    payload: err
+	  };
+	}
+
 /***/ },
-/* 575 */
+/* 576 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -50614,11 +50709,17 @@
 	  GETTING_INFO: 'GETTING_INFO',
 	  GETTING_INFO_SUCCESS: 'GETTING_INFO_SUCCESS',
 	  GETTING_INFO_FAILURE: 'GETTING_INFO_FAILURE',
+	  GETTING_XML: 'GETTING_XML',
+	  GETTING_XML_SUCCESS: 'GETTING_XML_SUCCESS',
+	  GETTING_XML_FAILURE: 'GETTING_XML_SUCCESS',
+	  SENDDING_INFO: 'SENDING_INFO_SUCCESS',
+	  SENDING_INFO_FAILURE: 'SENDING_INFO_FAILURE',
+	  SENDING_INFO_SUCCESS: 'SENDING_INFO_SUCCESS',
 	  INITIAL_STATE: { data: null, status: null, error: null, loading: null }
 	};
 
 /***/ },
-/* 576 */
+/* 577 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50626,15 +50727,14 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var React = __webpack_require__(1);
-	var GasStationInfoTile = __webpack_require__(577);
-	var VehicleInfoTile = __webpack_require__(579);
-	var SupplyInfoTile = __webpack_require__(580);
-	var InvoiceInfoTile = __webpack_require__(581);
+	var GasStationInfoTile = __webpack_require__(578);
+	var VehicleInfoTile = __webpack_require__(580);
+	var SupplyInfoTile = __webpack_require__(581);
+	var InvoiceInfoTile = __webpack_require__(582);
 	var DefaultButton = __webpack_require__(570);
 
 	var _require = __webpack_require__(259),
-	    Col = _require.Col,
-	    Row = _require.Row;
+	    Col = _require.Col;
 
 	var _React$PropTypes = React.PropTypes,
 	    object = _React$PropTypes.object,
@@ -50648,9 +50748,8 @@
 	  propTypes: {
 	    data: object,
 	    getInfo: func,
-	    status: string,
-	    lol: string,
-	    couilles: string
+	    sendInfo: func,
+	    status: string
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this.props.getInfo();
@@ -50664,7 +50763,7 @@
 	    this.setState({ distance: e.target.value });
 	  },
 	  onValidationEvent: function onValidationEvent() {
-	    console.log(this.state.distance);
+	    this.props.sendInfo(this.state.distance);
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -50678,32 +50777,33 @@
 	        'div',
 	        null,
 	        React.createElement(
-	          Row,
-	          null,
-	          React.createElement(
-	            Col,
-	            { md: 3, xs: 8, xsOffset: 2 },
-	            React.createElement(GasStationInfoTile, this.props.data.gasStation)
-	          ),
-	          React.createElement(
-	            Col,
-	            { md: 3, xs: 8, xsOffset: 2 },
-	            React.createElement(VehicleInfoTile, _extends({}, this.props.data.vehicle, {
-	              distance: this.state.distance,
-	              onDistanceChangeEvent: this.onDistanceChangeEvent }))
-	          ),
-	          React.createElement(
-	            Col,
-	            { md: 3, xs: 8, xsOffset: 2 },
-	            React.createElement(SupplyInfoTile, this.props.data.supply)
-	          ),
-	          React.createElement(
-	            Col,
-	            { md: 3, xs: 8, xsOffset: 2 },
-	            React.createElement(InvoiceInfoTile, this.props.data.invoice)
-	          )
+	          Col,
+	          { md: 3, xs: 8, xsOffset: 2 },
+	          React.createElement(GasStationInfoTile, this.props.data.gasStation)
 	        ),
+	        React.createElement(
+	          Col,
+	          { md: 3, xs: 8, xsOffset: 2 },
+	          React.createElement(VehicleInfoTile, _extends({}, this.props.data.vehicle, {
+	            distance: this.state.distance,
+	            onDistanceChangeEvent: this.onDistanceChangeEvent }))
+	        ),
+	        React.createElement(
+	          Col,
+	          { md: 3, xs: 8, xsOffset: 2 },
+	          React.createElement(SupplyInfoTile, this.props.data.supply)
+	        ),
+	        React.createElement(
+	          Col,
+	          { md: 3, xs: 8, xsOffset: 2 },
+	          React.createElement(InvoiceInfoTile, this.props.data.invoice)
+	        )
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
 	        React.createElement(DefaultButton, {
+	          'class': 'validation-button',
 	          onSubmit: this.onValidationEvent,
 	          title: 'Enviar' })
 	      )
@@ -50714,13 +50814,17 @@
 	module.exports = Profile;
 
 /***/ },
-/* 577 */
+/* 578 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(578);
+	var DefaultBox = __webpack_require__(579);
+
+	var _require = __webpack_require__(259),
+	    Col = _require.Col;
+
 	var string = React.PropTypes.string;
 
 
@@ -50738,18 +50842,30 @@
 	      null,
 	      React.createElement(
 	        'h3',
-	        null,
+	        { className: 'tile-title' },
 	        'Estabelecimento'
 	      ),
-	      React.createElement(DefaultBox, {
-	        title: 'C\xF3digo do estabelecimento',
-	        value: this.props.code }),
-	      React.createElement(DefaultBox, {
-	        title: 'NIF do estabelecimento',
-	        value: this.props.NIF }),
-	      React.createElement(DefaultBox, {
-	        title: 'Pa\xEDs emissor do NIF',
-	        value: this.props.country })
+	      React.createElement(
+	        Col,
+	        { md: 4, xs: 4 },
+	        React.createElement(DefaultBox, {
+	          title: 'C\xF3digo',
+	          value: this.props.code })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 4, xs: 4 },
+	        React.createElement(DefaultBox, {
+	          title: 'NIF',
+	          value: this.props.NIF })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 4, xs: 4 },
+	        React.createElement(DefaultBox, {
+	          title: 'Pa\xEDs do NIF',
+	          value: this.props.country })
+	      )
 	    );
 	  }
 	});
@@ -50757,7 +50873,7 @@
 	module.exports = GasStationInfoTile;
 
 /***/ },
-/* 578 */
+/* 579 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50780,13 +50896,13 @@
 	      _reactBootstrap.FormGroup,
 	      { controlId: 'formBasicText' },
 	      React.createElement(
-	        'h3',
-	        null,
+	        'p',
+	        { className: 'tile-content-title' },
 	        this.props.title
 	      ),
 	      React.createElement(
 	        _reactBootstrap.FormControl.Static,
-	        { className: 'title' },
+	        { className: 'tile-content' },
 	        this.props.value
 	      )
 	    );
@@ -50796,13 +50912,13 @@
 	module.exports = DefaultBox;
 
 /***/ },
-/* 579 */
+/* 580 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(578);
+	var DefaultBox = __webpack_require__(579);
 	var DefaultInput = __webpack_require__(569);
 
 	var _require = __webpack_require__(259),
@@ -50831,12 +50947,12 @@
 	      null,
 	      React.createElement(
 	        'h3',
-	        null,
+	        { className: 'tile-title' },
 	        'Ve\xEDculo'
 	      ),
 	      React.createElement(
 	        Col,
-	        { md: 3, xs: 3 },
+	        { md: 4, xs: 4 },
 	        React.createElement(DefaultBox, {
 	          title: 'Matr\xEDcula',
 	          value: this.props.registrationNumber })
@@ -50845,21 +50961,21 @@
 	        Col,
 	        { md: 4, xs: 4 },
 	        React.createElement(DefaultBox, {
-	          title: 'Pa\xEDs emissor',
+	          title: 'Pa\xEDs',
 	          value: this.props.registrationCountry })
 	      ),
 	      React.createElement(
 	        Col,
-	        { md: 5, xs: 5 },
+	        { md: 4, xs: 4 },
 	        React.createElement(DefaultBox, {
-	          title: 'Numero NFC',
+	          title: 'NFC',
 	          value: this.props.NFCCardNumber })
 	      ),
 	      React.createElement(
 	        Col,
 	        { md: 6, xs: 6 },
 	        React.createElement(DefaultBox, {
-	          title: 'Tipo de combust\xEDvel',
+	          title: 'Combust\xEDvel',
 	          value: this.props.gasType })
 	      ),
 	      React.createElement(
@@ -50884,15 +51000,15 @@
 	module.exports = VehicleInfoTile;
 
 /***/ },
-/* 580 */
+/* 581 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DateAndTimeBox = __webpack_require__(578);
-	var GasAmountBox = __webpack_require__(578);
-	var GasPriceBox = __webpack_require__(578);
+	var DateAndTimeBox = __webpack_require__(579);
+	var GasAmountBox = __webpack_require__(579);
+	var GasPriceBox = __webpack_require__(579);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -50914,26 +51030,26 @@
 	      null,
 	      React.createElement(
 	        'h3',
-	        null,
+	        { className: 'tile-title' },
 	        'Abastecimento'
 	      ),
 	      React.createElement(
 	        Col,
-	        { md: 2, xs: 2 },
+	        { md: 3, xs: 3 },
 	        React.createElement(GasPriceBox, {
 	          title: 'Pre\xE7o',
 	          value: this.props.price })
 	      ),
 	      React.createElement(
 	        Col,
-	        { md: 2, xs: 2 },
+	        { md: 3, xs: 3 },
 	        React.createElement(GasAmountBox, {
 	          title: 'Litros',
 	          value: this.props.liters })
 	      ),
 	      React.createElement(
 	        Col,
-	        { md: 8, xs: 8 },
+	        { md: 6, xs: 6 },
 	        React.createElement(DateAndTimeBox, {
 	          title: 'Data e hora',
 	          value: this.props.date })
@@ -50945,14 +51061,18 @@
 	module.exports = SupplyInfoTile;
 
 /***/ },
-/* 581 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var InvoiceNumberBox = __webpack_require__(578);
-	var DateAndTimeBox = __webpack_require__(578);
+	var InvoiceNumberBox = __webpack_require__(579);
+	var DateAndTimeBox = __webpack_require__(579);
+
+	var _require = __webpack_require__(259),
+	    Col = _require.Col;
+
 	var string = React.PropTypes.string;
 
 
@@ -50969,15 +51089,23 @@
 	      null,
 	      React.createElement(
 	        'h3',
-	        null,
+	        { className: 'tile-title' },
 	        'Fatura'
 	      ),
-	      React.createElement(InvoiceNumberBox, {
-	        title: 'N\xFAmero da fatura',
-	        value: this.props.number }),
-	      React.createElement(DateAndTimeBox, {
-	        title: 'Data e hora',
-	        value: this.props.date })
+	      React.createElement(
+	        Col,
+	        { md: 6, xs: 6 },
+	        React.createElement(InvoiceNumberBox, {
+	          title: 'N\xFAmero da fatura',
+	          value: this.props.number })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 6, xs: 6 },
+	        React.createElement(DateAndTimeBox, {
+	          title: 'Data e hora',
+	          value: this.props.date })
+	      )
 	    );
 	  }
 	});
@@ -50985,7 +51113,7 @@
 	module.exports = InvoiceInfoTile;
 
 /***/ },
-/* 582 */
+/* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50994,15 +51122,15 @@
 
 	var _redux = __webpack_require__(190);
 
-	var _reduxPromise = __webpack_require__(583);
+	var _reduxPromise = __webpack_require__(584);
 
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 
-	var _reducers = __webpack_require__(590);
+	var _reducers = __webpack_require__(591);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _localStorage = __webpack_require__(593);
+	var _localStorage = __webpack_require__(595);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51023,7 +51151,7 @@
 	module.exports = store;
 
 /***/ },
-/* 583 */
+/* 584 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51042,7 +51170,7 @@
 
 	exports['default'] = promiseMiddleware;
 
-	var _fluxStandardAction = __webpack_require__(584);
+	var _fluxStandardAction = __webpack_require__(585);
 
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -51069,7 +51197,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 584 */
+/* 585 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51082,7 +51210,7 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 
-	var _lodashIsplainobject = __webpack_require__(585);
+	var _lodashIsplainobject = __webpack_require__(586);
 
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 
@@ -51101,7 +51229,7 @@
 	}
 
 /***/ },
-/* 585 */
+/* 586 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51116,9 +51244,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(586),
-	    isArguments = __webpack_require__(587),
-	    keysIn = __webpack_require__(588);
+	var baseFor = __webpack_require__(587),
+	    isArguments = __webpack_require__(588),
+	    keysIn = __webpack_require__(589);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -51212,7 +51340,7 @@
 	module.exports = isPlainObject;
 
 /***/ },
-/* 586 */
+/* 587 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -51267,7 +51395,7 @@
 	module.exports = baseFor;
 
 /***/ },
-/* 587 */
+/* 588 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -51503,7 +51631,7 @@
 	module.exports = isArguments;
 
 /***/ },
-/* 588 */
+/* 589 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51518,8 +51646,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(587),
-	    isArray = __webpack_require__(589);
+	var isArguments = __webpack_require__(588),
+	    isArray = __webpack_require__(590);
 
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -51642,7 +51770,7 @@
 	module.exports = keysIn;
 
 /***/ },
-/* 589 */
+/* 590 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -51828,18 +51956,22 @@
 	module.exports = isArray;
 
 /***/ },
-/* 590 */
+/* 591 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _authReducer = __webpack_require__(591);
+	var _authReducer = __webpack_require__(592);
 
 	var _authReducer2 = _interopRequireDefault(_authReducer);
 
-	var _infoReducer = __webpack_require__(592);
+	var _infoReducer = __webpack_require__(593);
 
 	var _infoReducer2 = _interopRequireDefault(_infoReducer);
+
+	var _xmlReducer = __webpack_require__(594);
+
+	var _xmlReducer2 = _interopRequireDefault(_xmlReducer);
 
 	var _redux = __webpack_require__(190);
 
@@ -51847,13 +51979,14 @@
 
 	var rootReducer = (0, _redux.combineReducers)({
 	  authReducer: _authReducer2.default,
-	  infoReducer: _infoReducer2.default
+	  infoReducer: _infoReducer2.default,
+	  xmlReducer: _xmlReducer2.default
 	});
 
 	module.exports = rootReducer;
 
 /***/ },
-/* 591 */
+/* 592 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51900,12 +52033,12 @@
 	module.exports = authReducer;
 
 /***/ },
-/* 592 */
+/* 593 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _constantStrings = __webpack_require__(575);
+	var _constantStrings = __webpack_require__(576);
 
 	var infoReducer = function infoReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constantStrings.INITIAL_STATE;
@@ -51920,6 +52053,14 @@
 	    case _constantStrings.GETTING_INFO_FAILURE:
 	      var err = action.payload.data || { message: action.payload.message };
 	      return Object.assign({}, state, { data: null, status: 'no data', error: err, loading: false });
+	    case _constantStrings.SENDING_INFO:
+	      return Object.assign({}, state, { data: null, status: 'waiting', error: null, loading: true });
+	    case _constantStrings.SENDING_INFO_SUCCESS:
+	      console.log(action);
+	      return Object.assign({}, state, { data: action.payload.data, status: 'data', error: null, loading: false });
+	    case _constantStrings.SENDING_INFO_FAILURE:
+	      var err2 = action.payload.data || { message: action.payload.message };
+	      return Object.assign({}, state, { data: null, status: 'no data', error: err2, loading: false });
 	    default:
 	      return state;
 	  }
@@ -51928,7 +52069,34 @@
 	module.exports = infoReducer;
 
 /***/ },
-/* 593 */
+/* 594 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _constantStrings = __webpack_require__(576);
+
+	var xmlReducer = function xmlReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constantStrings.INITIAL_STATE;
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case _constantStrings.GETTING_XML:
+	      return Object.assign({}, state, { data: null, status: 'waiting', error: null, loading: true });
+	    case _constantStrings.GETTING_XML_SUCCESS:
+	      return Object.assign({}, state, { data: action.payload.data, status: 'data', error: null, loading: false });
+	    case _constantStrings.GETTING_XML_FAILURE:
+	      var err = action.payload.data || { message: action.payload.message };
+	      return Object.assign({}, state, { data: null, status: 'no data', error: err, loading: false });
+	    default:
+	      return state;
+	  }
+	};
+
+	module.exports = xmlReducer;
+
+/***/ },
+/* 595 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -51958,56 +52126,269 @@
 	};
 
 /***/ },
-/* 594 */
+/* 596 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactRedux = __webpack_require__(179);
+
+	var _xml = __webpack_require__(597);
+
+	var _xmlGeneratorButton = __webpack_require__(598);
+
+	var _xmlGeneratorButton2 = _interopRequireDefault(_xmlGeneratorButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    getXml: function getXml() {
+	      dispatch((0, _xml.getXml)()).then(function (response) {
+	        if (response.error) {
+	          dispatch((0, _xml.getXmlFailure)(response.payload));
+	        } else {
+	          dispatch((0, _xml.getXmlSuccess)(response.payload));
+	        }
+	      });
+	    }
+	  };
+	};
+
+	module.exports = (0, _reactRedux.connect)(null, mapDispatchToProps)(_xmlGeneratorButton2.default);
+
+/***/ },
+/* 597 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getXml = getXml;
+	exports.getXmlSuccess = getXmlSuccess;
+	exports.getXmlFailure = getXmlFailure;
+	var axios = __webpack_require__(231);
+	var strings = __webpack_require__(576);
+	var config = __webpack_require__(256);
+	var jsonHelper = __webpack_require__(599);
+
+	var sendXmlToServer = function sendXmlToServer(obj) {
+	  axios.post(config.SERVER_URL + '/auth/xml', obj).then(function (response) {
+	    if (response.error) {
+	      return getXmlFailure();
+	    }
+	  });
+	};
+
+	var getClientIds = function getClientIds(obj, cb) {
+	  var clientsIds = [];
+
+	  obj.vehicles.forEach(function (vehicle) {
+	    clientsIds.push({ _id: vehicle.cliente_id });
+	  });
+	  axios.get(config.SERVER_URL + '/auth/clients', clientsIds).then(function (response) {
+	    if (response.error) {
+	      return getXmlFailure();
+	    }
+	    obj.clients = response.data;
+	    cb(obj, sendXmlToServer);
+	  });
+	};
+
+	var getVehiclesIds = function getVehiclesIds(obj, cb) {
+	  var vehicleIds = [];
+
+	  obj.supplies.forEach(function (supply) {
+	    vehicleIds.push({ _id: supply.veiculo_id });
+	  });
+	  axios.get(config.SERVER_URL + '/auth/vehicles', vehicleIds).then(function (response) {
+	    if (response.error) {
+	      return getXmlFailure();
+	    }
+	    obj.vehicles = response.data;
+	    cb(obj, jsonHelper.createJson);
+	  });
+	};
+
+	var getSuppliesIds = function getSuppliesIds(obj, cb) {
+	  var stationsIds = [];
+
+	  obj.stations.forEach(function (station) {
+	    stationsIds.push({ _id: station.Abastecimento });
+	  });
+	  axios.get(config.SERVER_URL + '/auth/supplies', stationsIds).then(function (response) {
+	    if (response.error) {
+	      return getXmlFailure();
+	    }
+	    obj.supplies = response.data;
+	    cb(obj, getClientIds);
+	  });
+	};
+
+	function getXml() {
+	  var obj = {};
+	  var request = axios.get(config.SERVER_URL + '/auth/stations').then(function (response) {
+	    if (response.error) {
+	      return getXmlSuccess(response.error);
+	    }
+	    obj.stations = response.data;
+	    getSuppliesIds(obj, getVehiclesIds);
+	    return getXmlSuccess(obj);
+	  });
+	  return {
+	    type: strings.GETTING_XML,
+	    payload: request
+	  };
+	}
+
+	function getXmlSuccess(xml) {
+	  return {
+	    type: strings.GETTING_XML_SUCCESS,
+	    payload: xml
+	  };
+	}
+
+	function getXmlFailure(error) {
+	  return {
+	    type: strings.GETTING_XML_FAILURE,
+	    payload: error
+	  };
+	}
+
+/***/ },
+/* 598 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultInput = __webpack_require__(569);
-	var DefaultButton = __webpack_require__(570);
-	var _React$PropTypes = React.PropTypes,
-	    string = _React$PropTypes.string,
-	    func = _React$PropTypes.func;
+	var func = React.PropTypes.func;
 
+	var _require = __webpack_require__(259),
+	    Button = _require.Button;
 
-	var SignUpForm = React.createClass({
-	  displayName: 'SignUpForm',
+	var DefaultButton = React.createClass({
+	  displayName: 'DefaultButton',
 
 	  propTypes: {
-	    phoneNumber: string,
-	    onPhoneNumberChangeEvent: func,
-	    password: string,
-	    onPasswordChangeEvent: func,
-	    onSignInSubmit: func
+	    getXml: func
+	  },
+	  onSubmit: function onSubmit() {
+	    this.props.getXml();
 	  },
 	  render: function render() {
 	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Entrar'
-	      ),
-	      React.createElement(DefaultInput, {
-	        title: 'Numero de telem\xF3vel',
-	        placeholder: 'telem\xF3vel',
-	        value: this.props.phoneNumber,
-	        onChange: this.props.onPhoneNumberChangeEvent }),
-	      React.createElement(DefaultInput, {
-	        title: 'PIN',
-	        placeholder: '******',
-	        value: this.props.password,
-	        onChange: this.props.onPasswordChangeEvent }),
-	      React.createElement(DefaultButton, {
-	        title: 'Enviar',
-	        onSubmit: this.props.onSignInSubmit })
+	      Button,
+	      { bsStyle: 'primary',
+	        onClick: this.onSubmit },
+	      'XML'
 	    );
 	  }
 	});
 
-	module.exports = SignUpForm;
+	module.exports = DefaultButton;
+
+/***/ },
+/* 599 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var findClientById = function findClientById(obj, clientId) {
+	  for (var i = 0; i < obj.clients.length; i++) {
+	    if (obj.clients[i]._id === clientId) {
+	      return obj.clients[i];
+	    }
+	  }
+	};
+
+	var createClientObject = function createClientObject(obj, vehicle) {
+	  var client = findClientById(obj, vehicle);
+
+	  return {
+	    pais: client.pais,
+	    vat: client.vat
+	  };
+	};
+
+	var findVehicleById = function findVehicleById(obj, vehicleId) {
+	  for (var i = 0; i < obj.vehicles.length; i++) {
+	    if (obj.vehicles[i]._id === vehicleId) {
+	      return obj.vehicles[i];
+	    }
+	  }
+	};
+
+	var createVehicleObject = function createVehicleObject(obj, vehicleId) {
+	  var foundVehicle = findVehicleById(obj, vehicleId);
+
+	  var vehicle = {
+	    vehicle: {
+	      pais: foundVehicle.pais,
+	      matricula: foundVehicle.matricula,
+	      combustivel: foundVehicle.combustivel,
+	      km: foundVehicle.km
+	    },
+	    client_id: foundVehicle.cliente_id
+	  };
+	  if (vehicle.pais !== 'PT') {
+	    vehicle.pesoBruto = foundVehicle.pesoBruto;
+	  }
+	  return vehicle;
+	};
+
+	var filterSupplyByStationId = function filterSupplyByStationId(obj, stationId) {
+	  var supplies = [];
+	  obj.supplies.forEach(function (supply) {
+	    if (supply.station_id === stationId) {
+	      supplies.push(supply);
+	    }
+	  });
+	  return supplies;
+	};
+
+	var createSupplyObj = function createSupplyObj(obj, stationId) {
+	  var stationSupplies = [];
+	  var supplyIndex = 0;
+	  var supplies = filterSupplyByStationId(obj, stationId);
+
+	  supplies.forEach(function (supply) {
+	    stationSupplies.push({
+	      _registo: supply._registo,
+	      _transacao: supply._transacao,
+	      dataAbastecimento: supply.dataAbastecimento,
+	      volumeAbastecimento: supply.volumeAbastecimento,
+	      cartaoProfissional: supply.cartaoProfissional
+	    });
+	    var vehicle = createVehicleObject(obj, supply.veiculo_id);
+	    stationSupplies[supplyIndex].veiculo = vehicle.vehicle;
+	    stationSupplies[supplyIndex++].sujeitoPassivo = createClientObject(obj, vehicle.client_id);
+	  });
+	  return stationSupplies;
+	};
+
+	var populateStations = function populateStations(obj, proSupply) {
+	  obj.stations.forEach(function (station) {
+	    proSupply.Abastecimentos.push({
+	      _idPosto: station._idPosto,
+	      Abastecimento: createSupplyObj(obj, station._id)
+	    });
+	  });
+	};
+
+	exports.createJson = function (obj, cb) {
+	  var proSupply = {
+	    '_xmlns': 'http://www.at.gov.pt/2016/AbastecimentoProfissional',
+	    '_xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+	    '_xsi:schemaLocation': 'http://www.at.gov.pt/2016/AbastecimentoProfissional AbastecimentoPro.xsd',
+	    '_versao': '1',
+	    'Abastecimentos': []
+	  };
+	  populateStations(obj, proSupply);
+	  cb(proSupply);
+	};
 
 /***/ }
 /******/ ]);

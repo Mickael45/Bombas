@@ -5,11 +5,12 @@ const { Button } = require('react-bootstrap')
 const DefaultButton = React.createClass({
   propTypes: {
     title: string,
-    onSubmit: func
+    onSubmit: func,
+    class: string
   },
   render () {
     return (
-      <Button className='button'
+      <Button className={this.props.class}
         bsStyle='primary'
         onClick={this.props.onSubmit}>
         {this.props.title}

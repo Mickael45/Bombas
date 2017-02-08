@@ -2,8 +2,8 @@ const createObject = () => (
   {
     gasStation: {
       code: '978546311',
-      NIF: 'faf79f48af9f4a9f4af9',
-      country: 'Portugao'
+      NIF: 'faf79f48af9',
+      country: 'Portugal'
     },
     vehicle: {
       registrationNumber: '78-KB-84',
@@ -27,4 +27,8 @@ const createObject = () => (
 exports.test = (req, res) => {
   var obj = createObject()
   return res.json(obj)
+}
+
+exports.registerInfo = (req, res) => {
+  return res.send(req.body)
 }

@@ -15,25 +15,27 @@ const NavBar = React.createClass({
         <Navbar inverse collapseOnSelect>
           <Navbar.Header>
             <Navbar.Brand>
-              <a>React-Bootstrap</a>
+              <a className='navBar-title'>React-Bootstrap</a>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
-          {
-            (this.props.status === 'authenticated'
+          <Navbar.Collapse>
+            {
+              (this.props.status === 'authenticated'
+              ? <Nav pullRight>
+                <NavItem onClick={this.props.logout} className='navBar-link'>Sair</NavItem>
+              </Nav>
+            : this.props.status === 'not subscribed'
             ? <Nav pullRight>
-              <NavItem onClick={this.props.logout}>Sair</NavItem>
+              <NavItem onClick={this.props.toSignInStatus} className='navBar-link'>Entrar</NavItem>
             </Nav>
-          : this.props.status === 'not subscribed'
-          ? <Nav pullRight>
-            <NavItem onClick={this.props.toSignInStatus}>Entrar</NavItem>
-          </Nav>
-          : this.props.status === 'not authenticated'
-          ? <Nav pullRight>
-            <NavItem onClick={this.props.toSignUpStatus}>Registar</NavItem>
-          </Nav>
-          : <Nav />)
-          }
+            : this.props.status === 'not authenticated'
+            ? <Nav pullRight>
+              <NavItem onClick={this.props.toSignUpStatus} className='navBar-link'>Registar</NavItem>
+            </Nav>
+            : <Nav />)
+            }
+          </Navbar.Collapse>
         </Navbar>
       </div>
     )

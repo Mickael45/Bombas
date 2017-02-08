@@ -10,10 +10,10 @@ const DefaultBox = React.createClass({
   render () {
     return (
       <FormGroup controlId='formBasicText'>
-        <h3>
+        <p className='tile-content-title'>
           {this.props.title}
-        </h3>
-        <FormControl.Static className='title'>
+        </p>
+        <FormControl.Static className='tile-content'>
           {this.props.value}
         </FormControl.Static>
       </FormGroup>

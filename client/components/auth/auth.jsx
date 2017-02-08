@@ -61,9 +61,6 @@ const Auth = React.createClass({
       this.state.birthDate)
   },
   onSignInSubmit () {
-    if (!isOnlyMadeOfNumbers(this.state.password, 6)) {
-      return
-    }
     this.props.signMeInByPhone(this.state.phoneNumber, this.state.password)
   },
   onValidationCodeSubmit () {

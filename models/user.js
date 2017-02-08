@@ -4,11 +4,14 @@ const userTokenController = require('./../controllers/user/userAuthyController')
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, unique: true },
+  firstname: { type: String },
+  lastname: { type: String },
   password: String,
   isAdmin: { type: Boolean, default: false, select: false },
   authyId: String,
   countryCode: String,
   phone: String,
+  station_id: String,
   verified: { type: Boolean, default: false, select: false }
 })
 
@@ -38,4 +41,4 @@ UserSchema.methods.sendAuthyToken = userTokenController.sendAuthyToken
 
 UserSchema.methods.verifyAuthyToken = userTokenController.verifyAuthyToken
 
-module.exports = mongoose.model('user', UserSchema)
+module.exports = mongoose.model('utilizadores', UserSchema)

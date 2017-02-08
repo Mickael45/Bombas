@@ -45,6 +45,7 @@ const mapDispatchToProps = (dispatch) => ({
     }
     dispatch(phoneSignInUser(user))
     .then((response) => {
+      console.log(response)
       if (!response.error) {
         dispatch(signUpUserSuccess(response.payload))
         browserHistory.push('/profile')

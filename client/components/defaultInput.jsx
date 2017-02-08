@@ -1,5 +1,5 @@
 const React = require('react')
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
+import { FormGroup, FormControl } from 'react-bootstrap'
 const { string, func } = React.PropTypes
 
 const DefaultInput = React.createClass({
@@ -12,9 +12,9 @@ const DefaultInput = React.createClass({
   render () {
     return (
       <FormGroup controlId='formBasicText'>
-        <ControlLabel className='title'>
+        <p className='input-title'>
           {this.props.title}
-        </ControlLabel>
+        </p>
         <FormControl
           className='input'
           type='text'

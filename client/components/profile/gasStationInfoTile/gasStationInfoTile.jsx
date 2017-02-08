@@ -1,5 +1,6 @@
 const React = require('react')
 const DefaultBox = require('./../../defaultBox')
+const { Col } = require('react-bootstrap')
 const { string } = React.PropTypes
 
 const GasStationInfoTile = React.createClass({
@@ -11,16 +12,22 @@ const GasStationInfoTile = React.createClass({
   render () {
     return (
       <div>
-        <h3>Estabelecimento</h3>
-        <DefaultBox
-          title='Código do estabelecimento'
-          value={this.props.code} />
-        <DefaultBox
-          title='NIF do estabelecimento'
-          value={this.props.NIF} />
-        <DefaultBox
-          title='País emissor do NIF'
-          value={this.props.country} />
+        <h3 className='tile-title'>Estabelecimento</h3>
+        <Col md={4} xs={4}>
+          <DefaultBox
+            title='Código'
+            value={this.props.code} />
+        </Col>
+        <Col md={4} xs={4}>
+          <DefaultBox
+            title='NIF'
+            value={this.props.NIF} />
+        </Col>
+        <Col md={4} xs={4}>
+          <DefaultBox
+            title='País do NIF'
+            value={this.props.country} />
+        </Col>
       </div>
     )
   }
