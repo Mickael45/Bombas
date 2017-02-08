@@ -25862,13 +25862,14 @@
 
 /***/ },
 /* 256 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
 
 	module.exports = {
-	  SERVER_URL: 'http://192.168.1.74:8080'
+	  SERVER_URL: process.env.BOMBAS_SERVER_URL
 	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
 /* 257 */

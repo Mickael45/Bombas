@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 const xmlify = require('xmlify')
 
 exports.generateXml = (req, res) => {
@@ -8,7 +9,6 @@ exports.generateXml = (req, res) => {
       return res.status(424).json({ message: 'Error creating xml file', error: err })
     }
   })
-  res.attachment('test.xml')
-  res.setHeader('Content-Type', 'application/octet-stream')
-  res.end(JSON.stringify(xml, null, 2), 'utf8')
+  var file = path.join(__dirname, '../test.xml')
+  res.download(file, 'test.xml')
 }
