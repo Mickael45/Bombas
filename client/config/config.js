@@ -1,3 +1,3 @@
 module.exports = {
-  SERVER_URL: process.env.BOMBAS_SERVER_URL
+  SERVER_URL: 'http://192.168.1.74:8080'
 }

@@ -3,8 +3,8 @@ const strings = require('./constantStrings')
 const config = require('./../config/config')
 const jsonHelper = require('./../helpers/jsonHelper')
 
-export function sendXmlToServer (obj) {
-  var request = axios.get(`${config.SERVER_URL}/auth/xml`, obj)
+const sendXmlToServer = (obj) => {
+  var request = axios.post(`${config.SERVER_URL}/auth/xml`, obj)
 
   return {
     type: strings.GETTING_XML,
@@ -62,6 +62,8 @@ const getSuppliesIds = (obj, cb) => {
 
 export function getXml () {
   var obj = {}
+  console.log(config)
+  console.log(config.SERVER_URL)
   var request = axios.get(`${config.SERVER_URL}/auth/stations`)
   .then((response) => {
     if (response.error) {
@@ -69,6 +71,7 @@ export function getXml () {
     }
     obj.stations = response.data
     getSuppliesIds(obj, getVehiclesIds)
+    return getXmlSuccess(obj)
   })
   return {
     type: strings.GETTING_XML,

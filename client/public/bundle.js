@@ -21539,9 +21539,9 @@
 	var React = __webpack_require__(1);
 	var App = __webpack_require__(227);
 	var Auth = __webpack_require__(565);
-	var Profile = __webpack_require__(578);
+	var Profile = __webpack_require__(579);
 
-	var store = __webpack_require__(587);
+	var store = __webpack_require__(588);
 
 	var _require = __webpack_require__(511),
 	    Router = _require.Router,
@@ -25862,14 +25862,13 @@
 
 /***/ },
 /* 256 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
+	'use strict';
 
 	module.exports = {
-	  SERVER_URL: process.env.BOMBAS_SERVER_URL
+	  SERVER_URL: 'http://192.168.1.74:8080'
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
 /* 257 */
@@ -50594,12 +50593,8 @@
 	        if (response.error) {
 	          dispatch((0, _xml.getXmlFailure)(response.payload));
 	        } else {
-	          dispatch((0, _xml.sendXmlToServer)(response.payload)).then(function (response) {
-	            if (response.error) {
-	              dispatch((0, _xml.getXmlFailure)(response.payload));
-	            }
-	            dispatch((0, _xml.getXmlSuccess)(response.payload));
-	          });
+	          window.open('/download');
+	          dispatch((0, _xml.getXmlSuccess)(response.payload));
 	        }
 	      });
 	    }
@@ -50617,7 +50612,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.sendXmlToServer = sendXmlToServer;
 	exports.getXml = getXml;
 	exports.getXmlSuccess = getXmlSuccess;
 	exports.getXmlFailure = getXmlFailure;
@@ -50626,14 +50620,14 @@
 	var config = __webpack_require__(256);
 	var jsonHelper = __webpack_require__(576);
 
-	function sendXmlToServer(obj) {
-	  var request = axios.get(config.SERVER_URL + '/auth/xml', obj);
+	var sendXmlToServer = function sendXmlToServer(obj) {
+	  var request = axios.post(config.SERVER_URL + '/auth/xml', obj);
 
 	  return {
 	    type: strings.GETTING_XML,
 	    payload: request
 	  };
-	}
+	};
 
 	var getClientIds = function getClientIds(obj, cb) {
 	  var clientsIds = [];
@@ -50682,12 +50676,15 @@
 
 	function getXml() {
 	  var obj = {};
+	  console.log(config);
+	  console.log(config.SERVER_URL);
 	  var request = axios.get(config.SERVER_URL + '/auth/stations').then(function (response) {
 	    if (response.error) {
 	      return getXmlSuccess(response.error);
 	    }
 	    obj.stations = response.data;
 	    getSuppliesIds(obj, getVehiclesIds);
+	    return getXmlSuccess(obj);
 	  });
 	  return {
 	    type: strings.GETTING_XML,
@@ -50862,13 +50859,14 @@
 	module.exports = DefaultButton;
 
 /***/ },
-/* 578 */
+/* 578 */,
+/* 579 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var ProfileContainer = __webpack_require__(579);
+	var ProfileContainer = __webpack_require__(580);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -50880,16 +50878,16 @@
 	module.exports = Profile;
 
 /***/ },
-/* 579 */
+/* 580 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _reactRedux = __webpack_require__(179);
 
-	var _info = __webpack_require__(580);
+	var _info = __webpack_require__(581);
 
-	var _profile = __webpack_require__(581);
+	var _profile = __webpack_require__(582);
 
 	var _profile2 = _interopRequireDefault(_profile);
 
@@ -50928,7 +50926,7 @@
 	module.exports = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_profile2.default);
 
 /***/ },
-/* 580 */
+/* 581 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50991,7 +50989,7 @@
 	}
 
 /***/ },
-/* 581 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50999,10 +50997,10 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var React = __webpack_require__(1);
-	var GasStationInfoTile = __webpack_require__(582);
-	var VehicleInfoTile = __webpack_require__(584);
-	var SupplyInfoTile = __webpack_require__(585);
-	var InvoiceInfoTile = __webpack_require__(586);
+	var GasStationInfoTile = __webpack_require__(583);
+	var VehicleInfoTile = __webpack_require__(585);
+	var SupplyInfoTile = __webpack_require__(586);
+	var InvoiceInfoTile = __webpack_require__(587);
 	var DefaultButton = __webpack_require__(570);
 
 	var _require = __webpack_require__(259),
@@ -51086,13 +51084,13 @@
 	module.exports = Profile;
 
 /***/ },
-/* 582 */
+/* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(583);
+	var DefaultBox = __webpack_require__(584);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -51145,7 +51143,7 @@
 	module.exports = GasStationInfoTile;
 
 /***/ },
-/* 583 */
+/* 584 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51184,13 +51182,13 @@
 	module.exports = DefaultBox;
 
 /***/ },
-/* 584 */
+/* 585 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(583);
+	var DefaultBox = __webpack_require__(584);
 	var DefaultInput = __webpack_require__(569);
 
 	var _require = __webpack_require__(259),
@@ -51272,15 +51270,15 @@
 	module.exports = VehicleInfoTile;
 
 /***/ },
-/* 585 */
+/* 586 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DateAndTimeBox = __webpack_require__(583);
-	var GasAmountBox = __webpack_require__(583);
-	var GasPriceBox = __webpack_require__(583);
+	var DateAndTimeBox = __webpack_require__(584);
+	var GasAmountBox = __webpack_require__(584);
+	var GasPriceBox = __webpack_require__(584);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -51333,14 +51331,14 @@
 	module.exports = SupplyInfoTile;
 
 /***/ },
-/* 586 */
+/* 587 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var InvoiceNumberBox = __webpack_require__(583);
-	var DateAndTimeBox = __webpack_require__(583);
+	var InvoiceNumberBox = __webpack_require__(584);
+	var DateAndTimeBox = __webpack_require__(584);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -51385,7 +51383,7 @@
 	module.exports = InvoiceInfoTile;
 
 /***/ },
-/* 587 */
+/* 588 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51394,15 +51392,15 @@
 
 	var _redux = __webpack_require__(190);
 
-	var _reduxPromise = __webpack_require__(588);
+	var _reduxPromise = __webpack_require__(589);
 
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 
-	var _reducers = __webpack_require__(595);
+	var _reducers = __webpack_require__(596);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _localStorage = __webpack_require__(599);
+	var _localStorage = __webpack_require__(600);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51423,7 +51421,7 @@
 	module.exports = store;
 
 /***/ },
-/* 588 */
+/* 589 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51442,7 +51440,7 @@
 
 	exports['default'] = promiseMiddleware;
 
-	var _fluxStandardAction = __webpack_require__(589);
+	var _fluxStandardAction = __webpack_require__(590);
 
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -51469,7 +51467,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 589 */
+/* 590 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51482,7 +51480,7 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 
-	var _lodashIsplainobject = __webpack_require__(590);
+	var _lodashIsplainobject = __webpack_require__(591);
 
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 
@@ -51501,7 +51499,7 @@
 	}
 
 /***/ },
-/* 590 */
+/* 591 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51516,9 +51514,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(591),
-	    isArguments = __webpack_require__(592),
-	    keysIn = __webpack_require__(593);
+	var baseFor = __webpack_require__(592),
+	    isArguments = __webpack_require__(593),
+	    keysIn = __webpack_require__(594);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -51612,7 +51610,7 @@
 	module.exports = isPlainObject;
 
 /***/ },
-/* 591 */
+/* 592 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -51667,7 +51665,7 @@
 	module.exports = baseFor;
 
 /***/ },
-/* 592 */
+/* 593 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -51903,7 +51901,7 @@
 	module.exports = isArguments;
 
 /***/ },
-/* 593 */
+/* 594 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51918,8 +51916,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(592),
-	    isArray = __webpack_require__(594);
+	var isArguments = __webpack_require__(593),
+	    isArray = __webpack_require__(595);
 
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -52042,7 +52040,7 @@
 	module.exports = keysIn;
 
 /***/ },
-/* 594 */
+/* 595 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -52228,20 +52226,20 @@
 	module.exports = isArray;
 
 /***/ },
-/* 595 */
+/* 596 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _authReducer = __webpack_require__(596);
+	var _authReducer = __webpack_require__(597);
 
 	var _authReducer2 = _interopRequireDefault(_authReducer);
 
-	var _infoReducer = __webpack_require__(597);
+	var _infoReducer = __webpack_require__(598);
 
 	var _infoReducer2 = _interopRequireDefault(_infoReducer);
 
-	var _xmlReducer = __webpack_require__(598);
+	var _xmlReducer = __webpack_require__(599);
 
 	var _xmlReducer2 = _interopRequireDefault(_xmlReducer);
 
@@ -52258,7 +52256,7 @@
 	module.exports = rootReducer;
 
 /***/ },
-/* 596 */
+/* 597 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52305,7 +52303,7 @@
 	module.exports = authReducer;
 
 /***/ },
-/* 597 */
+/* 598 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52341,7 +52339,7 @@
 	module.exports = infoReducer;
 
 /***/ },
-/* 598 */
+/* 599 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52368,7 +52366,7 @@
 	module.exports = xmlReducer;
 
 /***/ },
-/* 599 */
+/* 600 */
 /***/ function(module, exports) {
 
 	'use strict';

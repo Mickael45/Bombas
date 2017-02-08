@@ -14,7 +14,9 @@ const router = require('express')()
 const xmlGenerator = require('./../controllers/xmlGenerator')
 const bordelController = require('./../controllers/bordelController')
 
-router.get('/auth/xml', xmlGenerator.generateXml)
+router.post('/auth/xml', xmlGenerator.generateXml)
+
+router.get('/download', xmlGenerator.getXml)
 
 router.get('/auth/supplies', bordelController.getSupply)
 
