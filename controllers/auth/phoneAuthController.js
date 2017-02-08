@@ -13,10 +13,12 @@ exports.send = (req, res) => {
   })
   user.save(function (err, doc) {
     if (err) {
+      console.log(err)
       return res.status(424).json({ message: 'There was a problem creating your account - note that all fields are required. Please double-check your input and try again. ', error: err })
     } else {
       user.sendAuthyToken(doc, function (err, finalUser) {
         if (err) {
+          console.log('err')
           return res.status(424).json({ message: 'There was an error sending the token. Hit the resend button to receive a new validation code. ', error: err })
         }
         return res.json({ message: 'The verification code has been sent.', user })

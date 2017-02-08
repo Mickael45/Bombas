@@ -3,13 +3,13 @@ const strings = require('./constantStrings')
 const config = require('./../config/config')
 const jsonHelper = require('./../helpers/jsonHelper')
 
-const sendXmlToServer = (obj) => {
-  axios.post(`${config.SERVER_URL}/auth/xml`, obj)
-  .then((response) => {
-    if (response.error) {
-      return getXmlFailure()
-    }
-  })
+export function sendXmlToServer (obj) {
+  var request = axios.get(`${config.SERVER_URL}/auth/xml`, obj)
+
+  return {
+    type: strings.GETTING_XML,
+    payload: request
+  }
 }
 
 const getClientIds = (obj, cb) => {
@@ -69,7 +69,6 @@ export function getXml () {
     }
     obj.stations = response.data
     getSuppliesIds(obj, getVehiclesIds)
-    return getXmlSuccess(obj)
   })
   return {
     type: strings.GETTING_XML,
