@@ -50591,13 +50591,13 @@
 
 	var _xml = __webpack_require__(574);
 
-	var _xmlGeneratorButton = __webpack_require__(577);
+	var _xmlGeneratorButton = __webpack_require__(576);
 
 	var _xmlGeneratorButton2 = _interopRequireDefault(_xmlGeneratorButton);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var jsonHelper = __webpack_require__(576);
+	var jsonHelper = __webpack_require__(577);
 
 
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
@@ -50766,6 +50766,39 @@
 
 /***/ },
 /* 576 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var func = React.PropTypes.func;
+
+	var _require = __webpack_require__(259),
+	    Button = _require.Button;
+
+	var DefaultButton = React.createClass({
+	  displayName: 'DefaultButton',
+
+	  propTypes: {
+	    getXml: func
+	  },
+	  onSubmit: function onSubmit() {
+	    this.props.getXml();
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      Button,
+	      { bsStyle: 'primary',
+	        onClick: this.onSubmit },
+	      'XML'
+	    );
+	  }
+	});
+
+	module.exports = DefaultButton;
+
+/***/ },
+/* 577 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -50868,39 +50901,6 @@
 	  populateStations(obj, proSupply);
 	  return proSupply;
 	};
-
-/***/ },
-/* 577 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var func = React.PropTypes.func;
-
-	var _require = __webpack_require__(259),
-	    Button = _require.Button;
-
-	var DefaultButton = React.createClass({
-	  displayName: 'DefaultButton',
-
-	  propTypes: {
-	    getXml: func
-	  },
-	  onSubmit: function onSubmit() {
-	    this.props.getXml();
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      Button,
-	      { bsStyle: 'primary',
-	        onClick: this.onSubmit },
-	      'XML'
-	    );
-	  }
-	});
-
-	module.exports = DefaultButton;
 
 /***/ },
 /* 578 */
