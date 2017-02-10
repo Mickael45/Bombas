@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
   authyId: String,
   countryCode: String,
   phone: String,
-  station_id: String,
+  posto_id: String,
   verified: { type: Boolean, default: false, select: false }
 })
 

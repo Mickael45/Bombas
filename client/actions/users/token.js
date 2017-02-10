@@ -18,6 +18,13 @@ export function meFromToken (tokenFromStorage) {
   }
 }
 
+export function saveVehicleId (vehicleId) {
+  return {
+    type: token.SAVE_VEHICLE_ID,
+    payload: vehicleId
+  }
+}
+
 export function meFromTokenSuccess (currentUser) {
   return {
     type: token.ME_FROM_TOKEN_SUCCESS,

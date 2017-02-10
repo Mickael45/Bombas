@@ -1,32 +1,29 @@
-const createObject = () => (
-  {
-    gasStation: {
-      code: '978546311',
-      NIF: 'faf79f48af9',
-      country: 'Portugal'
-    },
-    vehicle: {
-      registrationNumber: '78-KB-84',
-      registrationCountry: 'Portugal',
-      NFCCardNumber: '78456123',
-      gasType: 'Gasoléo',
-      maxWeightCapacity: '900'
-    },
-    supply: {
-      date: '12/01/17 - 12h47',
-      liters: '800',
-      price: '1.44'
-    },
-    invoice: {
-      number: '35 - 01/15',
-      date: '14/02/14 - 13h48'
-    }
-  }
-)
+const Supply = require('./../models/supply')
 
-exports.test = (req, res) => {
-  var obj = createObject()
-  return res.json(obj)
+const saveSupply = (supply, res) => {
+  supply.save(function (err, doc) {
+    if (err) {
+      return res.status(424).json({ message: 'Failed to update supply', error: err })
+    }
+    return res.json({ message: 'supply updated' })
+  })
+}
+
+const fillSupply = (supply, cb, info, res) => {
+  supply._transacao = 'TX' + supply._registo
+  supply.cartaoProfissional = info.proCard
+  supply.station_id = info.stationId
+  supply.veiculo_id = info.vehicleId
+  cb(supply, res)
+}
+
+exports.updateLastSupply = (req, res) => {
+  Supply.find({ station_id: req.body.stationId, bomba_id: req.body.bombaId, _transacao: '' }).sort({ dataAbastecimento: -1 }).exec(function (err, supply) {
+    if (err) {
+      return res.status(424).json({ message: 'Failed to find supplies', error: err })
+    }
+    fillSupply(supply[0], saveSupply, req.body, res)
+  })
 }
 
 exports.registerInfo = (req, res) => {

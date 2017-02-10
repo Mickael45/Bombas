@@ -7,7 +7,7 @@ class App extends React.Component {
     return (
       <div>
         <NavBarContainer />
-        <AppContainer>
+        <AppContainer vehicleId={this.props.location.query.id}>
           {this.props.children}
         </AppContainer>
       </div>
@@ -16,7 +16,8 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  children: React.PropTypes.element
+  children: React.PropTypes.element,
+  location: React.PropTypes.object
 }
 
 module.exports = App

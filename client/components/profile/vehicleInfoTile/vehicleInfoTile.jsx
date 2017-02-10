@@ -2,16 +2,16 @@ const React = require('react')
 const DefaultBox = require('./../../defaultBox')
 const DefaultInput = require('./../../defaultInput')
 const { Col } = require('react-bootstrap')
-const { string, func } = React.PropTypes
+const { string, func, bool } = React.PropTypes
 
 const VehicleInfoTile = React.createClass({
   propTypes: {
-    registrationNumber: string,
-    registrationCountry: string,
-    NFCCardNumber: string,
-    gasType: string,
+    activo: bool,
+    combustivel: string,
+    pesoBruto: string,
+    matricula: string,
     distance: string,
-    maxWeightCapacity: string,
+    pais: string,
     onDistanceChangeEvent: func
   },
   render () {
@@ -21,22 +21,22 @@ const VehicleInfoTile = React.createClass({
         <Col md={4} xs={4}>
           <DefaultBox
             title='Matrícula'
-            value={this.props.registrationNumber} />
+            value={this.props.matricula} />
         </Col>
         <Col md={4} xs={4}>
           <DefaultBox
             title='País'
-            value={this.props.registrationCountry} />
+            value={this.props.pais} />
         </Col>
         <Col md={4} xs={4}>
           <DefaultBox
-            title='NFC'
-            value={this.props.NFCCardNumber} />
+            title='Activo'
+            boolValue={this.props.activo} />
         </Col>
         <Col md={6} xs={6}>
           <DefaultBox
             title='Combustível'
-            value={this.props.gasType} />
+            value={this.props.combustivel} />
         </Col>
         <Col md={6} xs={6}>
           <DefaultInput
@@ -47,7 +47,7 @@ const VehicleInfoTile = React.createClass({
         <Col md={8} mdOffset={2} xs={8} xsOffset={2}>
           <DefaultBox
             title='Peso total em carga permitido'
-            value={this.props.maxWeightCapacity} />
+            value={this.props.pesoBruto} />
         </Col>
       </div>
     )

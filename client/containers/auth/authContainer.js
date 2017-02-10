@@ -45,10 +45,9 @@ const mapDispatchToProps = (dispatch) => ({
     }
     dispatch(phoneSignInUser(user))
     .then((response) => {
-      console.log(response)
       if (!response.error) {
         dispatch(signUpUserSuccess(response.payload))
-        browserHistory.push('/profile')
+        browserHistory.push('/profile/')
       } else {
         dispatch(signUpUserFailure(response.payload))
       }
@@ -57,7 +56,6 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state) => {
-  console.log(state)
   if (state.authReducer.user) {
     userId = state.authReducer.user._id
   }
