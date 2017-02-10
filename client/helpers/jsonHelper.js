@@ -44,6 +44,8 @@ const createVehicleObject = (obj, vehicleId) => {
 const filterSupplyByStationId = (obj, stationId) => {
   var supplies = []
   obj.supplies.forEach(function (supply) {
+    console.log(supply.station_id)
+    console.log(stationId)
     if (supply.station_id === stationId) {
       supplies.push(supply)
     }
@@ -56,6 +58,7 @@ const createSupplyObj = (obj, stationId) => {
   var supplyIndex = 0
   var supplies = filterSupplyByStationId(obj, stationId)
 
+  console.log(obj.supplies)
   supplies.forEach(function (supply) {
     stationSupplies.push({
       _registo: supply._registo,
@@ -72,6 +75,8 @@ const createSupplyObj = (obj, stationId) => {
 }
 
 const populateStations = (obj, proSupply) => {
+  console.log('jgroegj,iormesgh')
+  console.log(obj)
   obj.stations.forEach(function (station) {
     proSupply.Abastecimentos.push({
       _idPosto: station._idPosto,
@@ -80,7 +85,7 @@ const populateStations = (obj, proSupply) => {
   })
 }
 
-exports.createJson = (obj, cb) => {
+exports.createJson = (obj) => {
   var proSupply = {
     '_xmlns': 'http://www.at.gov.pt/2016/AbastecimentoProfissional',
     '_xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
@@ -89,5 +94,5 @@ exports.createJson = (obj, cb) => {
     'Abastecimentos': []
   }
   populateStations(obj, proSupply)
-  cb(proSupply)
+  return proSupply
 }

@@ -2,18 +2,37 @@ const axios = require('axios')
 const strings = require('./constantStrings')
 const config = require('./../config/config')
 
-export function getInfo () {
-  var request = axios.get(`${config.SERVER_URL}/auth/info`)
+export function getUsersStation (stationId) {
+  var request = axios.get(`${config.SERVER_URL}/auth/station/${stationId}`)
+
   return {
     type: strings.GETTING_INFO,
     payload: request
   }
 }
 
-export function getInfoSuccess (user) {
+export function getVehiclesOwner (clientId) {
+  var request = axios.get(`${config.SERVER_URL}/auth/client/${clientId}`)
+
+  return {
+    type: strings.GETTING_INFO,
+    payload: request
+  }
+}
+
+export function getVehicle (vehicleId) {
+  var request = axios.get(`${config.SERVER_URL}/auth/vehicle/${vehicleId}`)
+
+  return {
+    type: strings.GETTING_INFO,
+    payload: request
+  }
+}
+
+export function getInfoSuccess (obj) {
   return {
     type: strings.GETTING_INFO_SUCCESS,
-    payload: user
+    payload: obj
   }
 }
 
@@ -24,8 +43,8 @@ export function getInfoFailure (error) {
   }
 }
 
-export function sendInfo (distance) {
-  var request = axios.post(`${config.SERVER_URL}/auth/info`)
+export function sendInfo (obj) {
+  var request = axios.post(`${config.SERVER_URL}/auth/info`, obj)
   return {
     type: strings.SENDING_INFO,
     payload: request

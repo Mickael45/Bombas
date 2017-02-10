@@ -3,7 +3,7 @@ const { func, element, string } = React.PropTypes
 
 class App extends React.Component {
   componentWillMount () {
-    this.props.loadUserFromToken(this.props.token)
+    this.props.loadUserFromToken(this.props.token, this.props.vehicleId)
   }
   render () {
     return (
@@ -17,7 +17,8 @@ class App extends React.Component {
 App.propTypes = {
   children: element,
   loadUserFromToken: func.isRequired,
-  token: string
+  token: string,
+  vehicleId: string
 }
 
 module.exports = App

@@ -1,11 +1,18 @@
 const React = require('react')
 import { FormGroup, FormControl } from 'react-bootstrap'
-const { string } = React.PropTypes
+const { string, bool } = React.PropTypes
 
 const DefaultBox = React.createClass({
   propTypes: {
     title: string,
-    value: string
+    value: string,
+    boolValue: bool
+  },
+  getInitialState () {
+    return {
+      value: (this.props.value) ? this.props.value
+      : (this.props.boolValue) ? 'Sim' : 'Não'
+    }
   },
   render () {
     return (
@@ -14,7 +21,7 @@ const DefaultBox = React.createClass({
           {this.props.title}
         </p>
         <FormControl.Static className='tile-content'>
-          {this.props.value}
+          {this.state.value}
         </FormControl.Static>
       </FormGroup>
     )

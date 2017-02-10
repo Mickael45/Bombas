@@ -1,13 +1,16 @@
 import { connect } from 'react-redux'
-import { meFromToken, meFromTokenSuccess, meFromTokenFailure, resetToken } from '../actions/users/token'
+import { meFromToken, meFromTokenSuccess, meFromTokenFailure, resetToken, saveVehicleId } from '../actions/users/token'
 import { browserHistory } from 'react-router'
 import App from '../components/app'
 
 const mapDispatchToProps = (dispatch) => ({
-  loadUserFromToken (token) {
+  loadUserFromToken (token, vehicleId) {
     if (!token || token === '' || token === 'undefined') {
       browserHistory.push('/auth')
       return
+    }
+    if (vehicleId) {
+      dispatch(saveVehicleId(vehicleId))
     }
     dispatch(meFromToken(token))
     .then((response) => {
@@ -17,10 +20,9 @@ const mapDispatchToProps = (dispatch) => ({
       }
       if (!response.error) {
         dispatch(meFromTokenSuccess(response.payload))
-        browserHistory.push('/profile')
+        browserHistory.push('/profile/')
       } else {
         dispatch(meFromTokenFailure(response.payload))
-        browserHistory.push('/auth')
       }
     })
   },

@@ -5,9 +5,10 @@ const { string } = React.PropTypes
 
 const GasStationInfoTile = React.createClass({
   propTypes: {
-    code: string,
-    NIF: string,
-    country: string
+    city: string,
+    adress: string,
+    name: string,
+    zipCode: string
   },
   render () {
     return (
@@ -15,18 +16,23 @@ const GasStationInfoTile = React.createClass({
         <h3 className='tile-title'>Estabelecimento</h3>
         <Col md={4} xs={4}>
           <DefaultBox
-            title='Código'
-            value={this.props.code} />
+            title='Nome'
+            value={this.props.name} />
         </Col>
         <Col md={4} xs={4}>
           <DefaultBox
-            title='NIF'
-            value={this.props.NIF} />
+            title='Cidade'
+            value={this.props.city} />
         </Col>
         <Col md={4} xs={4}>
           <DefaultBox
-            title='País do NIF'
-            value={this.props.country} />
+            title='Morada'
+            value={this.props.adress} />
+        </Col>
+        <Col md={6} mdOffset={3} xs={6} xsOffset={3}>
+          <DefaultBox
+            title='Código Postal'
+            value={this.props.zipCode} />
         </Col>
       </div>
     )

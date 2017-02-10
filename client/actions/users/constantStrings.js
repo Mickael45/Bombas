@@ -3,6 +3,7 @@ module.exports = {
     ME_FROM_TOKEN: 'ME_FROM_TOKEN',
     ME_FROM_TOKEN_SUCCESS: 'ME_FROM_TOKEN_SUCCESS',
     ME_FROM_TOKEN_FAILURE: 'ME_FROM_TOKEN_FAILURE',
+    SAVE_VEHICLE_ID: 'SAVE_VEHICLE_ID',
     RESET_TOKEN: 'RESET_TOKEN'
   },
   signUp: { // Sign Up User
@@ -20,5 +21,5 @@ module.exports = {
   logout: { // log out user
     LOGOUT_USER: 'LOGOUT_USER'
   },
-  INITIAL_STATE: {user: null, status: 'not subscribed', error: null, loading: false, token: null}
+  INITIAL_STATE: {vehicleId: null, user: null, status: 'not subscribed', error: null, loading: false, token: null}
 }

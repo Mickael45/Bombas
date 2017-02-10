@@ -21539,9 +21539,9 @@
 	var React = __webpack_require__(1);
 	var App = __webpack_require__(227);
 	var Auth = __webpack_require__(565);
-	var Profile = __webpack_require__(579);
+	var Profile = __webpack_require__(578);
 
-	var store = __webpack_require__(588);
+	var store = __webpack_require__(586);
 
 	var _require = __webpack_require__(511),
 	    Router = _require.Router,
@@ -24268,7 +24268,7 @@
 	        React.createElement(NavBarContainer, null),
 	        React.createElement(
 	          AppContainer,
-	          null,
+	          { vehicleId: this.props.location.query.id },
 	          this.props.children
 	        )
 	      );
@@ -24279,7 +24279,8 @@
 	}(React.Component);
 
 	App.propTypes = {
-	  children: React.PropTypes.element
+	  children: React.PropTypes.element,
+	  location: React.PropTypes.object
 	};
 
 	module.exports = App;
@@ -24414,6 +24415,7 @@
 	    ME_FROM_TOKEN: 'ME_FROM_TOKEN',
 	    ME_FROM_TOKEN_SUCCESS: 'ME_FROM_TOKEN_SUCCESS',
 	    ME_FROM_TOKEN_FAILURE: 'ME_FROM_TOKEN_FAILURE',
+	    SAVE_VEHICLE_ID: 'SAVE_VEHICLE_ID',
 	    RESET_TOKEN: 'RESET_TOKEN'
 	  },
 	  signUp: { // Sign Up User
@@ -24431,7 +24433,7 @@
 	  logout: { // log out user
 	    LOGOUT_USER: 'LOGOUT_USER'
 	  },
-	  INITIAL_STATE: { user: null, status: 'not subscribed', error: null, loading: false, token: null }
+	  INITIAL_STATE: { vehicleId: null, user: null, status: 'not subscribed', error: null, loading: false, token: null }
 	};
 
 /***/ },
@@ -25880,6 +25882,7 @@
 	  value: true
 	});
 	exports.meFromToken = meFromToken;
+	exports.saveVehicleId = saveVehicleId;
 	exports.meFromTokenSuccess = meFromTokenSuccess;
 	exports.meFromTokenFailure = meFromTokenFailure;
 	exports.resetToken = resetToken;
@@ -25907,6 +25910,13 @@
 	  return {
 	    type: _constantStrings.token.ME_FROM_TOKEN,
 	    payload: request
+	  };
+	}
+
+	function saveVehicleId(vehicleId) {
+	  return {
+	    type: _constantStrings.token.SAVE_VEHICLE_ID,
+	    payload: vehicleId
 	  };
 	}
 
@@ -50020,10 +50030,13 @@
 
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
-	    loadUserFromToken: function loadUserFromToken(token) {
+	    loadUserFromToken: function loadUserFromToken(token, vehicleId) {
 	      if (!token || token === '' || token === 'undefined') {
 	        _reactRouter.browserHistory.push('/auth');
 	        return;
+	      }
+	      if (vehicleId) {
+	        dispatch((0, _token.saveVehicleId)(vehicleId));
 	      }
 	      dispatch((0, _token.meFromToken)(token)).then(function (response) {
 	        if (response.type !== 'ME_FROM_TOKEN') {
@@ -50032,10 +50045,9 @@
 	        }
 	        if (!response.error) {
 	          dispatch((0, _token.meFromTokenSuccess)(response.payload));
-	          _reactRouter.browserHistory.push('/profile');
+	          _reactRouter.browserHistory.push('/profile/');
 	        } else {
 	          dispatch((0, _token.meFromTokenFailure)(response.payload));
-	          _reactRouter.browserHistory.push('/auth');
 	        }
 	      });
 	    },
@@ -50085,7 +50097,7 @@
 	  _createClass(App, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      this.props.loadUserFromToken(this.props.token);
+	      this.props.loadUserFromToken(this.props.token, this.props.vehicleId);
 	    }
 	  }, {
 	    key: 'render',
@@ -50104,7 +50116,8 @@
 	App.propTypes = {
 	  children: element,
 	  loadUserFromToken: func.isRequired,
-	  token: string
+	  token: string,
+	  vehicleId: string
 	};
 
 	module.exports = App;
@@ -50187,10 +50200,9 @@
 	        password: password
 	      };
 	      dispatch((0, _phoneSignUp.phoneSignInUser)(user)).then(function (response) {
-	        console.log(response);
 	        if (!response.error) {
 	          dispatch((0, _phoneSignUp.signUpUserSuccess)(response.payload));
-	          _reactRouter.browserHistory.push('/profile');
+	          _reactRouter.browserHistory.push('/profile/');
 	        } else {
 	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload));
 	        }
@@ -50200,7 +50212,6 @@
 	};
 
 	var mapStateToProps = function mapStateToProps(state) {
-	  console.log(state);
 	  if (state.authReducer.user) {
 	    userId = state.authReducer.user._id;
 	  }
@@ -50586,15 +50597,52 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var jsonHelper = __webpack_require__(576);
+
+
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
 	    getXml: function getXml() {
-	      dispatch((0, _xml.getXml)()).then(function (response) {
+	      var obj = {};
+	      dispatch((0, _xml.getStations)()).then(function (response) {
 	        if (response.error) {
-	          dispatch((0, _xml.getXmlFailure)(response.payload));
+	          dispatch((0, _xml.getXmlFailure)(response.error));
 	        } else {
-	          window.open('/download');
-	          dispatch((0, _xml.getXmlSuccess)(response.payload));
+	          obj.stations = response.payload.data;
+	          dispatch((0, _xml.getSupplierByIds)(obj.stations)).then(function (response) {
+	            if (response.error) {
+	              dispatch((0, _xml.getXmlFailure)(response.error));
+	            } else {
+	              obj.supplies = response.payload.data;
+	              dispatch((0, _xml.getVehiclesByIds)(obj.supplies)).then(function (response) {
+	                if (response.error) {
+	                  dispatch((0, _xml.getXmlFailure)(response.error));
+	                } else {
+	                  obj.vehicles = response.payload.data;
+	                  dispatch((0, _xml.getClientIds)(obj.vehicles)).then(function (response) {
+	                    if (response.error) {
+	                      dispatch((0, _xml.getXmlFailure)(response.error));
+	                    } else {
+	                      obj.clients = response.payload.data;
+	                      console.log('OBJECT');
+	                      console.log(obj);
+	                      var jsonToSend = jsonHelper.createJson(obj);
+	                      console.log('JSONTOSEND');
+	                      console.log(jsonToSend);
+	                      dispatch((0, _xml.sendXmlToServer)(jsonToSend)).then(function (response) {
+	                        if (response.error) {
+	                          dispatch((0, _xml.getXmlFailure)(response.error));
+	                        } else {
+	                          window.open('/download');
+	                          dispatch((0, _xml.getXmlSuccess)(response.payload));
+	                        }
+	                      });
+	                    }
+	                  });
+	                }
+	              });
+	            }
+	          });
 	        }
 	      });
 	    }
@@ -50612,80 +50660,71 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.getXml = getXml;
+	exports.sendXmlToServer = sendXmlToServer;
+	exports.getClientIds = getClientIds;
+	exports.getVehiclesByIds = getVehiclesByIds;
+	exports.getSupplierByIds = getSupplierByIds;
+	exports.getStations = getStations;
 	exports.getXmlSuccess = getXmlSuccess;
 	exports.getXmlFailure = getXmlFailure;
 	var axios = __webpack_require__(231);
 	var strings = __webpack_require__(575);
 	var config = __webpack_require__(256);
-	var jsonHelper = __webpack_require__(576);
 
-	var sendXmlToServer = function sendXmlToServer(obj) {
+	function sendXmlToServer(obj) {
 	  var request = axios.post(config.SERVER_URL + '/auth/xml', obj);
 
 	  return {
 	    type: strings.GETTING_XML,
 	    payload: request
 	  };
-	};
+	}
 
-	var getClientIds = function getClientIds(obj, cb) {
+	function getClientIds(vehicles, cb) {
 	  var clientsIds = [];
 
-	  obj.vehicles.forEach(function (vehicle) {
+	  vehicles.forEach(function (vehicle) {
 	    clientsIds.push({ _id: vehicle.cliente_id });
 	  });
-	  axios.get(config.SERVER_URL + '/auth/clients', clientsIds).then(function (response) {
-	    if (response.error) {
-	      return getXmlFailure();
-	    }
-	    obj.clients = response.data;
-	    cb(obj, sendXmlToServer);
-	  });
-	};
+	  var request = axios.get(config.SERVER_URL + '/auth/clients', clientsIds);
 
-	var getVehiclesIds = function getVehiclesIds(obj, cb) {
+	  return {
+	    type: strings.GETTING_XML,
+	    payload: request
+	  };
+	}
+
+	function getVehiclesByIds(supplies, cb) {
 	  var vehicleIds = [];
 
-	  obj.supplies.forEach(function (supply) {
+	  supplies.forEach(function (supply) {
 	    vehicleIds.push({ _id: supply.veiculo_id });
 	  });
-	  axios.get(config.SERVER_URL + '/auth/vehicles', vehicleIds).then(function (response) {
-	    if (response.error) {
-	      return getXmlFailure();
-	    }
-	    obj.vehicles = response.data;
-	    cb(obj, jsonHelper.createJson);
-	  });
-	};
+	  var request = axios.get(config.SERVER_URL + '/auth/vehicles', vehicleIds);
 
-	var getSuppliesIds = function getSuppliesIds(obj, cb) {
+	  return {
+	    type: strings.GETTING_XML,
+	    payload: request
+	  };
+	}
+
+	function getSupplierByIds(stations, cb) {
 	  var stationsIds = [];
 
-	  obj.stations.forEach(function (station) {
+	  stations.forEach(function (station) {
 	    stationsIds.push({ _id: station.Abastecimento });
 	  });
-	  axios.get(config.SERVER_URL + '/auth/supplies', stationsIds).then(function (response) {
-	    if (response.error) {
-	      return getXmlFailure();
-	    }
-	    obj.supplies = response.data;
-	    cb(obj, getClientIds);
-	  });
-	};
+	  var request = axios.get(config.SERVER_URL + '/auth/supplies', stationsIds);
 
-	function getXml() {
-	  var obj = {};
-	  console.log(config);
-	  console.log(config.SERVER_URL);
-	  var request = axios.get(config.SERVER_URL + '/auth/stations').then(function (response) {
-	    if (response.error) {
-	      return getXmlSuccess(response.error);
-	    }
-	    obj.stations = response.data;
-	    getSuppliesIds(obj, getVehiclesIds);
-	    return getXmlSuccess(obj);
-	  });
+	  return {
+	    type: strings.GETTING_XML,
+	    payload: request
+	  };
+	}
+
+	function getStations() {
+	  var request = axios.get(config.SERVER_URL + '/auth/stations');
+
 	  return {
 	    type: strings.GETTING_XML,
 	    payload: request
@@ -50777,6 +50816,8 @@
 	var filterSupplyByStationId = function filterSupplyByStationId(obj, stationId) {
 	  var supplies = [];
 	  obj.supplies.forEach(function (supply) {
+	    console.log(supply.station_id);
+	    console.log(stationId);
 	    if (supply.station_id === stationId) {
 	      supplies.push(supply);
 	    }
@@ -50789,6 +50830,7 @@
 	  var supplyIndex = 0;
 	  var supplies = filterSupplyByStationId(obj, stationId);
 
+	  console.log(obj.supplies);
 	  supplies.forEach(function (supply) {
 	    stationSupplies.push({
 	      _registo: supply._registo,
@@ -50805,6 +50847,8 @@
 	};
 
 	var populateStations = function populateStations(obj, proSupply) {
+	  console.log('jgroegj,iormesgh');
+	  console.log(obj);
 	  obj.stations.forEach(function (station) {
 	    proSupply.Abastecimentos.push({
 	      _idPosto: station._idPosto,
@@ -50813,7 +50857,7 @@
 	  });
 	};
 
-	exports.createJson = function (obj, cb) {
+	exports.createJson = function (obj) {
 	  var proSupply = {
 	    '_xmlns': 'http://www.at.gov.pt/2016/AbastecimentoProfissional',
 	    '_xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
@@ -50822,7 +50866,7 @@
 	    'Abastecimentos': []
 	  };
 	  populateStations(obj, proSupply);
-	  cb(proSupply);
+	  return proSupply;
 	};
 
 /***/ },
@@ -50859,14 +50903,13 @@
 	module.exports = DefaultButton;
 
 /***/ },
-/* 578 */,
-/* 579 */
+/* 578 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var ProfileContainer = __webpack_require__(580);
+	var ProfileContainer = __webpack_require__(579);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -50878,16 +50921,16 @@
 	module.exports = Profile;
 
 /***/ },
-/* 580 */
+/* 579 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _reactRedux = __webpack_require__(179);
 
-	var _info = __webpack_require__(581);
+	var _info = __webpack_require__(580);
 
-	var _profile = __webpack_require__(582);
+	var _profile = __webpack_require__(581);
 
 	var _profile2 = _interopRequireDefault(_profile);
 
@@ -50895,17 +50938,33 @@
 
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
-	    getInfo: function getInfo() {
-	      dispatch((0, _info.getInfo)()).then(function (response) {
+	    getInfo: function getInfo(vehicleId, stationId) {
+	      var obj = {};
+	      dispatch((0, _info.getVehicle)(vehicleId, stationId)).then(function (response) {
 	        if (response.error) {
 	          dispatch((0, _info.getInfoFailure)(response.payload));
 	        } else {
-	          dispatch((0, _info.getInfoSuccess)(response.payload));
+	          obj.vehicle = response.payload.data;
+	          dispatch((0, _info.getVehiclesOwner)(obj.vehicle.cliente_id)).then(function (response) {
+	            if (response.error) {
+	              dispatch((0, _info.getInfoFailure)(response.payload));
+	            } else {
+	              obj.client = response.payload.data;
+	              dispatch((0, _info.getUsersStation)(stationId)).then(function (response) {
+	                if (response.error) {
+	                  dispatch((0, _info.getInfoFailure)(response.payload));
+	                } else {
+	                  obj.station = response.payload.data;
+	                  dispatch((0, _info.getInfoSuccess)(obj));
+	                }
+	              });
+	            }
+	          });
 	        }
 	      });
 	    },
-	    sendInfo: function sendInfo(distance) {
-	      dispatch((0, _info.sendInfo)(distance)).then(function (response) {
+	    sendInfo: function sendInfo(obj) {
+	      dispatch((0, _info.sendInfo)(obj)).then(function (response) {
 	        if (response.error) {
 	          dispatch((0, _info.sendInfoSuccess)(response.payload));
 	        } else {
@@ -50917,16 +50976,22 @@
 	};
 
 	var mapStateToProps = function mapStateToProps(state) {
+	  var stationId;
+	  if (state.authReducer.user) {
+	    stationId = state.authReducer.user.posto_id;
+	  }
 	  return {
 	    data: state.infoReducer.data,
-	    status: state.infoReducer.status
+	    status: state.infoReducer.status,
+	    vehicleId: state.authReducer.vehicleId,
+	    stationId: stationId
 	  };
 	};
 
 	module.exports = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_profile2.default);
 
 /***/ },
-/* 581 */
+/* 580 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50934,7 +50999,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.getInfo = getInfo;
+	exports.getUsersStation = getUsersStation;
+	exports.getVehiclesOwner = getVehiclesOwner;
+	exports.getVehicle = getVehicle;
 	exports.getInfoSuccess = getInfoSuccess;
 	exports.getInfoFailure = getInfoFailure;
 	exports.sendInfo = sendInfo;
@@ -50944,18 +51011,37 @@
 	var strings = __webpack_require__(575);
 	var config = __webpack_require__(256);
 
-	function getInfo() {
-	  var request = axios.get(config.SERVER_URL + '/auth/info');
+	function getUsersStation(stationId) {
+	  var request = axios.get(config.SERVER_URL + '/auth/station/' + stationId);
+
 	  return {
 	    type: strings.GETTING_INFO,
 	    payload: request
 	  };
 	}
 
-	function getInfoSuccess(user) {
+	function getVehiclesOwner(clientId) {
+	  var request = axios.get(config.SERVER_URL + '/auth/client/' + clientId);
+
+	  return {
+	    type: strings.GETTING_INFO,
+	    payload: request
+	  };
+	}
+
+	function getVehicle(vehicleId) {
+	  var request = axios.get(config.SERVER_URL + '/auth/vehicle/' + vehicleId);
+
+	  return {
+	    type: strings.GETTING_INFO,
+	    payload: request
+	  };
+	}
+
+	function getInfoSuccess(obj) {
 	  return {
 	    type: strings.GETTING_INFO_SUCCESS,
-	    payload: user
+	    payload: obj
 	  };
 	}
 
@@ -50966,8 +51052,8 @@
 	  };
 	}
 
-	function sendInfo(distance) {
-	  var request = axios.post(config.SERVER_URL + '/auth/info');
+	function sendInfo(obj) {
+	  var request = axios.post(config.SERVER_URL + '/auth/info', obj);
 	  return {
 	    type: strings.SENDING_INFO,
 	    payload: request
@@ -50989,7 +51075,7 @@
 	}
 
 /***/ },
-/* 582 */
+/* 581 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50997,10 +51083,9 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var React = __webpack_require__(1);
-	var GasStationInfoTile = __webpack_require__(583);
-	var VehicleInfoTile = __webpack_require__(585);
-	var SupplyInfoTile = __webpack_require__(586);
-	var InvoiceInfoTile = __webpack_require__(587);
+	var GasStationInfoTile = __webpack_require__(582);
+	var VehicleInfoTile = __webpack_require__(584);
+	var ClientInfoTile = __webpack_require__(585);
 	var DefaultButton = __webpack_require__(570);
 
 	var _require = __webpack_require__(259),
@@ -51019,10 +51104,12 @@
 	    data: object,
 	    getInfo: func,
 	    sendInfo: func,
-	    status: string
+	    status: string,
+	    vehicleId: string,
+	    stationId: string
 	  },
 	  componentDidMount: function componentDidMount() {
-	    this.props.getInfo();
+	    this.props.getInfo(this.props.vehicleId, this.props.stationId);
 	  },
 	  getInitialState: function getInitialState() {
 	    return {
@@ -51033,7 +51120,13 @@
 	    this.setState({ distance: e.target.value });
 	  },
 	  onValidationEvent: function onValidationEvent() {
-	    this.props.sendInfo(this.state.distance);
+	    var obj = {
+	      bombaId: '2',
+	      stationId: this.props.stationId,
+	      vehicleId: this.props.vehicleId,
+	      km: this.state.distance
+	    };
+	    this.props.sendInfo(obj);
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -51049,7 +51142,7 @@
 	        React.createElement(
 	          Col,
 	          { md: 3, xs: 8, xsOffset: 2 },
-	          React.createElement(GasStationInfoTile, this.props.data.gasStation)
+	          React.createElement(GasStationInfoTile, this.props.data.station)
 	        ),
 	        React.createElement(
 	          Col,
@@ -51061,12 +51154,7 @@
 	        React.createElement(
 	          Col,
 	          { md: 3, xs: 8, xsOffset: 2 },
-	          React.createElement(SupplyInfoTile, this.props.data.supply)
-	        ),
-	        React.createElement(
-	          Col,
-	          { md: 3, xs: 8, xsOffset: 2 },
-	          React.createElement(InvoiceInfoTile, this.props.data.invoice)
+	          React.createElement(ClientInfoTile, this.props.data.client)
 	        )
 	      ),
 	      React.createElement(
@@ -51084,13 +51172,13 @@
 	module.exports = Profile;
 
 /***/ },
-/* 583 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(584);
+	var DefaultBox = __webpack_require__(583);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -51102,9 +51190,10 @@
 	  displayName: 'GasStationInfoTile',
 
 	  propTypes: {
-	    code: string,
-	    NIF: string,
-	    country: string
+	    city: string,
+	    adress: string,
+	    name: string,
+	    zipCode: string
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -51119,22 +51208,29 @@
 	        Col,
 	        { md: 4, xs: 4 },
 	        React.createElement(DefaultBox, {
-	          title: 'C\xF3digo',
-	          value: this.props.code })
+	          title: 'Nome',
+	          value: this.props.name })
 	      ),
 	      React.createElement(
 	        Col,
 	        { md: 4, xs: 4 },
 	        React.createElement(DefaultBox, {
-	          title: 'NIF',
-	          value: this.props.NIF })
+	          title: 'Cidade',
+	          value: this.props.city })
 	      ),
 	      React.createElement(
 	        Col,
 	        { md: 4, xs: 4 },
 	        React.createElement(DefaultBox, {
-	          title: 'Pa\xEDs do NIF',
-	          value: this.props.country })
+	          title: 'Morada',
+	          value: this.props.adress })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
+	        React.createElement(DefaultBox, {
+	          title: 'C\xF3digo Postal',
+	          value: this.props.zipCode })
 	      )
 	    );
 	  }
@@ -51143,7 +51239,7 @@
 	module.exports = GasStationInfoTile;
 
 /***/ },
-/* 584 */
+/* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51151,7 +51247,9 @@
 	var _reactBootstrap = __webpack_require__(259);
 
 	var React = __webpack_require__(1);
-	var string = React.PropTypes.string;
+	var _React$PropTypes = React.PropTypes,
+	    string = _React$PropTypes.string,
+	    bool = _React$PropTypes.bool;
 
 
 	var DefaultBox = React.createClass({
@@ -51159,7 +51257,13 @@
 
 	  propTypes: {
 	    title: string,
-	    value: string
+	    value: string,
+	    boolValue: bool
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      value: this.props.value ? this.props.value : this.props.boolValue ? 'Sim' : 'Não'
+	    };
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -51173,7 +51277,7 @@
 	      React.createElement(
 	        _reactBootstrap.FormControl.Static,
 	        { className: 'tile-content' },
-	        this.props.value
+	        this.state.value
 	      )
 	    );
 	  }
@@ -51182,13 +51286,13 @@
 	module.exports = DefaultBox;
 
 /***/ },
-/* 585 */
+/* 584 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(584);
+	var DefaultBox = __webpack_require__(583);
 	var DefaultInput = __webpack_require__(569);
 
 	var _require = __webpack_require__(259),
@@ -51196,19 +51300,20 @@
 
 	var _React$PropTypes = React.PropTypes,
 	    string = _React$PropTypes.string,
-	    func = _React$PropTypes.func;
+	    func = _React$PropTypes.func,
+	    bool = _React$PropTypes.bool;
 
 
 	var VehicleInfoTile = React.createClass({
 	  displayName: 'VehicleInfoTile',
 
 	  propTypes: {
-	    registrationNumber: string,
-	    registrationCountry: string,
-	    NFCCardNumber: string,
-	    gasType: string,
+	    activo: bool,
+	    combustivel: string,
+	    pesoBruto: string,
+	    matricula: string,
 	    distance: string,
-	    maxWeightCapacity: string,
+	    pais: string,
 	    onDistanceChangeEvent: func
 	  },
 	  render: function render() {
@@ -51225,28 +51330,28 @@
 	        { md: 4, xs: 4 },
 	        React.createElement(DefaultBox, {
 	          title: 'Matr\xEDcula',
-	          value: this.props.registrationNumber })
+	          value: this.props.matricula })
 	      ),
 	      React.createElement(
 	        Col,
 	        { md: 4, xs: 4 },
 	        React.createElement(DefaultBox, {
 	          title: 'Pa\xEDs',
-	          value: this.props.registrationCountry })
+	          value: this.props.pais })
 	      ),
 	      React.createElement(
 	        Col,
 	        { md: 4, xs: 4 },
 	        React.createElement(DefaultBox, {
-	          title: 'NFC',
-	          value: this.props.NFCCardNumber })
+	          title: 'Activo',
+	          boolValue: this.props.activo })
 	      ),
 	      React.createElement(
 	        Col,
 	        { md: 6, xs: 6 },
 	        React.createElement(DefaultBox, {
 	          title: 'Combust\xEDvel',
-	          value: this.props.gasType })
+	          value: this.props.combustivel })
 	      ),
 	      React.createElement(
 	        Col,
@@ -51261,7 +51366,7 @@
 	        { md: 8, mdOffset: 2, xs: 8, xsOffset: 2 },
 	        React.createElement(DefaultBox, {
 	          title: 'Peso total em carga permitido',
-	          value: this.props.maxWeightCapacity })
+	          value: this.props.pesoBruto })
 	      )
 	    );
 	  }
@@ -51270,120 +51375,66 @@
 	module.exports = VehicleInfoTile;
 
 /***/ },
+/* 585 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var DefaultBox = __webpack_require__(583);
+
+	var _require = __webpack_require__(259),
+	    Col = _require.Col;
+
+	var string = React.PropTypes.string;
+
+
+	var ClientInfoTile = React.createClass({
+	  displayName: 'ClientInfoTile',
+
+	  propTypes: {
+	    vat: string,
+	    nome: string,
+	    pais: string
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h3',
+	        { className: 'tile-title' },
+	        'Cliente'
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 4, xs: 4 },
+	        React.createElement(DefaultBox, {
+	          title: 'Nome',
+	          value: this.props.nome })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 4, xs: 4 },
+	        React.createElement(DefaultBox, {
+	          title: 'Pa\xEDs',
+	          value: this.props.pais })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 4, xs: 4 },
+	        React.createElement(DefaultBox, {
+	          title: 'NIF',
+	          value: this.props.vat })
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ClientInfoTile;
+
+/***/ },
 /* 586 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var DateAndTimeBox = __webpack_require__(584);
-	var GasAmountBox = __webpack_require__(584);
-	var GasPriceBox = __webpack_require__(584);
-
-	var _require = __webpack_require__(259),
-	    Col = _require.Col;
-
-	var string = React.PropTypes.string;
-
-
-	var SupplyInfoTile = React.createClass({
-	  displayName: 'SupplyInfoTile',
-
-	  propTypes: {
-	    date: string,
-	    liters: string,
-	    price: string
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h3',
-	        { className: 'tile-title' },
-	        'Abastecimento'
-	      ),
-	      React.createElement(
-	        Col,
-	        { md: 3, xs: 3 },
-	        React.createElement(GasPriceBox, {
-	          title: 'Pre\xE7o',
-	          value: this.props.price })
-	      ),
-	      React.createElement(
-	        Col,
-	        { md: 3, xs: 3 },
-	        React.createElement(GasAmountBox, {
-	          title: 'Litros',
-	          value: this.props.liters })
-	      ),
-	      React.createElement(
-	        Col,
-	        { md: 6, xs: 6 },
-	        React.createElement(DateAndTimeBox, {
-	          title: 'Data e hora',
-	          value: this.props.date })
-	      )
-	    );
-	  }
-	});
-
-	module.exports = SupplyInfoTile;
-
-/***/ },
-/* 587 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var InvoiceNumberBox = __webpack_require__(584);
-	var DateAndTimeBox = __webpack_require__(584);
-
-	var _require = __webpack_require__(259),
-	    Col = _require.Col;
-
-	var string = React.PropTypes.string;
-
-
-	var InvoiceInfoTile = React.createClass({
-	  displayName: 'InvoiceInfoTile',
-
-	  propTypes: {
-	    number: string,
-	    date: string
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h3',
-	        { className: 'tile-title' },
-	        'Fatura'
-	      ),
-	      React.createElement(
-	        Col,
-	        { md: 6, xs: 6 },
-	        React.createElement(InvoiceNumberBox, {
-	          title: 'N\xFAmero da fatura',
-	          value: this.props.number })
-	      ),
-	      React.createElement(
-	        Col,
-	        { md: 6, xs: 6 },
-	        React.createElement(DateAndTimeBox, {
-	          title: 'Data e hora',
-	          value: this.props.date })
-	      )
-	    );
-	  }
-	});
-
-	module.exports = InvoiceInfoTile;
-
-/***/ },
-/* 588 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51392,15 +51443,15 @@
 
 	var _redux = __webpack_require__(190);
 
-	var _reduxPromise = __webpack_require__(589);
+	var _reduxPromise = __webpack_require__(587);
 
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 
-	var _reducers = __webpack_require__(596);
+	var _reducers = __webpack_require__(594);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _localStorage = __webpack_require__(600);
+	var _localStorage = __webpack_require__(598);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51421,7 +51472,7 @@
 	module.exports = store;
 
 /***/ },
-/* 589 */
+/* 587 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51440,7 +51491,7 @@
 
 	exports['default'] = promiseMiddleware;
 
-	var _fluxStandardAction = __webpack_require__(590);
+	var _fluxStandardAction = __webpack_require__(588);
 
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -51467,7 +51518,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 590 */
+/* 588 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51480,7 +51531,7 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 
-	var _lodashIsplainobject = __webpack_require__(591);
+	var _lodashIsplainobject = __webpack_require__(589);
 
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 
@@ -51499,7 +51550,7 @@
 	}
 
 /***/ },
-/* 591 */
+/* 589 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51514,9 +51565,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(592),
-	    isArguments = __webpack_require__(593),
-	    keysIn = __webpack_require__(594);
+	var baseFor = __webpack_require__(590),
+	    isArguments = __webpack_require__(591),
+	    keysIn = __webpack_require__(592);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -51610,7 +51661,7 @@
 	module.exports = isPlainObject;
 
 /***/ },
-/* 592 */
+/* 590 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -51665,7 +51716,7 @@
 	module.exports = baseFor;
 
 /***/ },
-/* 593 */
+/* 591 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -51901,7 +51952,7 @@
 	module.exports = isArguments;
 
 /***/ },
-/* 594 */
+/* 592 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51916,8 +51967,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(593),
-	    isArray = __webpack_require__(595);
+	var isArguments = __webpack_require__(591),
+	    isArray = __webpack_require__(593);
 
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -52040,7 +52091,7 @@
 	module.exports = keysIn;
 
 /***/ },
-/* 595 */
+/* 593 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -52226,20 +52277,20 @@
 	module.exports = isArray;
 
 /***/ },
-/* 596 */
+/* 594 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _authReducer = __webpack_require__(597);
+	var _authReducer = __webpack_require__(595);
 
 	var _authReducer2 = _interopRequireDefault(_authReducer);
 
-	var _infoReducer = __webpack_require__(598);
+	var _infoReducer = __webpack_require__(596);
 
 	var _infoReducer2 = _interopRequireDefault(_infoReducer);
 
-	var _xmlReducer = __webpack_require__(599);
+	var _xmlReducer = __webpack_require__(597);
 
 	var _xmlReducer2 = _interopRequireDefault(_xmlReducer);
 
@@ -52256,7 +52307,7 @@
 	module.exports = rootReducer;
 
 /***/ },
-/* 597 */
+/* 595 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52278,6 +52329,8 @@
 	      // return error and make loading = false
 	      var tokenError = action.payload.data || { message: action.payload.message };
 	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: tokenError, loading: false, token: '' }); // 2nd one is network or server down errors
+	    case _constantStrings.token.SAVE_VEHICLE_ID:
+	      return Object.assign({}, state, { vehicleId: action.payload, user: null, status: 'not authenticated', error: null, loading: false, token: '' });
 	    case _constantStrings.token.RESET_TOKEN:
 	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: '', loading: false, token: '' });
 	    case _constantStrings.signUp.WAITING_FOR_VALIDATION_CODE:
@@ -52303,7 +52356,7 @@
 	module.exports = authReducer;
 
 /***/ },
-/* 598 */
+/* 596 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52318,8 +52371,7 @@
 	    case _constantStrings.GETTING_INFO:
 	      return Object.assign({}, state, { data: null, status: 'waiting', error: null, loading: true });
 	    case _constantStrings.GETTING_INFO_SUCCESS:
-	      console.log(action);
-	      return Object.assign({}, state, { data: action.payload.data, status: 'data', error: null, loading: false });
+	      return Object.assign({}, state, { data: action.payload, status: 'data', error: null, loading: false });
 	    case _constantStrings.GETTING_INFO_FAILURE:
 	      var err = action.payload.data || { message: action.payload.message };
 	      return Object.assign({}, state, { data: null, status: 'no data', error: err, loading: false });
@@ -52339,7 +52391,7 @@
 	module.exports = infoReducer;
 
 /***/ },
-/* 599 */
+/* 597 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52366,7 +52418,7 @@
 	module.exports = xmlReducer;
 
 /***/ },
-/* 600 */
+/* 598 */
 /***/ function(module, exports) {
 
 	'use strict';
