@@ -51409,14 +51409,37 @@
 	var React = __webpack_require__(1);
 	var DatePicker = __webpack_require__(586);
 	var XmlButton = __webpack_require__(588);
+	var func = React.PropTypes.func;
+
 
 	var Xml = React.createClass({
 	  displayName: 'Xml',
+
+	  propTypes: {
+	    createXmlFile: func
+	  },
+	  getInitialState: function getInitialState() {
+	    var value = new Date().toISOString();
+	    return {
+	      beginning: value,
+	      ending: value
+	    };
+	  },
+	  handleBeginningChange: function handleBeginningChange(value) {
+	    this.setState({ beginning: value });
+	  },
+	  handleEndingChange: function handleEndingChange(value) {
+	    this.setState({ ending: value });
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(DatePicker, null),
+	      React.createElement(DatePicker, {
+	        beginning: this.state.beginning,
+	        ending: this.state.ending,
+	        handleBeginningChange: this.handleBeginningChange,
+	        handleEndingChange: this.handleEndingChange }),
 	      React.createElement(XmlButton, null)
 	    );
 	  }
@@ -51432,27 +51455,22 @@
 
 	var React = __webpack_require__(1);
 	var DP = __webpack_require__(587);
+	var _React$PropTypes = React.PropTypes,
+	    func = _React$PropTypes.func,
+	    string = _React$PropTypes.string;
 
 	var _require = __webpack_require__(312),
-	    ControlLabel = _require.ControlLabel,
-	    HelpBlock = _require.HelpBlock,
 	    FormGroup = _require.FormGroup,
 	    Col = _require.Col;
 
 	var DatePicker = React.createClass({
 	  displayName: 'DatePicker',
-	  getInitialState: function getInitialState() {
-	    var value = new Date().toISOString();
-	    return {
-	      beginning: value,
-	      ending: value
-	    };
-	  },
-	  handleBegginingChange: function handleBegginingChange(value) {
-	    this.setState({ beginning: value });
-	  },
-	  handleEndingChange: function handleEndingChange(value) {
-	    this.setState({ ending: value });
+
+	  propTypes: {
+	    beginning: string,
+	    ending: string,
+	    handleBeginningChange: func,
+	    handleEndingChange: func
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -51465,16 +51483,11 @@
 	          FormGroup,
 	          null,
 	          React.createElement(
-	            ControlLabel,
-	            null,
+	            'p',
+	            { className: 'input-title' },
 	            'Desde'
 	          ),
-	          React.createElement(DP, { id: 'example-datepicker', value: this.state.beginning, onChange: this.handleBegginingChange }),
-	          React.createElement(
-	            HelpBlock,
-	            null,
-	            'Help'
-	          )
+	          React.createElement(DP, { id: 'example-datepicker', value: this.props.beginning, onChange: this.props.handleBeginingChange })
 	        )
 	      ),
 	      React.createElement(
@@ -51484,16 +51497,11 @@
 	          FormGroup,
 	          null,
 	          React.createElement(
-	            ControlLabel,
-	            null,
+	            'p',
+	            { className: 'input-title' },
 	            'At\xE9'
 	          ),
-	          React.createElement(DP, { id: 'example-datepicker', value: this.state.ending, onChange: this.handleChandleEndingChangehange }),
-	          React.createElement(
-	            HelpBlock,
-	            null,
-	            'Help'
-	          )
+	          React.createElement(DP, { id: 'example-datepicker', value: this.props.ending, onChange: this.props.handleEndingChange })
 	        )
 	      )
 	    );
