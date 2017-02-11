@@ -55,10 +55,9 @@ export function sendInfo (obj) {
   }
 }
 
-export function sendInfoSuccess (data) {
+export function sendInfoSuccess () {
   return {
-    type: strings.SENDING_INFO_SUCCESS,
-    payload: data
+    type: strings.SENDING_INFO_SUCCESS
   }
 }
 
@@ -66,5 +65,37 @@ export function sendInfoFailure (err) {
   return {
     type: strings.SENDING_INFO_FAILURE,
     payload: err
+  }
+}
+
+export function gettingPinVerify (vehicleId, pin) {
+  var request = axios.post(`${config.SERVER_URL}/auth/vehicle/${vehicleId}/verify`, {pin})
+
+  return {
+    type: strings.GETTING_PIN_VERIFIED,
+    payload: request
+  }
+}
+
+export function gettingPinVerifySuccess () {
+  return {
+    type: strings.GETTING_PIN_VERIFIED_SUCCESS
+  }
+}
+
+export function gettingPinVerifyFailure (error) {
+  var formattedError = {
+    title: 'Error',
+    body: error.message
+  }
+  return {
+    type: strings.GETTING_PIN_VERIFIED_FAILURE,
+    payload: formattedError
+  }
+}
+
+export function resetInfo () {
+  return {
+    type: strings.RESET_INFO
   }
 }

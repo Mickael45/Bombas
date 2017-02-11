@@ -41,6 +41,7 @@ const VehicleInfoTile = React.createClass({
         <Col md={6} xs={6}>
           <DefaultInput
             title='Quilometragem'
+            type='text'
             placeholder='Quilometragem'
             onChange={this.props.onDistanceChangeEvent} />
         </Col>
