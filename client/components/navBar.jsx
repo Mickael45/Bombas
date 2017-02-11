@@ -1,13 +1,18 @@
 const React = require('react')
+const { browserHistory } = require('react-router')
 const { Navbar, Nav, NavItem } = require('react-bootstrap')
-const { func, string } = React.PropTypes
+const { func, string, bool } = React.PropTypes
 
 const NavBar = React.createClass({
   propTypes: {
     logout: func,
     status: string,
     toSignInStatus: func,
-    toSignUpStatus: func
+    toSignUpStatus: func,
+    isUserAdmin: bool
+  },
+  onClickEvent () {
+    browserHistory.push('/xml')
   },
   render () {
     return (
@@ -27,6 +32,13 @@ const NavBar = React.createClass({
               </Nav>
             : <div />
               )
+            }
+            {
+              (this.props.isUserAdmin)
+              ? <Nav pullRight>
+                <NavItem onClick={this.onClickEvent} className='navBar-link'>xml</NavItem>
+              </Nav>
+              : <div />
             }
           </Navbar.Collapse>
         </Navbar>

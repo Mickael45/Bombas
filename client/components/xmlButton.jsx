@@ -13,7 +13,7 @@ const DefaultButton = React.createClass({
     return (
       <Button bsStyle='primary'
         onClick={this.onSubmit}>
-        XML
+        Crear ficheiro xml
       </Button>
     )
   }
