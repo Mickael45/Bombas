@@ -18,8 +18,13 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state) => {
+  var isAdmin
+  if (state.authReducer.user) {
+    isAdmin = state.authReducer.user.isAdmin
+  }
   return {
-    status: state.authReducer.status
+    status: state.authReducer.status,
+    isUserAdmin: isAdmin
   }
 }
 

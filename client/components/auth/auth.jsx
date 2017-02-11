@@ -1,10 +1,9 @@
 const React = require('react')
 // const SignUpForm = require('./signUpForm/signUpForm')
 const SignInForm = require('./signInForm/signInForm')
-const XmlButton = require('./../../containers/xmlButtonContainer')
 // const ValidationCodeForm = require('./validationCodeForm/validationCodeForm')
 const AlertTile = require('./../alertTile')
-const { func, string, object, bool } = React.PropTypes
+const { func, string, object } = React.PropTypes
 const { Col } = require('react-bootstrap')
 
 /* const isOnlyMadeOfNumbers = (birthDate, length) => {
@@ -44,8 +43,7 @@ const Auth = React.createClass({
     validateCode: func,
     error: object,
     resendCode: func,
-    status: string,
-    isUserAdmin: bool
+    status: string
   },
   getInitialState () {
     return {
@@ -105,11 +103,6 @@ const Auth = React.createClass({
           onSignInSubmit={this.onSignInSubmit}
           password={this.state.password}
           onPasswordChangeEvent={this.onPasswordChangeEvent} />
-      }
-        {
-        (this.props.status === 'authenticated' && this.props.isUserAdmin)
-        ? <XmlButton />
-      : <div />
       }
       </Col>
     )

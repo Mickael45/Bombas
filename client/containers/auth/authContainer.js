@@ -56,17 +56,13 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state) => {
-  var isAdmin
   if (state.authReducer.user) {
     userId = state.authReducer.user._id
-    isAdmin = state.authReducer.user.isAdmin
-    console.log(state.authReducer.user)
   }
   return {
     loading: state.authReducer.loading,
     status: state.authReducer.status,
-    error: state.authReducer.error,
-    isUserAdmin: isAdmin
+    error: state.authReducer.error
   }
 }
 
