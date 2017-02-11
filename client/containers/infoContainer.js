@@ -8,19 +8,19 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(getVehicle(vehicleId, stationId))
     .then((response) => {
       if (response.error) {
-        dispatch(getInfoFailure(response.payload))
+        dispatch(getInfoFailure(response.payload.response.data))
       } else {
         obj.vehicle = response.payload.data
         dispatch(getVehiclesOwner(obj.vehicle.cliente_id))
         .then((response) => {
           if (response.error) {
-            dispatch(getInfoFailure(response.payload))
+            dispatch(getInfoFailure(response.payload.response.data))
           } else {
             obj.client = response.payload.data
             dispatch(getUsersStation(stationId))
             .then((response) => {
               if (response.error) {
-                dispatch(getInfoFailure(response.payload))
+                dispatch(getInfoFailure(response.payload.response.data))
               } else {
                 obj.station = response.payload.data
                 dispatch(getInfoSuccess(obj))
@@ -52,6 +52,7 @@ const mapStateToProps = (state) => {
     data: state.infoReducer.data,
     status: state.infoReducer.status,
     vehicleId: state.authReducer.vehicleId,
+    error: state.infoReducer.error,
     stationId: stationId
   }
 }

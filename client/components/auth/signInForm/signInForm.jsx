@@ -21,8 +21,8 @@ const SignUpForm = React.createClass({
           value={this.props.phoneNumber}
           onChange={this.props.onPhoneNumberChangeEvent} />
         <DefaultInput
-          title='PIN'
-          placeholder='******'
+          title='Senha'
+          placeholder='***********'
           value={this.props.password}
           onChange={this.props.onPasswordChangeEvent} />
         <DefaultButton

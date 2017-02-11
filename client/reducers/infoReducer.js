@@ -7,16 +7,13 @@ const infoReducer = (state = INITIAL_STATE, action) => {
     case GETTING_INFO_SUCCESS:
       return Object.assign({}, state, { data: action.payload, status: 'data', error: null, loading: false })
     case GETTING_INFO_FAILURE:
-      var err = action.payload.data || { message: action.payload.message }
-      return Object.assign({}, state, { data: null, status: 'no data', error: err, loading: false })
+      return Object.assign({}, state, { data: null, status: 'no data', error: action.payload, loading: false })
     case SENDING_INFO:
       return Object.assign({}, state, { data: null, status: 'waiting', error: null, loading: true })
     case SENDING_INFO_SUCCESS:
-      console.log(action)
       return Object.assign({}, state, { data: action.payload.data, status: 'data', error: null, loading: false })
     case SENDING_INFO_FAILURE:
-      var err2 = action.payload.data || { message: action.payload.message }
-      return Object.assign({}, state, { data: null, status: 'no data', error: err2, loading: false })
+      return Object.assign({}, state, { data: null, status: 'no data', error: action.payload, loading: false })
     default:
       return state
   }

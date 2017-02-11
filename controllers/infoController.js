@@ -21,6 +21,8 @@ exports.updateLastSupply = (req, res) => {
   Supply.find({ station_id: req.body.stationId, bomba_id: req.body.bombaId, _transacao: '' }).sort({ dataAbastecimento: -1 }).exec(function (err, supply) {
     if (err) {
       return res.status(424).json({ message: 'Failed to find supplies', error: err })
+    } else if (supply.length === 0) {
+      return res.status(400).json({ message: 'There is no supply to register' })
     }
     fillSupply(supply[0], saveSupply, req.body, res)
   })

@@ -1,11 +1,13 @@
 const React = require('react')
-const SignUpForm = require('./signUpForm/signUpForm')
+// const SignUpForm = require('./signUpForm/signUpForm')
 const SignInForm = require('./signInForm/signInForm')
-const ValidationCodeForm = require('./validationCodeForm/validationCodeForm')
-const { func, string } = React.PropTypes
+const XmlButton = require('./../../containers/xmlButtonContainer')
+// const ValidationCodeForm = require('./validationCodeForm/validationCodeForm')
+const AlertTile = require('./../alertTile')
+const { func, string, object, bool } = React.PropTypes
 const { Col } = require('react-bootstrap')
 
-const isOnlyMadeOfNumbers = (birthDate, length) => {
+/* const isOnlyMadeOfNumbers = (birthDate, length) => {
   if (birthDate.length !== length) {
     console.log('6 numbers required')
     return false
@@ -21,9 +23,9 @@ const isOnlyMadeOfNumbers = (birthDate, length) => {
     }
   }
   return true
-}
+} */
 
-const checkBirthDate = (birthDate, length) => {
+/* const checkBirthDate = (birthDate, length) => {
   if (birthDate.length !== length || birthDate[2] !== '/' || birthDate[5] !== '/') {
     console.log('bad format')
     return false
@@ -33,15 +35,17 @@ const checkBirthDate = (birthDate, length) => {
     }
     return true
   }
-}
+} */
 
 const Auth = React.createClass({
   propTypes: {
     signMeUpByPhone: func,
     signMeInByPhone: func,
     validateCode: func,
+    error: object,
     resendCode: func,
-    status: string
+    status: string,
+    isUserAdmin: bool
   },
   getInitialState () {
     return {
@@ -53,9 +57,9 @@ const Auth = React.createClass({
     }
   },
   onSignUpSubmit () {
-    if (!checkBirthDate(this.state.birthDate, 8)) {
+    /* if (!checkBirthDate(this.state.birthDate, 8)) {
       return
-    }
+    } */
     this.props.signMeUpByPhone(this.state.phoneNumber,
       this.state.countryCode,
       this.state.birthDate)
@@ -88,28 +92,25 @@ const Auth = React.createClass({
     return (
       <Col md={6} mdOffset={3} xs={6} xsOffset={3}>
         {
-          (this.props.status === 'waiting'
-          ? <ValidationCodeForm
-            validationCode={this.state.validationCode}
-            onValidationCodeChange={this.onValidationCodeChange}
-            onValidationCodeSubmit={this.onValidationCodeSubmit}
-            onResendCodeSubmit={this.onResendCodeSubmit} />
-          : this.props.status === 'not subscribed'
-          ? <SignUpForm
-            phoneNumber={this.state.phoneNumber}
-            onPhoneNumberChangeEvent={this.onPhoneNumberChangeEvent}
-            countryCode={this.state.countryCode}
-            onCountryCodeChangeEvent={this.onCountryCodeChangeEvent}
-            onSignUpSubmit={this.onSignUpSubmit}
-            birthDate={this.state.birthDate}
-            onBirthDateChangeEvent={this.onBirthDateChangeEvent} />
-          : <SignInForm
-            phoneNumber={this.state.phoneNumber}
-            onPhoneNumberChangeEvent={this.onPhoneNumberChangeEvent}
-            onSignInSubmit={this.onSignInSubmit}
-            password={this.state.password}
-            onPasswordChangeEvent={this.onPasswordChangeEvent} />)
+          (this.props.error)
+          ? <AlertTile {...this.props.error} />
+        : <div />
         }
+        {
+        (this.props.status === 'authenticated')
+          ? <h3>Connected</h3>
+        : <SignInForm
+          phoneNumber={this.state.phoneNumber}
+          onPhoneNumberChangeEvent={this.onPhoneNumberChangeEvent}
+          onSignInSubmit={this.onSignInSubmit}
+          password={this.state.password}
+          onPasswordChangeEvent={this.onPasswordChangeEvent} />
+      }
+        {
+        (this.props.status === 'authenticated' && this.props.isUserAdmin)
+        ? <XmlButton />
+      : <div />
+      }
       </Col>
     )
   }

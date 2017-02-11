@@ -20,7 +20,11 @@ const mapDispatchToProps = (dispatch) => ({
       }
       if (!response.error) {
         dispatch(meFromTokenSuccess(response.payload))
-        browserHistory.push('/profile/')
+        if (vehicleId) {
+          browserHistory.push('/profile')
+        } else {
+          browserHistory.push('/auth')
+        }
       } else {
         dispatch(meFromTokenFailure(response.payload))
       }

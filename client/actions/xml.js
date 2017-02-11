@@ -70,8 +70,12 @@ export function getXmlSuccess (xml) {
 }
 
 export function getXmlFailure (error) {
+  var formatterError = {
+    title: 'Error',
+    body: error.message
+  }
   return {
     type: strings.GETTING_XML_FAILURE,
-    payload: error
+    payload: formatterError
   }
 }

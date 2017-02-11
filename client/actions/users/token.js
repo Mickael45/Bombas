@@ -33,9 +33,13 @@ export function meFromTokenSuccess (currentUser) {
 }
 
 export function meFromTokenFailure (error) {
+  var formatterError = {
+    title: 'Error',
+    body: error.message
+  }
   return {
     type: token.ME_FROM_TOKEN_FAILURE,
-    payload: error
+    payload: formatterError
   }
 }
 

@@ -4,7 +4,7 @@ const bordelController = require('./../controllers/bordelController')
 
 router.post('/auth/xml', xmlGenerator.generateXml)
 
-router.get('/download', xmlGenerator.getXml)
+router.get('/auth/xml', xmlGenerator.getXml)
 
 router.get('/auth/supplies', bordelController.getSupplies)
 
