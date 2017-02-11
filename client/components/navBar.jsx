@@ -25,15 +25,8 @@ const NavBar = React.createClass({
               ? <Nav pullRight>
                 <NavItem onClick={this.props.logout} className='navBar-link'>Sair</NavItem>
               </Nav>
-            : this.props.status === 'not subscribed'
-            ? <Nav pullRight>
-              <NavItem onClick={this.props.toSignInStatus} className='navBar-link'>Entrar</NavItem>
-            </Nav>
-            : this.props.status === 'not authenticated'
-            ? <Nav pullRight>
-              <NavItem onClick={this.props.toSignUpStatus} className='navBar-link'>Registar</NavItem>
-            </Nav>
-            : <Nav />)
+            : <div />
+              )
             }
           </Navbar.Collapse>
         </Navbar>

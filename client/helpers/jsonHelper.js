@@ -44,8 +44,6 @@ const createVehicleObject = (obj, vehicleId) => {
 const filterSupplyByStationId = (obj, stationId) => {
   var supplies = []
   obj.supplies.forEach(function (supply) {
-    console.log(supply.station_id)
-    console.log(stationId)
     if (supply.station_id === stationId) {
       supplies.push(supply)
     }
@@ -58,7 +56,6 @@ const createSupplyObj = (obj, stationId) => {
   var supplyIndex = 0
   var supplies = filterSupplyByStationId(obj, stationId)
 
-  console.log(obj.supplies)
   supplies.forEach(function (supply) {
     stationSupplies.push({
       _registo: supply._registo,
@@ -75,8 +72,6 @@ const createSupplyObj = (obj, stationId) => {
 }
 
 const populateStations = (obj, proSupply) => {
-  console.log('jgroegj,iormesgh')
-  console.log(obj)
   obj.stations.forEach(function (station) {
     proSupply.Abastecimentos.push({
       _idPosto: station._idPosto,

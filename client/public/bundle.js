@@ -21539,30 +21539,30 @@
 	var React = __webpack_require__(1);
 	var App = __webpack_require__(227);
 	var Auth = __webpack_require__(565);
-	var Profile = __webpack_require__(578);
+	var Profile = __webpack_require__(577);
 
-	var store = __webpack_require__(586);
+	var store = __webpack_require__(585);
 
 	var _require = __webpack_require__(511),
 	    Router = _require.Router,
 	    Route = _require.Route,
 	    browserHistory = _require.browserHistory;
 
-	var requireAuth = function requireAuth(nextState, replace) {
+	/* const requireAuth = (nextState, replace) => {
 	  if (store.getState().authReducer.status !== 'authenticated') {
 	    replace({
 	      pathname: '/auth',
 	      state: { nextPathname: nextState.location.pathname }
-	    });
+	    })
 	  }
-	};
+	} */
 
 	var myRoutes = function myRoutes() {
 	  return React.createElement(
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(Route, { path: '/auth', component: Auth }),
-	    React.createElement(Route, { path: '/profile', component: Profile, onEnter: requireAuth })
+	    React.createElement(Route, { path: '/profile', component: Profile })
 	  );
 	};
 
@@ -24392,9 +24392,13 @@
 	}
 
 	function signUpUserFailure(error) {
+	  var formattedError = {
+	    title: 'Error',
+	    body: error.message
+	  };
 	  return {
 	    type: _constantStrings.signUp.SIGNUP_USER_FAILURE,
-	    payload: error
+	    payload: formattedError
 	  };
 	}
 
@@ -25928,9 +25932,13 @@
 	}
 
 	function meFromTokenFailure(error) {
+	  var formatterError = {
+	    title: 'Error',
+	    body: error.message
+	  };
 	  return {
 	    type: _constantStrings.token.ME_FROM_TOKEN_FAILURE,
-	    payload: error
+	    payload: formatterError
 	  };
 	}
 
@@ -25999,23 +26007,7 @@
 	              { onClick: this.props.logout, className: 'navBar-link' },
 	              'Sair'
 	            )
-	          ) : this.props.status === 'not subscribed' ? React.createElement(
-	            Nav,
-	            { pullRight: true },
-	            React.createElement(
-	              NavItem,
-	              { onClick: this.props.toSignInStatus, className: 'navBar-link' },
-	              'Entrar'
-	            )
-	          ) : this.props.status === 'not authenticated' ? React.createElement(
-	            Nav,
-	            { pullRight: true },
-	            React.createElement(
-	              NavItem,
-	              { onClick: this.props.toSignUpStatus, className: 'navBar-link' },
-	              'Registar'
-	            )
-	          ) : React.createElement(Nav, null)
+	          ) : React.createElement('div', null)
 	        )
 	      )
 	    );
@@ -50045,7 +50037,11 @@
 	        }
 	        if (!response.error) {
 	          dispatch((0, _token.meFromTokenSuccess)(response.payload));
-	          _reactRouter.browserHistory.push('/profile/');
+	          if (vehicleId) {
+	            _reactRouter.browserHistory.push('/profile');
+	          } else {
+	            _reactRouter.browserHistory.push('/auth');
+	          }
 	        } else {
 	          dispatch((0, _token.meFromTokenFailure)(response.payload));
 	        }
@@ -50130,14 +50126,12 @@
 
 	var React = __webpack_require__(1);
 	var AuthContainer = __webpack_require__(566);
-	var ButtonContainer = __webpack_require__(573);
 
 	var Auth = function Auth() {
 	  return React.createElement(
 	    'div',
 	    null,
-	    React.createElement(AuthContainer, null),
-	    React.createElement(ButtonContainer, null)
+	    React.createElement(AuthContainer, null)
 	  );
 	};
 
@@ -50173,7 +50167,7 @@
 	      };
 	      dispatch((0, _phoneSignUp.phoneSignUpUser)(user)).then(function (response) {
 	        if (response.error) {
-	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload));
+	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload.response.data));
 	        }
 	      });
 	    },
@@ -50183,14 +50177,14 @@
 	          dispatch((0, _phoneSignUp.signUpUserSuccess)(response.payload));
 	          _reactRouter.browserHistory.push('/profile');
 	        } else {
-	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload));
+	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload.response.data));
 	        }
 	      });
 	    },
 	    resendCode: function resendCode() {
 	      dispatch((0, _phoneSignUp.phoneResendCode)(userId)).then(function (response) {
 	        if (response.error) {
-	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload));
+	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload.response.data));
 	        }
 	      });
 	    },
@@ -50204,7 +50198,7 @@
 	          dispatch((0, _phoneSignUp.signUpUserSuccess)(response.payload));
 	          _reactRouter.browserHistory.push('/profile/');
 	        } else {
-	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload));
+	          dispatch((0, _phoneSignUp.signUpUserFailure)(response.payload.response.data));
 	        }
 	      });
 	    }
@@ -50212,12 +50206,17 @@
 	};
 
 	var mapStateToProps = function mapStateToProps(state) {
+	  var isAdmin;
 	  if (state.authReducer.user) {
 	    userId = state.authReducer.user._id;
+	    isAdmin = state.authReducer.user.isAdmin;
+	    console.log(state.authReducer.user);
 	  }
 	  return {
 	    loading: state.authReducer.loading,
-	    status: state.authReducer.status
+	    status: state.authReducer.status,
+	    error: state.authReducer.error,
+	    isUserAdmin: isAdmin
 	  };
 	};
 
@@ -50230,43 +50229,49 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var SignUpForm = __webpack_require__(568);
-	var SignInForm = __webpack_require__(571);
-	var ValidationCodeForm = __webpack_require__(572);
+	// const SignUpForm = require('./signUpForm/signUpForm')
+	var SignInForm = __webpack_require__(568);
+	var XmlButton = __webpack_require__(600);
+	// const ValidationCodeForm = require('./validationCodeForm/validationCodeForm')
+	var AlertTile = __webpack_require__(571);
 	var _React$PropTypes = React.PropTypes,
 	    func = _React$PropTypes.func,
-	    string = _React$PropTypes.string;
+	    string = _React$PropTypes.string,
+	    object = _React$PropTypes.object,
+	    bool = _React$PropTypes.bool;
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
 
-	var isOnlyMadeOfNumbers = function isOnlyMadeOfNumbers(birthDate, length) {
+	/* const isOnlyMadeOfNumbers = (birthDate, length) => {
 	  if (birthDate.length !== length) {
-	    console.log('6 numbers required');
-	    return false;
+	    console.log('6 numbers required')
+	    return false
 	  }
 	  for (var i = 0; i < length; i++) {
-	    if (birthDate[i] !== '0' && birthDate[i] !== '1' && birthDate[i] !== '2' && birthDate[i] !== '3' && birthDate[i] !== '4' && birthDate[i] !== '5' && birthDate[i] !== '6' && birthDate[i] !== '7' && birthDate[i] !== '8' && birthDate[i] !== '9') {
-	      if (i !== 2 && i !== 5 || birthDate[i] !== '/') {
-	        console.log('only numbers allowed');
-	        return false;
+	    if (birthDate[i] !== '0' && birthDate[i] !== '1' && birthDate[i] !== '2' &&
+	    birthDate[i] !== '3' && birthDate[i] !== '4' && birthDate[i] !== '5' &&
+	    birthDate[i] !== '6' && birthDate[i] !== '7' && birthDate[i] !== '8' && birthDate[i] !== '9') {
+	      if ((i !== 2 && i !== 5) || birthDate[i] !== '/') {
+	        console.log('only numbers allowed')
+	        return false
 	      }
 	    }
 	  }
-	  return true;
-	};
+	  return true
+	} */
 
-	var checkBirthDate = function checkBirthDate(birthDate, length) {
+	/* const checkBirthDate = (birthDate, length) => {
 	  if (birthDate.length !== length || birthDate[2] !== '/' || birthDate[5] !== '/') {
-	    console.log('bad format');
-	    return false;
+	    console.log('bad format')
+	    return false
 	  } else {
 	    if (!isOnlyMadeOfNumbers(birthDate, length)) {
-	      return false;
+	      return false
 	    }
-	    return true;
+	    return true
 	  }
-	};
+	} */
 
 	var Auth = React.createClass({
 	  displayName: 'Auth',
@@ -50275,8 +50280,10 @@
 	    signMeUpByPhone: func,
 	    signMeInByPhone: func,
 	    validateCode: func,
+	    error: object,
 	    resendCode: func,
-	    status: string
+	    status: string,
+	    isUserAdmin: bool
 	  },
 	  getInitialState: function getInitialState() {
 	    return {
@@ -50288,9 +50295,9 @@
 	    };
 	  },
 	  onSignUpSubmit: function onSignUpSubmit() {
-	    if (!checkBirthDate(this.state.birthDate, 8)) {
-	      return;
-	    }
+	    /* if (!checkBirthDate(this.state.birthDate, 8)) {
+	      return
+	    } */
 	    this.props.signMeUpByPhone(this.state.phoneNumber, this.state.countryCode, this.state.birthDate);
 	  },
 	  onSignInSubmit: function onSignInSubmit() {
@@ -50321,23 +50328,18 @@
 	    return React.createElement(
 	      Col,
 	      { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
-	      this.props.status === 'waiting' ? React.createElement(ValidationCodeForm, {
-	        validationCode: this.state.validationCode,
-	        onValidationCodeChange: this.onValidationCodeChange,
-	        onValidationCodeSubmit: this.onValidationCodeSubmit,
-	        onResendCodeSubmit: this.onResendCodeSubmit }) : this.props.status === 'not subscribed' ? React.createElement(SignUpForm, {
-	        phoneNumber: this.state.phoneNumber,
-	        onPhoneNumberChangeEvent: this.onPhoneNumberChangeEvent,
-	        countryCode: this.state.countryCode,
-	        onCountryCodeChangeEvent: this.onCountryCodeChangeEvent,
-	        onSignUpSubmit: this.onSignUpSubmit,
-	        birthDate: this.state.birthDate,
-	        onBirthDateChangeEvent: this.onBirthDateChangeEvent }) : React.createElement(SignInForm, {
+	      this.props.error ? React.createElement(AlertTile, this.props.error) : React.createElement('div', null),
+	      this.props.status === 'authenticated' ? React.createElement(
+	        'h3',
+	        null,
+	        'Connected'
+	      ) : React.createElement(SignInForm, {
 	        phoneNumber: this.state.phoneNumber,
 	        onPhoneNumberChangeEvent: this.onPhoneNumberChangeEvent,
 	        onSignInSubmit: this.onSignInSubmit,
 	        password: this.state.password,
-	        onPasswordChangeEvent: this.onPasswordChangeEvent })
+	        onPasswordChangeEvent: this.onPasswordChangeEvent }),
+	      this.props.status === 'authenticated' && this.props.isUserAdmin ? React.createElement(XmlButton, null) : React.createElement('div', null)
 	    );
 	  }
 	});
@@ -50364,11 +50366,9 @@
 	  propTypes: {
 	    phoneNumber: string,
 	    onPhoneNumberChangeEvent: func,
-	    onSignUpSubmit: func,
-	    countryCode: string,
-	    onCountryCodeChangeEvent: func,
-	    birthDate: string,
-	    onBirthDateChangeEvent: func
+	    password: string,
+	    onPasswordChangeEvent: func,
+	    onSignInSubmit: func
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -50377,27 +50377,22 @@
 	      React.createElement(
 	        'h1',
 	        null,
-	        'Registar'
+	        'Entrar'
 	      ),
-	      React.createElement(DefaultInput, {
-	        title: 'Indicativo',
-	        placeholder: 'indicativo',
-	        value: this.props.countryCode,
-	        onChange: this.props.onCountryCodeChangeEvent }),
 	      React.createElement(DefaultInput, {
 	        title: 'Numero de telem\xF3vel',
 	        placeholder: 'telem\xF3vel',
 	        value: this.props.phoneNumber,
 	        onChange: this.props.onPhoneNumberChangeEvent }),
 	      React.createElement(DefaultInput, {
-	        title: 'Data de nascimento',
-	        placeholder: 'dd/mm/yy',
-	        value: this.props.birthDate,
-	        onChange: this.props.onBirthDateChangeEvent }),
+	        title: 'Senha',
+	        placeholder: '***********',
+	        value: this.props.password,
+	        onChange: this.props.onPasswordChangeEvent }),
 	      React.createElement(DefaultButton, {
 	        'class': 'button',
 	        title: 'Enviar',
-	        onSubmit: this.props.onSignUpSubmit })
+	        onSubmit: this.props.onSignInSubmit })
 	    );
 	  }
 	});
@@ -50489,170 +50484,67 @@
 
 	'use strict';
 
+	var _reactBootstrap = __webpack_require__(259);
+
 	var React = __webpack_require__(1);
-	var DefaultInput = __webpack_require__(569);
-	var DefaultButton = __webpack_require__(570);
-	var _React$PropTypes = React.PropTypes,
-	    string = _React$PropTypes.string,
-	    func = _React$PropTypes.func;
+	var string = React.PropTypes.string;
 
 
-	var SignUpForm = React.createClass({
-	  displayName: 'SignUpForm',
+	var AlertTile = React.createClass({
+	  displayName: 'AlertTile',
 
 	  propTypes: {
-	    phoneNumber: string,
-	    onPhoneNumberChangeEvent: func,
-	    password: string,
-	    onPasswordChangeEvent: func,
-	    onSignInSubmit: func
+	    title: string,
+	    body: string
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      isVisible: true
+	    };
+	  },
+	  onButtonClickEvent: function onButtonClickEvent() {
+	    this.setState({ isVisible: false });
 	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
+	      { className: 'static-modal' },
+	      this.state.isVisible ? React.createElement(
+	        _reactBootstrap.Modal.Dialog,
 	        null,
-	        'Entrar'
-	      ),
-	      React.createElement(DefaultInput, {
-	        title: 'Numero de telem\xF3vel',
-	        placeholder: 'telem\xF3vel',
-	        value: this.props.phoneNumber,
-	        onChange: this.props.onPhoneNumberChangeEvent }),
-	      React.createElement(DefaultInput, {
-	        title: 'PIN',
-	        placeholder: '******',
-	        value: this.props.password,
-	        onChange: this.props.onPasswordChangeEvent }),
-	      React.createElement(DefaultButton, {
-	        'class': 'button',
-	        title: 'Enviar',
-	        onSubmit: this.props.onSignInSubmit })
+	        React.createElement(
+	          _reactBootstrap.Modal.Header,
+	          null,
+	          React.createElement(
+	            _reactBootstrap.Modal.Title,
+	            null,
+	            this.props.title
+	          )
+	        ),
+	        React.createElement(
+	          _reactBootstrap.Modal.Body,
+	          null,
+	          this.props.body
+	        ),
+	        React.createElement(
+	          _reactBootstrap.Modal.Footer,
+	          null,
+	          React.createElement(
+	            _reactBootstrap.Button,
+	            { onClick: this.onButtonClickEvent },
+	            'Close'
+	          )
+	        )
+	      ) : React.createElement('div', null)
 	    );
 	  }
 	});
 
-	module.exports = SignUpForm;
+	module.exports = AlertTile;
 
 /***/ },
-/* 572 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var DefaultInput = __webpack_require__(569);
-	var DefaultButton = __webpack_require__(570);
-	var _React$PropTypes = React.PropTypes,
-	    string = _React$PropTypes.string,
-	    func = _React$PropTypes.func;
-
-
-	var ValidationCodeForm = React.createClass({
-	  displayName: 'ValidationCodeForm',
-
-	  propTypes: {
-	    validationCode: string,
-	    onValidationCodeChange: func,
-	    onValidationCodeSubmit: func,
-	    onResendCodeSubmit: func
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(DefaultInput, {
-	        title: 'Indica o c\xF3digo',
-	        placeholder: 'c\xF3digo', value: this.props.validationCode,
-	        onChange: this.props.onValidationCodeChange }),
-	      React.createElement(DefaultButton, {
-	        'class': 'button',
-	        title: 'Enviar',
-	        onSubmit: this.props.onValidationCodeSubmit }),
-	      React.createElement(DefaultButton, {
-	        'class': 'button',
-	        title: 'Novo c\xF3digo',
-	        onSubmit: this.props.onResendCodeSubmit })
-	    );
-	  }
-	});
-
-	module.exports = ValidationCodeForm;
-
-/***/ },
+/* 572 */,
 /* 573 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactRedux = __webpack_require__(179);
-
-	var _xml = __webpack_require__(574);
-
-	var _xmlGeneratorButton = __webpack_require__(576);
-
-	var _xmlGeneratorButton2 = _interopRequireDefault(_xmlGeneratorButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var jsonHelper = __webpack_require__(577);
-
-
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    getXml: function getXml() {
-	      var obj = {};
-	      dispatch((0, _xml.getStations)()).then(function (response) {
-	        if (response.error) {
-	          dispatch((0, _xml.getXmlFailure)(response.error));
-	        } else {
-	          obj.stations = response.payload.data;
-	          dispatch((0, _xml.getSupplierByIds)(obj.stations)).then(function (response) {
-	            if (response.error) {
-	              dispatch((0, _xml.getXmlFailure)(response.error));
-	            } else {
-	              obj.supplies = response.payload.data;
-	              dispatch((0, _xml.getVehiclesByIds)(obj.supplies)).then(function (response) {
-	                if (response.error) {
-	                  dispatch((0, _xml.getXmlFailure)(response.error));
-	                } else {
-	                  obj.vehicles = response.payload.data;
-	                  dispatch((0, _xml.getClientIds)(obj.vehicles)).then(function (response) {
-	                    if (response.error) {
-	                      dispatch((0, _xml.getXmlFailure)(response.error));
-	                    } else {
-	                      obj.clients = response.payload.data;
-	                      console.log('OBJECT');
-	                      console.log(obj);
-	                      var jsonToSend = jsonHelper.createJson(obj);
-	                      console.log('JSONTOSEND');
-	                      console.log(jsonToSend);
-	                      dispatch((0, _xml.sendXmlToServer)(jsonToSend)).then(function (response) {
-	                        if (response.error) {
-	                          dispatch((0, _xml.getXmlFailure)(response.error));
-	                        } else {
-	                          window.open('/download');
-	                          dispatch((0, _xml.getXmlSuccess)(response.payload));
-	                        }
-	                      });
-	                    }
-	                  });
-	                }
-	              });
-	            }
-	          });
-	        }
-	      });
-	    }
-	  };
-	};
-
-	module.exports = (0, _reactRedux.connect)(null, mapDispatchToProps)(_xmlGeneratorButton2.default);
-
-/***/ },
-/* 574 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50668,7 +50560,7 @@
 	exports.getXmlSuccess = getXmlSuccess;
 	exports.getXmlFailure = getXmlFailure;
 	var axios = __webpack_require__(231);
-	var strings = __webpack_require__(575);
+	var strings = __webpack_require__(574);
 	var config = __webpack_require__(256);
 
 	function sendXmlToServer(obj) {
@@ -50739,14 +50631,18 @@
 	}
 
 	function getXmlFailure(error) {
+	  var formatterError = {
+	    title: 'Error',
+	    body: error.message
+	  };
 	  return {
 	    type: strings.GETTING_XML_FAILURE,
-	    payload: error
+	    payload: formatterError
 	  };
 	}
 
 /***/ },
-/* 575 */
+/* 574 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -50757,48 +50653,16 @@
 	  GETTING_INFO_FAILURE: 'GETTING_INFO_FAILURE',
 	  GETTING_XML: 'GETTING_XML',
 	  GETTING_XML_SUCCESS: 'GETTING_XML_SUCCESS',
-	  GETTING_XML_FAILURE: 'GETTING_XML_SUCCESS',
-	  SENDDING_INFO: 'SENDING_INFO_SUCCESS',
+	  GETTING_XML_FAILURE: 'GETTING_XML_FAILURE',
+	  SENDING_INFO: 'SENDING_INFO',
 	  SENDING_INFO_FAILURE: 'SENDING_INFO_FAILURE',
 	  SENDING_INFO_SUCCESS: 'SENDING_INFO_SUCCESS',
 	  INITIAL_STATE: { data: null, status: null, error: null, loading: null }
 	};
 
 /***/ },
+/* 575 */,
 /* 576 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var func = React.PropTypes.func;
-
-	var _require = __webpack_require__(259),
-	    Button = _require.Button;
-
-	var DefaultButton = React.createClass({
-	  displayName: 'DefaultButton',
-
-	  propTypes: {
-	    getXml: func
-	  },
-	  onSubmit: function onSubmit() {
-	    this.props.getXml();
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      Button,
-	      { bsStyle: 'primary',
-	        onClick: this.onSubmit },
-	      'XML'
-	    );
-	  }
-	});
-
-	module.exports = DefaultButton;
-
-/***/ },
-/* 577 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -50849,8 +50713,6 @@
 	var filterSupplyByStationId = function filterSupplyByStationId(obj, stationId) {
 	  var supplies = [];
 	  obj.supplies.forEach(function (supply) {
-	    console.log(supply.station_id);
-	    console.log(stationId);
 	    if (supply.station_id === stationId) {
 	      supplies.push(supply);
 	    }
@@ -50863,7 +50725,6 @@
 	  var supplyIndex = 0;
 	  var supplies = filterSupplyByStationId(obj, stationId);
 
-	  console.log(obj.supplies);
 	  supplies.forEach(function (supply) {
 	    stationSupplies.push({
 	      _registo: supply._registo,
@@ -50880,8 +50741,6 @@
 	};
 
 	var populateStations = function populateStations(obj, proSupply) {
-	  console.log('jgroegj,iormesgh');
-	  console.log(obj);
 	  obj.stations.forEach(function (station) {
 	    proSupply.Abastecimentos.push({
 	      _idPosto: station._idPosto,
@@ -50903,13 +50762,13 @@
 	};
 
 /***/ },
-/* 578 */
+/* 577 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var ProfileContainer = __webpack_require__(579);
+	var ProfileContainer = __webpack_require__(578);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -50921,16 +50780,16 @@
 	module.exports = Profile;
 
 /***/ },
-/* 579 */
+/* 578 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _reactRedux = __webpack_require__(179);
 
-	var _info = __webpack_require__(580);
+	var _info = __webpack_require__(579);
 
-	var _profile = __webpack_require__(581);
+	var _profile = __webpack_require__(580);
 
 	var _profile2 = _interopRequireDefault(_profile);
 
@@ -50942,17 +50801,17 @@
 	      var obj = {};
 	      dispatch((0, _info.getVehicle)(vehicleId, stationId)).then(function (response) {
 	        if (response.error) {
-	          dispatch((0, _info.getInfoFailure)(response.payload));
+	          dispatch((0, _info.getInfoFailure)(response.payload.response.data));
 	        } else {
 	          obj.vehicle = response.payload.data;
 	          dispatch((0, _info.getVehiclesOwner)(obj.vehicle.cliente_id)).then(function (response) {
 	            if (response.error) {
-	              dispatch((0, _info.getInfoFailure)(response.payload));
+	              dispatch((0, _info.getInfoFailure)(response.payload.response.data));
 	            } else {
 	              obj.client = response.payload.data;
 	              dispatch((0, _info.getUsersStation)(stationId)).then(function (response) {
 	                if (response.error) {
-	                  dispatch((0, _info.getInfoFailure)(response.payload));
+	                  dispatch((0, _info.getInfoFailure)(response.payload.response.data));
 	                } else {
 	                  obj.station = response.payload.data;
 	                  dispatch((0, _info.getInfoSuccess)(obj));
@@ -50984,6 +50843,7 @@
 	    data: state.infoReducer.data,
 	    status: state.infoReducer.status,
 	    vehicleId: state.authReducer.vehicleId,
+	    error: state.infoReducer.error,
 	    stationId: stationId
 	  };
 	};
@@ -50991,7 +50851,7 @@
 	module.exports = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_profile2.default);
 
 /***/ },
-/* 580 */
+/* 579 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51008,7 +50868,7 @@
 	exports.sendInfoSuccess = sendInfoSuccess;
 	exports.sendInfoFailure = sendInfoFailure;
 	var axios = __webpack_require__(231);
-	var strings = __webpack_require__(575);
+	var strings = __webpack_require__(574);
 	var config = __webpack_require__(256);
 
 	function getUsersStation(stationId) {
@@ -51046,9 +50906,13 @@
 	}
 
 	function getInfoFailure(error) {
+	  var formattedError = {
+	    title: 'Error',
+	    body: error.message
+	  };
 	  return {
 	    type: strings.GETTING_INFO_FAILURE,
-	    payload: error
+	    payload: formattedError
 	  };
 	}
 
@@ -51075,7 +50939,7 @@
 	}
 
 /***/ },
-/* 581 */
+/* 580 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51083,10 +50947,12 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var React = __webpack_require__(1);
-	var GasStationInfoTile = __webpack_require__(582);
-	var VehicleInfoTile = __webpack_require__(584);
-	var ClientInfoTile = __webpack_require__(585);
+	var GasStationInfoTile = __webpack_require__(581);
+	var VehicleInfoTile = __webpack_require__(583);
+	var ClientInfoTile = __webpack_require__(584);
 	var DefaultButton = __webpack_require__(570);
+	var AlertTile = __webpack_require__(571);
+	var NumPad = __webpack_require__(598);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -51102,6 +50968,7 @@
 
 	  propTypes: {
 	    data: object,
+	    error: object,
 	    getInfo: func,
 	    sendInfo: func,
 	    status: string,
@@ -51113,13 +50980,20 @@
 	  },
 	  getInitialState: function getInitialState() {
 	    return {
-	      distance: ''
+	      distance: '',
+	      isPinBoxVisible: false
 	    };
 	  },
 	  onDistanceChangeEvent: function onDistanceChangeEvent(e) {
 	    this.setState({ distance: e.target.value });
 	  },
 	  onValidationEvent: function onValidationEvent() {
+	    this.setState({ isPinBoxVisible: true });
+	  },
+	  onCloseEvent: function onCloseEvent() {
+	    this.setState({ isPinBoxVisible: false });
+	  },
+	  onSendEvent: function onSendEvent() {
 	    var obj = {
 	      bombaId: '2',
 	      stationId: this.props.stationId,
@@ -51127,12 +51001,13 @@
 	      km: this.state.distance
 	    };
 	    this.props.sendInfo(obj);
+	    this.setState({ isPinBoxVisible: false });
 	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      null,
-	      this.props.status !== 'data' ? React.createElement(
+	      this.props.error ? React.createElement(AlertTile, this.props.error) : this.state.isPinBoxVisible ? React.createElement(NumPad, { onCloseEvent: this.onCloseEvent, onSendEvent: this.onSendEvent }) : this.props.status !== 'data' ? React.createElement(
 	        'h1',
 	        null,
 	        'Loading'
@@ -51140,30 +51015,34 @@
 	        'div',
 	        null,
 	        React.createElement(
-	          Col,
-	          { md: 3, xs: 8, xsOffset: 2 },
-	          React.createElement(GasStationInfoTile, this.props.data.station)
+	          'div',
+	          null,
+	          React.createElement(
+	            Col,
+	            { md: 3, xs: 8, xsOffset: 2 },
+	            React.createElement(GasStationInfoTile, this.props.data.station)
+	          ),
+	          React.createElement(
+	            Col,
+	            { md: 3, xs: 8, xsOffset: 2 },
+	            React.createElement(VehicleInfoTile, _extends({}, this.props.data.vehicle, {
+	              distance: this.state.distance,
+	              onDistanceChangeEvent: this.onDistanceChangeEvent }))
+	          ),
+	          React.createElement(
+	            Col,
+	            { md: 3, xs: 8, xsOffset: 2 },
+	            React.createElement(ClientInfoTile, this.props.data.client)
+	          )
 	        ),
 	        React.createElement(
 	          Col,
-	          { md: 3, xs: 8, xsOffset: 2 },
-	          React.createElement(VehicleInfoTile, _extends({}, this.props.data.vehicle, {
-	            distance: this.state.distance,
-	            onDistanceChangeEvent: this.onDistanceChangeEvent }))
-	        ),
-	        React.createElement(
-	          Col,
-	          { md: 3, xs: 8, xsOffset: 2 },
-	          React.createElement(ClientInfoTile, this.props.data.client)
+	          { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
+	          React.createElement(DefaultButton, {
+	            'class': 'validation-button',
+	            onSubmit: this.onValidationEvent,
+	            title: 'Enviar' })
 	        )
-	      ),
-	      React.createElement(
-	        Col,
-	        { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
-	        React.createElement(DefaultButton, {
-	          'class': 'validation-button',
-	          onSubmit: this.onValidationEvent,
-	          title: 'Enviar' })
 	      )
 	    );
 	  }
@@ -51172,13 +51051,13 @@
 	module.exports = Profile;
 
 /***/ },
-/* 582 */
+/* 581 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(583);
+	var DefaultBox = __webpack_require__(582);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -51239,7 +51118,7 @@
 	module.exports = GasStationInfoTile;
 
 /***/ },
-/* 583 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51286,13 +51165,13 @@
 	module.exports = DefaultBox;
 
 /***/ },
-/* 584 */
+/* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(583);
+	var DefaultBox = __webpack_require__(582);
 	var DefaultInput = __webpack_require__(569);
 
 	var _require = __webpack_require__(259),
@@ -51375,13 +51254,13 @@
 	module.exports = VehicleInfoTile;
 
 /***/ },
-/* 585 */
+/* 584 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DefaultBox = __webpack_require__(583);
+	var DefaultBox = __webpack_require__(582);
 
 	var _require = __webpack_require__(259),
 	    Col = _require.Col;
@@ -51434,7 +51313,7 @@
 	module.exports = ClientInfoTile;
 
 /***/ },
-/* 586 */
+/* 585 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51443,15 +51322,15 @@
 
 	var _redux = __webpack_require__(190);
 
-	var _reduxPromise = __webpack_require__(587);
+	var _reduxPromise = __webpack_require__(586);
 
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 
-	var _reducers = __webpack_require__(594);
+	var _reducers = __webpack_require__(593);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _localStorage = __webpack_require__(598);
+	var _localStorage = __webpack_require__(597);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51472,7 +51351,7 @@
 	module.exports = store;
 
 /***/ },
-/* 587 */
+/* 586 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51491,7 +51370,7 @@
 
 	exports['default'] = promiseMiddleware;
 
-	var _fluxStandardAction = __webpack_require__(588);
+	var _fluxStandardAction = __webpack_require__(587);
 
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -51518,7 +51397,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 588 */
+/* 587 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51531,7 +51410,7 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 
-	var _lodashIsplainobject = __webpack_require__(589);
+	var _lodashIsplainobject = __webpack_require__(588);
 
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 
@@ -51550,7 +51429,7 @@
 	}
 
 /***/ },
-/* 589 */
+/* 588 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51565,9 +51444,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(590),
-	    isArguments = __webpack_require__(591),
-	    keysIn = __webpack_require__(592);
+	var baseFor = __webpack_require__(589),
+	    isArguments = __webpack_require__(590),
+	    keysIn = __webpack_require__(591);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -51661,7 +51540,7 @@
 	module.exports = isPlainObject;
 
 /***/ },
-/* 590 */
+/* 589 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -51716,7 +51595,7 @@
 	module.exports = baseFor;
 
 /***/ },
-/* 591 */
+/* 590 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -51952,7 +51831,7 @@
 	module.exports = isArguments;
 
 /***/ },
-/* 592 */
+/* 591 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51967,8 +51846,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(591),
-	    isArray = __webpack_require__(593);
+	var isArguments = __webpack_require__(590),
+	    isArray = __webpack_require__(592);
 
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -52091,7 +51970,7 @@
 	module.exports = keysIn;
 
 /***/ },
-/* 593 */
+/* 592 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -52277,20 +52156,20 @@
 	module.exports = isArray;
 
 /***/ },
-/* 594 */
+/* 593 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _authReducer = __webpack_require__(595);
+	var _authReducer = __webpack_require__(594);
 
 	var _authReducer2 = _interopRequireDefault(_authReducer);
 
-	var _infoReducer = __webpack_require__(596);
+	var _infoReducer = __webpack_require__(595);
 
 	var _infoReducer2 = _interopRequireDefault(_infoReducer);
 
-	var _xmlReducer = __webpack_require__(597);
+	var _xmlReducer = __webpack_require__(596);
 
 	var _xmlReducer2 = _interopRequireDefault(_xmlReducer);
 
@@ -52307,7 +52186,7 @@
 	module.exports = rootReducer;
 
 /***/ },
-/* 595 */
+/* 594 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52327,12 +52206,11 @@
 	      return Object.assign({}, state, { user: action.payload.data.user, status: 'authenticated', error: null, loading: false, token: action.payload.data.token }); // <-- authenticated
 	    case _constantStrings.token.ME_FROM_TOKEN_FAILURE:
 	      // return error and make loading = false
-	      var tokenError = action.payload.data || { message: action.payload.message };
-	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: tokenError, loading: false, token: '' }); // 2nd one is network or server down errors
+	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: action.payload, loading: false, token: '' }); // 2nd one is network or server down errors
 	    case _constantStrings.token.SAVE_VEHICLE_ID:
 	      return Object.assign({}, state, { vehicleId: action.payload, user: null, status: 'not authenticated', error: null, loading: false, token: '' });
 	    case _constantStrings.token.RESET_TOKEN:
-	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: '', loading: false, token: '' });
+	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: null, loading: false, token: '' });
 	    case _constantStrings.signUp.WAITING_FOR_VALIDATION_CODE:
 	      if (action.error) {
 	        return state;
@@ -52344,8 +52222,7 @@
 	    case _constantStrings.signUp.SIGNUP_USER_SUCCESS:
 	      return Object.assign({}, state, { user: action.payload.data.user, status: 'authenticated', error: null, loading: false, token: action.payload.data.token });
 	    case _constantStrings.signUp.SIGNUP_USER_FAILURE:
-	      var signUpError = action.payload.data || { message: action.payload.message };
-	      return Object.assign({}, state, { user: null, status: 'not subscribed', error: signUpError, loading: false, token: '' });
+	      return Object.assign({}, state, { user: null, status: 'not subscribed', error: action.payload, loading: false, token: '' });
 	    case _constantStrings.signUp.RESET_USER:
 	      return _constantStrings.INITIAL_STATE;
 	    default:
@@ -52356,12 +52233,12 @@
 	module.exports = authReducer;
 
 /***/ },
-/* 596 */
+/* 595 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _constantStrings = __webpack_require__(575);
+	var _constantStrings = __webpack_require__(574);
 
 	var infoReducer = function infoReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constantStrings.INITIAL_STATE;
@@ -52373,16 +52250,13 @@
 	    case _constantStrings.GETTING_INFO_SUCCESS:
 	      return Object.assign({}, state, { data: action.payload, status: 'data', error: null, loading: false });
 	    case _constantStrings.GETTING_INFO_FAILURE:
-	      var err = action.payload.data || { message: action.payload.message };
-	      return Object.assign({}, state, { data: null, status: 'no data', error: err, loading: false });
+	      return Object.assign({}, state, { data: null, status: 'no data', error: action.payload, loading: false });
 	    case _constantStrings.SENDING_INFO:
 	      return Object.assign({}, state, { data: null, status: 'waiting', error: null, loading: true });
 	    case _constantStrings.SENDING_INFO_SUCCESS:
-	      console.log(action);
 	      return Object.assign({}, state, { data: action.payload.data, status: 'data', error: null, loading: false });
 	    case _constantStrings.SENDING_INFO_FAILURE:
-	      var err2 = action.payload.data || { message: action.payload.message };
-	      return Object.assign({}, state, { data: null, status: 'no data', error: err2, loading: false });
+	      return Object.assign({}, state, { data: null, status: 'no data', error: action.payload, loading: false });
 	    default:
 	      return state;
 	  }
@@ -52391,12 +52265,12 @@
 	module.exports = infoReducer;
 
 /***/ },
-/* 597 */
+/* 596 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _constantStrings = __webpack_require__(575);
+	var _constantStrings = __webpack_require__(574);
 
 	var xmlReducer = function xmlReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constantStrings.INITIAL_STATE;
@@ -52408,8 +52282,7 @@
 	    case _constantStrings.GETTING_XML_SUCCESS:
 	      return Object.assign({}, state, { data: action.payload.data, status: 'data', error: null, loading: false });
 	    case _constantStrings.GETTING_XML_FAILURE:
-	      var err = action.payload.data || { message: action.payload.message };
-	      return Object.assign({}, state, { data: null, status: 'no data', error: err, loading: false });
+	      return Object.assign({}, state, { data: null, status: 'no data', error: action.payload, loading: false });
 	    default:
 	      return state;
 	  }
@@ -52418,7 +52291,7 @@
 	module.exports = xmlReducer;
 
 /***/ },
-/* 598 */
+/* 597 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -52446,6 +52319,230 @@
 	    // Ignore write error
 	  }
 	};
+
+/***/ },
+/* 598 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactBootstrap = __webpack_require__(259);
+
+	var React = __webpack_require__(1);
+	var DefaultInput = __webpack_require__(569);
+	var Number = __webpack_require__(599);
+	var func = React.PropTypes.func;
+
+
+	var NumPad = React.createClass({
+	  displayName: 'NumPad',
+
+	  propTypes: {
+	    onCloseEvent: func,
+	    onSendEvent: func
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      pin: ''
+	    };
+	  },
+	  onPinChangeEvent: function onPinChangeEvent(value) {
+	    this.setState({ pin: this.state.pin + value });
+	  },
+	  onDelClick: function onDelClick() {
+	    this.setState({ pin: this.state.pin.slice(0, -1) });
+	  },
+	  onCloseEvent: function onCloseEvent() {
+	    this.props.onCloseEvent();
+	  },
+	  onSendEvent: function onSendEvent() {
+	    this.props.onSendEvent();
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'container' },
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Entrar PIN'
+	      ),
+	      React.createElement(DefaultInput, { title: 'Pin', placeholder: 'Entra seu codigo PIN', value: this.state.pin, onChange: this.onPinChangeEvent }),
+	      React.createElement(
+	        _reactBootstrap.Col,
+	        { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
+	        React.createElement(
+	          'div',
+	          { id: 'container' },
+	          React.createElement(
+	            'ul',
+	            { id: 'keyboard' },
+	            React.createElement(Number, { classToUse: 'letter', number: '1', onClick: this.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '2', onClick: this.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '3', onClick: this.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter clearl', number: '4', onClick: this.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '5', onClick: this.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '6', onClick: this.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter clearl', number: '7', onClick: this.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter ', number: '8', onClick: this.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '9', onClick: this.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter zero clearl', number: '0', onClick: this.onPinChangeEvent }),
+	            React.createElement(
+	              'li',
+	              { className: 'delete lastitem', onClick: this.onDelClick },
+	              'Del'
+	            ),
+	            React.createElement(
+	              'li',
+	              { className: 'letter zero clearl', onClick: this.onCloseEvent },
+	              'Fechar'
+	            ),
+	            React.createElement(
+	              'li',
+	              { className: 'delete lastitem', onClick: this.onSendEvent },
+	              'Enviar'
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = NumPad;
+
+/***/ },
+/* 599 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var _React$PropTypes = React.PropTypes,
+	    func = _React$PropTypes.func,
+	    string = _React$PropTypes.string;
+
+
+	var Number = React.createClass({
+	  displayName: 'Number',
+
+	  propTypes: {
+	    onClick: func,
+	    classToUse: string,
+	    number: string
+	  },
+	  onNumberClick: function onNumberClick() {
+	    this.props.onClick(this.props.number);
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'li',
+	      { className: this.props.classToUse, onClick: this.onNumberClick },
+	      this.props.number
+	    );
+	  }
+	});
+
+	module.exports = Number;
+
+/***/ },
+/* 600 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactRedux = __webpack_require__(179);
+
+	var _xml = __webpack_require__(573);
+
+	var _xmlButton = __webpack_require__(601);
+
+	var _xmlButton2 = _interopRequireDefault(_xmlButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var jsonHelper = __webpack_require__(576);
+
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    getXml: function getXml() {
+	      var obj = {};
+	      dispatch((0, _xml.getStations)()).then(function (response) {
+	        if (response.error) {
+	          dispatch((0, _xml.getXmlFailure)(response.payload.response.data));
+	        } else {
+	          obj.stations = response.payload.data;
+	          dispatch((0, _xml.getSupplierByIds)(obj.stations)).then(function (response) {
+	            if (response.error) {
+	              dispatch((0, _xml.getXmlFailure)(response.payload.response.data));
+	            } else {
+	              obj.supplies = response.payload.data;
+	              dispatch((0, _xml.getVehiclesByIds)(obj.supplies)).then(function (response) {
+	                if (response.error) {
+	                  dispatch((0, _xml.getXmlFailure)(response.payload.response.data));
+	                } else {
+	                  obj.vehicles = response.payload.data;
+	                  dispatch((0, _xml.getClientIds)(obj.vehicles)).then(function (response) {
+	                    if (response.error) {
+	                      dispatch((0, _xml.getXmlFailure)(response.payload.response.data));
+	                    } else {
+	                      obj.clients = response.payload.data;
+	                      var jsonToSend = jsonHelper.createJson(obj);
+	                      dispatch((0, _xml.sendXmlToServer)(jsonToSend)).then(function (response) {
+	                        if (response.error) {
+	                          dispatch((0, _xml.getXmlFailure)(response.payload.response.data));
+	                        } else {
+	                          window.open('/download');
+	                          dispatch((0, _xml.getXmlSuccess)(response.payload));
+	                        }
+	                      });
+	                    }
+	                  });
+	                }
+	              });
+	            }
+	          });
+	        }
+	      });
+	    }
+	  };
+	};
+
+	module.exports = (0, _reactRedux.connect)(null, mapDispatchToProps)(_xmlButton2.default);
+
+/***/ },
+/* 601 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var func = React.PropTypes.func;
+
+	var _require = __webpack_require__(259),
+	    Button = _require.Button;
+
+	var DefaultButton = React.createClass({
+	  displayName: 'DefaultButton',
+
+	  propTypes: {
+	    getXml: func
+	  },
+	  onSubmit: function onSubmit() {
+	    this.props.getXml();
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      Button,
+	      { bsStyle: 'primary',
+	        onClick: this.onSubmit },
+	      'XML'
+	    );
+	  }
+	});
+
+	module.exports = DefaultButton;
 
 /***/ }
 /******/ ]);

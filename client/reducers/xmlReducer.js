@@ -7,8 +7,7 @@ const xmlReducer = (state = INITIAL_STATE, action) => {
     case GETTING_XML_SUCCESS:
       return Object.assign({}, state, { data: action.payload.data, status: 'data', error: null, loading: false })
     case GETTING_XML_FAILURE:
-      var err = action.payload.data || { message: action.payload.message }
-      return Object.assign({}, state, { data: null, status: 'no data', error: err, loading: false })
+      return Object.assign({}, state, { data: null, status: 'no data', error: action.payload, loading: false })
     default:
       return state
   }

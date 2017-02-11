@@ -17,16 +17,16 @@ const Routes = Client.Routes
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
-const mongooseController = require('./controllers/mongooseController')
+const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const appController = require('./controllers/appController')
 const routes = require('./routes')
 const config = require('./config/config')
 
-mongooseController.connect()
-
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/*', appController.setHeaders)
+
+mongoose.connect(config.MONGOLAB_URI)
 
 app.use(morgan('dev'))
 app.use(bodyParser.json())

@@ -37,9 +37,13 @@ export function getInfoSuccess (obj) {
 }
 
 export function getInfoFailure (error) {
+  var formattedError = {
+    title: 'Error',
+    body: error.message
+  }
   return {
     type: strings.GETTING_INFO_FAILURE,
-    payload: error
+    payload: formattedError
   }
 }
 

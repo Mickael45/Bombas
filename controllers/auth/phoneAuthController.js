@@ -98,7 +98,6 @@ exports.signIn = (req, res) => {
     if (!result) {
       return res.status(400).json({ message: 'Bad password', error: err })
     }
-    console.log('Ok')
     return res.json({
       message: 'User successfully found',
       user: user,

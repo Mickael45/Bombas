@@ -42,9 +42,13 @@ export function signUpUserSuccess (user) {
 }
 
 export function signUpUserFailure (error) {
+  var formattedError = {
+    title: 'Error',
+    body: error.message
+  }
   return {
     type: signUp.SIGNUP_USER_FAILURE,
-    payload: error
+    payload: formattedError
   }
 }
 

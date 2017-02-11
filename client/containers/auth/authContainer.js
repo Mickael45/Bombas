@@ -15,7 +15,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(phoneSignUpUser(user))
     .then((response) => {
       if (response.error) {
-        dispatch(signUpUserFailure(response.payload))
+        dispatch(signUpUserFailure(response.payload.response.data))
       }
     })
   },
@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(signUpUserSuccess(response.payload))
         browserHistory.push('/profile')
       } else {
-        dispatch(signUpUserFailure(response.payload))
+        dispatch(signUpUserFailure(response.payload.response.data))
       }
     })
   },
@@ -34,7 +34,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(phoneResendCode(userId))
     .then((response) => {
       if (response.error) {
-        dispatch(signUpUserFailure(response.payload))
+        dispatch(signUpUserFailure(response.payload.response.data))
       }
     })
   },
@@ -49,19 +49,24 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(signUpUserSuccess(response.payload))
         browserHistory.push('/profile/')
       } else {
-        dispatch(signUpUserFailure(response.payload))
+        dispatch(signUpUserFailure(response.payload.response.data))
       }
     })
   }
 })
 
 const mapStateToProps = (state) => {
+  var isAdmin
   if (state.authReducer.user) {
     userId = state.authReducer.user._id
+    isAdmin = state.authReducer.user.isAdmin
+    console.log(state.authReducer.user)
   }
   return {
     loading: state.authReducer.loading,
-    status: state.authReducer.status
+    status: state.authReducer.status,
+    error: state.authReducer.error,
+    isUserAdmin: isAdmin
   }
 }
 
