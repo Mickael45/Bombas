@@ -38,7 +38,7 @@ const Profile = React.createClass({
   },
   onSendEvent () {
     var obj = {
-      bombaId: '2',
+      bombaId: this.props.stationId,
       stationId: this.props.stationId,
       vehicleId: this.props.vehicleId,
       km: this.state.distance

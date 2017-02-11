@@ -44,11 +44,15 @@ const VehicleInfoTile = React.createClass({
             placeholder='Quilometragem'
             onChange={this.props.onDistanceChangeEvent} />
         </Col>
-        <Col md={8} mdOffset={2} xs={8} xsOffset={2}>
-          <DefaultBox
-            title='Peso total em carga permitido'
-            value={this.props.pesoBruto} />
-        </Col>
+        {
+          (this.props.pais !== 'PT')
+          ? <Col md={8} mdOffset={2} xs={8} xsOffset={2}>
+            <DefaultBox
+              title='Peso total em carga permitido'
+              value={this.props.pesoBruto} />
+          </Col>
+          : <div />
+        }
       </div>
     )
   }

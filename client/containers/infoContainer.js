@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { getVehicle, getVehiclesOwner, getUsersStation, getInfoSuccess, getInfoFailure, sendInfo, sendInfoSuccess, sendInfoFailure } from './../actions/info'
 import Profile from './../components/profile/profile'
+const { browserHistory } = require('react-router')
 
 const mapDispatchToProps = (dispatch) => ({
   getInfo (vehicleId, stationId) {
@@ -8,18 +9,21 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(getVehicle(vehicleId, stationId))
     .then((response) => {
       if (response.error) {
+        browserHistory.push('/auth')
         dispatch(getInfoFailure(response.payload.response.data))
       } else {
         obj.vehicle = response.payload.data
         dispatch(getVehiclesOwner(obj.vehicle.cliente_id))
         .then((response) => {
           if (response.error) {
+            browserHistory.push('/auth')
             dispatch(getInfoFailure(response.payload.response.data))
           } else {
             obj.client = response.payload.data
             dispatch(getUsersStation(stationId))
             .then((response) => {
               if (response.error) {
+                browserHistory.push('/auth')
                 dispatch(getInfoFailure(response.payload.response.data))
               } else {
                 obj.station = response.payload.data

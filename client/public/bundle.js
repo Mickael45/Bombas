@@ -50795,22 +50795,28 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var _require = __webpack_require__(511),
+	    browserHistory = _require.browserHistory;
+
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
 	    getInfo: function getInfo(vehicleId, stationId) {
 	      var obj = {};
 	      dispatch((0, _info.getVehicle)(vehicleId, stationId)).then(function (response) {
 	        if (response.error) {
+	          browserHistory.push('/auth');
 	          dispatch((0, _info.getInfoFailure)(response.payload.response.data));
 	        } else {
 	          obj.vehicle = response.payload.data;
 	          dispatch((0, _info.getVehiclesOwner)(obj.vehicle.cliente_id)).then(function (response) {
 	            if (response.error) {
+	              browserHistory.push('/auth');
 	              dispatch((0, _info.getInfoFailure)(response.payload.response.data));
 	            } else {
 	              obj.client = response.payload.data;
 	              dispatch((0, _info.getUsersStation)(stationId)).then(function (response) {
 	                if (response.error) {
+	                  browserHistory.push('/auth');
 	                  dispatch((0, _info.getInfoFailure)(response.payload.response.data));
 	                } else {
 	                  obj.station = response.payload.data;
@@ -50995,7 +51001,7 @@
 	  },
 	  onSendEvent: function onSendEvent() {
 	    var obj = {
-	      bombaId: '2',
+	      bombaId: this.props.stationId,
 	      stationId: this.props.stationId,
 	      vehicleId: this.props.vehicleId,
 	      km: this.state.distance
@@ -51240,13 +51246,13 @@
 	          placeholder: 'Quilometragem',
 	          onChange: this.props.onDistanceChangeEvent })
 	      ),
-	      React.createElement(
+	      this.props.pais !== 'PT' ? React.createElement(
 	        Col,
 	        { md: 8, mdOffset: 2, xs: 8, xsOffset: 2 },
 	        React.createElement(DefaultBox, {
 	          title: 'Peso total em carga permitido',
 	          value: this.props.pesoBruto })
-	      )
+	      ) : React.createElement('div', null)
 	    );
 	  }
 	});
