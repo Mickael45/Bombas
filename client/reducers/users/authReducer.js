@@ -11,7 +11,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
     case token.SAVE_VEHICLE_ID:
       return Object.assign({}, state, { vehicleId: action.payload, user: null, status: 'not authenticated', error: null, loading: false, token: '' })
     case token.RESET_TOKEN:
-      return Object.assign({}, state, { user: null, status: 'not authenticated', error: null, loading: false, token: '' })
+      return Object.assign({}, state, { vehicleId: null, user: null, status: 'not authenticated', error: null, loading: false, token: '' })
     case signUp.WAITING_FOR_VALIDATION_CODE:
       if (action.error) {
         return state

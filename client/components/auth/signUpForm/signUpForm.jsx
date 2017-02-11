@@ -19,16 +19,19 @@ const SignUpForm = React.createClass({
         <h1>Registar</h1>
         <DefaultInput
           title='Indicativo'
+          type='text'
           placeholder='indicativo'
           value={this.props.countryCode}
           onChange={this.props.onCountryCodeChangeEvent} />
         <DefaultInput
           title='Numero de telemóvel'
+          type='text'
           placeholder='telemóvel'
           value={this.props.phoneNumber}
           onChange={this.props.onPhoneNumberChangeEvent} />
         <DefaultInput
           title='Data de nascimento'
+          type='text'
           placeholder='dd/mm/yy'
           value={this.props.birthDate}
           onChange={this.props.onBirthDateChangeEvent} />

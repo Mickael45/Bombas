@@ -6,17 +6,20 @@ const DefaultButton = require('./../defaultButton')
 const AlertTile = require('./../alertTile')
 const NumPad = require('./../numPad')
 const { Col } = require('react-bootstrap')
-const { object, func, string } = React.PropTypes
+const { object, func, string, bool } = React.PropTypes
 
 const Profile = React.createClass({
   propTypes: {
     data: object,
     error: object,
+    resetInfo: func,
     getInfo: func,
     sendInfo: func,
     status: string,
     vehicleId: string,
-    stationId: string
+    stationId: string,
+    verifyPin: func,
+    isPinVerified: bool
   },
   componentDidMount () {
     this.props.getInfo(this.props.vehicleId, this.props.stationId)
@@ -24,27 +27,50 @@ const Profile = React.createClass({
   getInitialState () {
     return {
       distance: '',
-      isPinBoxVisible: false
+      isPinBoxVisible: false,
+      pin: '',
+      isButtonDisabled: true
     }
   },
   onDistanceChangeEvent (e) {
-    this.setState({ distance: e.target.value })
+    this.setState({ distance: e.target.value }, () => {
+      if (this.state.distance.length > 0) {
+        this.setState({ isButtonDisabled: false })
+      } else {
+        this.setState({ isButtonDisabled: true })
+      }
+    })
+  },
+  onPinDelChangeEvent () {
+    this.setState({ pin: this.state.pin.slice(0, -1) })
+  },
+  onPinChangeEvent (value) {
+    this.setState({ pin: this.state.pin + value })
   },
   onValidationEvent () {
     this.setState({ isPinBoxVisible: true })
+    this.setState({ pin: '' })
   },
   onCloseEvent () {
     this.setState({ isPinBoxVisible: false })
+    this.setState({ pin: '' })
   },
   onSendEvent () {
-    var obj = {
-      bombaId: this.props.stationId,
-      stationId: this.props.stationId,
-      vehicleId: this.props.vehicleId,
-      km: this.state.distance
-    }
-    this.props.sendInfo(obj)
-    this.setState({ isPinBoxVisible: false })
+    this.props.verifyPin(this.props.vehicleId, this.state.pin, () => {
+      if (this.props.isPinVerified) {
+        var obj = {
+          bombaId: '2',
+          stationId: this.props.stationId,
+          vehicleId: this.props.vehicleId,
+          km: this.state.distance
+        }
+        this.props.sendInfo(obj)
+        this.setState({ isPinBoxVisible: false })
+        this.props.resetInfo()
+      } else {
+        this.setState({ pin: '' })
+      }
+    })
   },
   render () {
     return (
@@ -52,8 +78,16 @@ const Profile = React.createClass({
         {
           (this.props.error)
           ? <AlertTile {...this.props.error} />
-        : (this.state.isPinBoxVisible)
-        ? <NumPad onCloseEvent={this.onCloseEvent} onSendEvent={this.onSendEvent} />
+        : <div />
+        }
+        {
+          (this.state.isPinBoxVisible)
+        ? <NumPad
+          value={this.state.pin}
+          onCloseEvent={this.onCloseEvent}
+          onSendEvent={this.onSendEvent}
+          onPinChangeEvent={this.onPinChangeEvent}
+          onPinDelChangeEvent={this.onPinDelChangeEvent} />
       : (this.props.status !== 'data'
             ? <h1>Loading</h1>
             : <div>
@@ -78,7 +112,8 @@ const Profile = React.createClass({
                 <DefaultButton
                   class='validation-button'
                   onSubmit={this.onValidationEvent}
-                  title='Enviar' />
+                  title='Enviar'
+                  disabled={this.state.isButtonDisabled} />
               </Col>
             </div>
           )

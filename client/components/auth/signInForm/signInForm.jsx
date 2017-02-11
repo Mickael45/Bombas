@@ -18,11 +18,13 @@ const SignUpForm = React.createClass({
         <DefaultInput
           title='Numero de telemóvel'
           placeholder='telemóvel'
+          type='text'
           value={this.props.phoneNumber}
           onChange={this.props.onPhoneNumberChangeEvent} />
         <DefaultInput
           title='Senha'
-          placeholder='***********'
+          type='password'
+          placeholder='senha'
           value={this.props.password}
           onChange={this.props.onPasswordChangeEvent} />
         <DefaultButton

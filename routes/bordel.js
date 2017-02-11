@@ -16,6 +16,8 @@ router.get('/auth/clients', bordelController.getClients)
 
 router.get('/auth/vehicle/:id', bordelController.getVehicleById)
 
+router.post('/auth/vehicle/:id/verify', bordelController.verify)
+
 router.get('/auth/client/:id', bordelController.getClientById)
 
 router.get('/auth/station/:id', bordelController.getStationById)

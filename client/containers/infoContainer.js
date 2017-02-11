@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getVehicle, getVehiclesOwner, getUsersStation, getInfoSuccess, getInfoFailure, sendInfo, sendInfoSuccess, sendInfoFailure } from './../actions/info'
+import { getVehicle, resetInfo, getVehiclesOwner, gettingPinVerify, gettingPinVerifySuccess, gettingPinVerifyFailure, getUsersStation, getInfoSuccess, getInfoFailure, sendInfo, sendInfoSuccess, sendInfoFailure } from './../actions/info'
 import Profile from './../components/profile/profile'
 const { browserHistory } = require('react-router')
 
@@ -39,11 +39,27 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(sendInfo(obj))
     .then((response) => {
       if (response.error) {
-        dispatch(sendInfoSuccess(response.payload))
+        dispatch(sendInfoFailure(response.payload.response.data))
       } else {
-        dispatch(sendInfoFailure(response.payload))
+        dispatch(sendInfoSuccess())
       }
     })
+  },
+  verifyPin (vehicleId, pin, cb) {
+    dispatch(gettingPinVerify(vehicleId, pin))
+    .then((response) => {
+      if (response.error) {
+        dispatch(gettingPinVerifyFailure(response.payload.response.data))
+        cb()
+      } else {
+        dispatch(gettingPinVerifySuccess())
+        cb()
+      }
+    })
+  },
+  resetInfo () {
+    dispatch(resetInfo())
+    browserHistory.push('/auth')
   }
 })
 
@@ -52,11 +68,14 @@ const mapStateToProps = (state) => {
   if (state.authReducer.user) {
     stationId = state.authReducer.user.posto_id
   }
+  console.log('STATE CHANGED')
+  console.log(state.infoReducer.loading)
   return {
     data: state.infoReducer.data,
     status: state.infoReducer.status,
     vehicleId: state.authReducer.vehicleId,
     error: state.infoReducer.error,
+    isPinVerified: state.infoReducer.isPinVerified,
     stationId: stationId
   }
 }

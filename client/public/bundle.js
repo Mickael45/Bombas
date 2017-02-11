@@ -50407,11 +50407,13 @@
 	      React.createElement(DefaultInput, {
 	        title: 'Numero de telem\xF3vel',
 	        placeholder: 'telem\xF3vel',
+	        type: 'text',
 	        value: this.props.phoneNumber,
 	        onChange: this.props.onPhoneNumberChangeEvent }),
 	      React.createElement(DefaultInput, {
 	        title: 'Senha',
-	        placeholder: '***********',
+	        type: 'password',
+	        placeholder: 'senha',
 	        value: this.props.password,
 	        onChange: this.props.onPasswordChangeEvent }),
 	      React.createElement(DefaultButton, {
@@ -50445,7 +50447,8 @@
 	    title: string,
 	    value: string,
 	    placeholder: string,
-	    onChange: func
+	    onChange: func,
+	    type: string
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -50458,7 +50461,7 @@
 	      ),
 	      React.createElement(_reactBootstrap.FormControl, {
 	        className: 'input',
-	        type: 'text',
+	        type: this.props.type,
 	        value: this.props.value,
 	        placeholder: this.props.placeholder,
 	        onChange: this.props.onChange })
@@ -50477,7 +50480,8 @@
 	var React = __webpack_require__(1);
 	var _React$PropTypes = React.PropTypes,
 	    string = _React$PropTypes.string,
-	    func = _React$PropTypes.func;
+	    func = _React$PropTypes.func,
+	    bool = _React$PropTypes.bool;
 
 	var _require = __webpack_require__(312),
 	    Button = _require.Button;
@@ -50488,14 +50492,16 @@
 	  propTypes: {
 	    title: string,
 	    onSubmit: func,
-	    class: string
+	    class: string,
+	    disabled: bool
 	  },
 	  render: function render() {
 	    return React.createElement(
 	      Button,
 	      { className: this.props.class,
 	        bsStyle: 'primary',
-	        onClick: this.props.onSubmit },
+	        onClick: this.props.onSubmit,
+	        disabled: this.props.disabled },
 	      this.props.title
 	    );
 	  }
@@ -50637,11 +50643,26 @@
 	    sendInfo: function sendInfo(obj) {
 	      dispatch((0, _info.sendInfo)(obj)).then(function (response) {
 	        if (response.error) {
-	          dispatch((0, _info.sendInfoSuccess)(response.payload));
+	          dispatch((0, _info.sendInfoFailure)(response.payload.response.data));
 	        } else {
-	          dispatch((0, _info.sendInfoFailure)(response.payload));
+	          dispatch((0, _info.sendInfoSuccess)());
 	        }
 	      });
+	    },
+	    verifyPin: function verifyPin(vehicleId, pin, cb) {
+	      dispatch((0, _info.gettingPinVerify)(vehicleId, pin)).then(function (response) {
+	        if (response.error) {
+	          dispatch((0, _info.gettingPinVerifyFailure)(response.payload.response.data));
+	          cb();
+	        } else {
+	          dispatch((0, _info.gettingPinVerifySuccess)());
+	          cb();
+	        }
+	      });
+	    },
+	    resetInfo: function resetInfo() {
+	      dispatch((0, _info.resetInfo)());
+	      browserHistory.push('/auth');
 	    }
 	  };
 	};
@@ -50651,11 +50672,14 @@
 	  if (state.authReducer.user) {
 	    stationId = state.authReducer.user.posto_id;
 	  }
+	  console.log('STATE CHANGED');
+	  console.log(state.infoReducer.loading);
 	  return {
 	    data: state.infoReducer.data,
 	    status: state.infoReducer.status,
 	    vehicleId: state.authReducer.vehicleId,
 	    error: state.infoReducer.error,
+	    isPinVerified: state.infoReducer.isPinVerified,
 	    stationId: stationId
 	  };
 	};
@@ -50679,6 +50703,10 @@
 	exports.sendInfo = sendInfo;
 	exports.sendInfoSuccess = sendInfoSuccess;
 	exports.sendInfoFailure = sendInfoFailure;
+	exports.gettingPinVerify = gettingPinVerify;
+	exports.gettingPinVerifySuccess = gettingPinVerifySuccess;
+	exports.gettingPinVerifyFailure = gettingPinVerifyFailure;
+	exports.resetInfo = resetInfo;
 	var axios = __webpack_require__(231);
 	var strings = __webpack_require__(575);
 	var config = __webpack_require__(256);
@@ -50736,10 +50764,9 @@
 	  };
 	}
 
-	function sendInfoSuccess(data) {
+	function sendInfoSuccess() {
 	  return {
-	    type: strings.SENDING_INFO_SUCCESS,
-	    payload: data
+	    type: strings.SENDING_INFO_SUCCESS
 	  };
 	}
 
@@ -50747,6 +50774,38 @@
 	  return {
 	    type: strings.SENDING_INFO_FAILURE,
 	    payload: err
+	  };
+	}
+
+	function gettingPinVerify(vehicleId, pin) {
+	  var request = axios.post(config.SERVER_URL + '/auth/vehicle/' + vehicleId + '/verify', { pin: pin });
+
+	  return {
+	    type: strings.GETTING_PIN_VERIFIED,
+	    payload: request
+	  };
+	}
+
+	function gettingPinVerifySuccess() {
+	  return {
+	    type: strings.GETTING_PIN_VERIFIED_SUCCESS
+	  };
+	}
+
+	function gettingPinVerifyFailure(error) {
+	  var formattedError = {
+	    title: 'Error',
+	    body: error.message
+	  };
+	  return {
+	    type: strings.GETTING_PIN_VERIFIED_FAILURE,
+	    payload: formattedError
+	  };
+	}
+
+	function resetInfo() {
+	  return {
+	    type: strings.RESET_INFO
 	  };
 	}
 
@@ -50766,7 +50825,11 @@
 	  SENDING_INFO: 'SENDING_INFO',
 	  SENDING_INFO_FAILURE: 'SENDING_INFO_FAILURE',
 	  SENDING_INFO_SUCCESS: 'SENDING_INFO_SUCCESS',
-	  INITIAL_STATE: { data: null, status: null, error: null, loading: null }
+	  GETTING_PIN_VERIFIED: 'GETTING_PIN_VERIFIED',
+	  GETTING_PIN_VERIFIED_FAILURE: 'GETTING_PIN_VERIFIED_FAILURE',
+	  GETTING_PIN_VERIFIED_SUCCESS: 'GETTING_PIN_VERIFIED_SUCCESS',
+	  RESET_INFO: 'RESET_INFO',
+	  INITIAL_STATE: { data: null, status: null, isPinVerified: false, error: null, loading: null }
 	};
 
 /***/ },
@@ -50791,7 +50854,8 @@
 	var _React$PropTypes = React.PropTypes,
 	    object = _React$PropTypes.object,
 	    func = _React$PropTypes.func,
-	    string = _React$PropTypes.string;
+	    string = _React$PropTypes.string,
+	    bool = _React$PropTypes.bool;
 
 
 	var Profile = React.createClass({
@@ -50800,11 +50864,14 @@
 	  propTypes: {
 	    data: object,
 	    error: object,
+	    resetInfo: func,
 	    getInfo: func,
 	    sendInfo: func,
 	    status: string,
 	    vehicleId: string,
-	    stationId: string
+	    stationId: string,
+	    verifyPin: func,
+	    isPinVerified: bool
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this.props.getInfo(this.props.vehicleId, this.props.stationId);
@@ -50812,33 +50879,66 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      distance: '',
-	      isPinBoxVisible: false
+	      isPinBoxVisible: false,
+	      pin: '',
+	      isButtonDisabled: true
 	    };
 	  },
 	  onDistanceChangeEvent: function onDistanceChangeEvent(e) {
-	    this.setState({ distance: e.target.value });
+	    var _this = this;
+
+	    this.setState({ distance: e.target.value }, function () {
+	      if (_this.state.distance.length > 0) {
+	        _this.setState({ isButtonDisabled: false });
+	      } else {
+	        _this.setState({ isButtonDisabled: true });
+	      }
+	    });
+	  },
+	  onPinDelChangeEvent: function onPinDelChangeEvent() {
+	    this.setState({ pin: this.state.pin.slice(0, -1) });
+	  },
+	  onPinChangeEvent: function onPinChangeEvent(value) {
+	    this.setState({ pin: this.state.pin + value });
 	  },
 	  onValidationEvent: function onValidationEvent() {
 	    this.setState({ isPinBoxVisible: true });
+	    this.setState({ pin: '' });
 	  },
 	  onCloseEvent: function onCloseEvent() {
 	    this.setState({ isPinBoxVisible: false });
+	    this.setState({ pin: '' });
 	  },
 	  onSendEvent: function onSendEvent() {
-	    var obj = {
-	      bombaId: this.props.stationId,
-	      stationId: this.props.stationId,
-	      vehicleId: this.props.vehicleId,
-	      km: this.state.distance
-	    };
-	    this.props.sendInfo(obj);
-	    this.setState({ isPinBoxVisible: false });
+	    var _this2 = this;
+
+	    this.props.verifyPin(this.props.vehicleId, this.state.pin, function () {
+	      if (_this2.props.isPinVerified) {
+	        var obj = {
+	          bombaId: '2',
+	          stationId: _this2.props.stationId,
+	          vehicleId: _this2.props.vehicleId,
+	          km: _this2.state.distance
+	        };
+	        _this2.props.sendInfo(obj);
+	        _this2.setState({ isPinBoxVisible: false });
+	        _this2.props.resetInfo();
+	      } else {
+	        _this2.setState({ pin: '' });
+	      }
+	    });
 	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      null,
-	      this.props.error ? React.createElement(AlertTile, this.props.error) : this.state.isPinBoxVisible ? React.createElement(NumPad, { onCloseEvent: this.onCloseEvent, onSendEvent: this.onSendEvent }) : this.props.status !== 'data' ? React.createElement(
+	      this.props.error ? React.createElement(AlertTile, this.props.error) : React.createElement('div', null),
+	      this.state.isPinBoxVisible ? React.createElement(NumPad, {
+	        value: this.state.pin,
+	        onCloseEvent: this.onCloseEvent,
+	        onSendEvent: this.onSendEvent,
+	        onPinChangeEvent: this.onPinChangeEvent,
+	        onPinDelChangeEvent: this.onPinDelChangeEvent }) : this.props.status !== 'data' ? React.createElement(
 	        'h1',
 	        null,
 	        'Loading'
@@ -50872,7 +50972,8 @@
 	          React.createElement(DefaultButton, {
 	            'class': 'validation-button',
 	            onSubmit: this.onValidationEvent,
-	            title: 'Enviar' })
+	            title: 'Enviar',
+	            disabled: this.state.isButtonDisabled })
 	        )
 	      )
 	    );
@@ -51068,6 +51169,7 @@
 	        { md: 6, xs: 6 },
 	        React.createElement(DefaultInput, {
 	          title: 'Quilometragem',
+	          type: 'text',
 	          placeholder: 'Quilometragem',
 	          onChange: this.props.onDistanceChangeEvent })
 	      ),
@@ -51154,7 +51256,9 @@
 	var React = __webpack_require__(1);
 	var DefaultInput = __webpack_require__(569);
 	var Number = __webpack_require__(582);
-	var func = React.PropTypes.func;
+	var _React$PropTypes = React.PropTypes,
+	    func = _React$PropTypes.func,
+	    string = _React$PropTypes.string;
 
 
 	var NumPad = React.createClass({
@@ -51162,24 +51266,10 @@
 
 	  propTypes: {
 	    onCloseEvent: func,
-	    onSendEvent: func
-	  },
-	  getInitialState: function getInitialState() {
-	    return {
-	      pin: ''
-	    };
-	  },
-	  onPinChangeEvent: function onPinChangeEvent(value) {
-	    this.setState({ pin: this.state.pin + value });
-	  },
-	  onDelClick: function onDelClick() {
-	    this.setState({ pin: this.state.pin.slice(0, -1) });
-	  },
-	  onCloseEvent: function onCloseEvent() {
-	    this.props.onCloseEvent();
-	  },
-	  onSendEvent: function onSendEvent() {
-	    this.props.onSendEvent();
+	    onSendEvent: func,
+	    onPinChangeEvent: func,
+	    onPinDelChangeEvent: func,
+	    value: string
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -51190,7 +51280,7 @@
 	        null,
 	        'Entrar PIN'
 	      ),
-	      React.createElement(DefaultInput, { title: 'Pin', placeholder: 'Entra seu codigo PIN', value: this.state.pin, onChange: this.onPinChangeEvent }),
+	      React.createElement(DefaultInput, { title: 'Pin', type: 'text', placeholder: 'Entra seu codigo PIN', value: this.props.value, onChange: this.props.onPinChangeEvent }),
 	      React.createElement(
 	        _reactBootstrap.Col,
 	        { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
@@ -51200,29 +51290,29 @@
 	          React.createElement(
 	            'ul',
 	            { id: 'keyboard' },
-	            React.createElement(Number, { classToUse: 'letter', number: '1', onClick: this.onPinChangeEvent }),
-	            React.createElement(Number, { classToUse: 'letter', number: '2', onClick: this.onPinChangeEvent }),
-	            React.createElement(Number, { classToUse: 'letter', number: '3', onClick: this.onPinChangeEvent }),
-	            React.createElement(Number, { classToUse: 'letter clearl', number: '4', onClick: this.onPinChangeEvent }),
-	            React.createElement(Number, { classToUse: 'letter', number: '5', onClick: this.onPinChangeEvent }),
-	            React.createElement(Number, { classToUse: 'letter', number: '6', onClick: this.onPinChangeEvent }),
-	            React.createElement(Number, { classToUse: 'letter clearl', number: '7', onClick: this.onPinChangeEvent }),
-	            React.createElement(Number, { classToUse: 'letter ', number: '8', onClick: this.onPinChangeEvent }),
-	            React.createElement(Number, { classToUse: 'letter', number: '9', onClick: this.onPinChangeEvent }),
-	            React.createElement(Number, { classToUse: 'letter zero clearl', number: '0', onClick: this.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '1', onClick: this.props.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '2', onClick: this.props.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '3', onClick: this.props.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter clearl', number: '4', onClick: this.props.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '5', onClick: this.props.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '6', onClick: this.props.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter clearl', number: '7', onClick: this.props.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter ', number: '8', onClick: this.props.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter', number: '9', onClick: this.props.onPinChangeEvent }),
+	            React.createElement(Number, { classToUse: 'letter zero clearl', number: '0', onClick: this.props.onPinChangeEvent }),
 	            React.createElement(
 	              'li',
-	              { className: 'delete lastitem', onClick: this.onDelClick },
+	              { className: 'delete lastitem', onClick: this.props.onPinDelChangeEvent },
 	              'Del'
 	            ),
 	            React.createElement(
 	              'li',
-	              { className: 'letter zero clearl', onClick: this.onCloseEvent },
+	              { className: 'letter zero clearl', onClick: this.props.onCloseEvent },
 	              'Fechar'
 	            ),
 	            React.createElement(
 	              'li',
-	              { className: 'delete lastitem', onClick: this.onSendEvent },
+	              { className: 'delete lastitem', onClick: this.props.onSendEvent },
 	              'Enviar'
 	            )
 	          )
@@ -52853,7 +52943,7 @@
 	    case _constantStrings.token.SAVE_VEHICLE_ID:
 	      return Object.assign({}, state, { vehicleId: action.payload, user: null, status: 'not authenticated', error: null, loading: false, token: '' });
 	    case _constantStrings.token.RESET_TOKEN:
-	      return Object.assign({}, state, { user: null, status: 'not authenticated', error: null, loading: false, token: '' });
+	      return Object.assign({}, state, { vehicleId: null, user: null, status: 'not authenticated', error: null, loading: false, token: '' });
 	    case _constantStrings.signUp.WAITING_FOR_VALIDATION_CODE:
 	      if (action.error) {
 	        return state;
@@ -52897,9 +52987,17 @@
 	    case _constantStrings.SENDING_INFO:
 	      return Object.assign({}, state, { data: null, status: 'waiting', error: null, loading: true });
 	    case _constantStrings.SENDING_INFO_SUCCESS:
-	      return Object.assign({}, state, { data: action.payload.data, status: 'data', error: null, loading: false });
+	      return Object.assign({}, state, { data: null, isPinVerified: false, status: 'data', error: null, loading: false });
 	    case _constantStrings.SENDING_INFO_FAILURE:
-	      return Object.assign({}, state, { data: null, status: 'no data', error: action.payload, loading: false });
+	      return Object.assign({}, state, { data: null, status: 'no data', isPinVerified: false, error: action.payload, loading: false });
+	    case _constantStrings.GETTING_PIN_VERIFIED:
+	      return Object.assign({}, state, { isPinVerified: false, status: 'waiting', error: null, loading: true });
+	    case _constantStrings.GETTING_PIN_VERIFIED_SUCCESS:
+	      return Object.assign({}, state, { isPinVerified: true, status: 'data', error: null, loading: false });
+	    case _constantStrings.GETTING_PIN_VERIFIED_FAILURE:
+	      return Object.assign({}, state, { isPinVerified: false, status: 'data', error: action.payload, loading: false });
+	    case _constantStrings.RESET_INFO:
+	      return _constantStrings.INITIAL_STATE;
 	    default:
 	      return state;
 	  }

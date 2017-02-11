@@ -15,6 +15,7 @@ const ValidationCodeForm = React.createClass({
       <div>
         <DefaultInput
           title='Indica o código'
+          type='text'
           placeholder='código' value={this.props.validationCode}
           onChange={this.props.onValidationCodeChange} />
         <DefaultButton

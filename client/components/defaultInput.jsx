@@ -7,7 +7,8 @@ const DefaultInput = React.createClass({
     title: string,
     value: string,
     placeholder: string,
-    onChange: func
+    onChange: func,
+    type: string
   },
   render () {
     return (
@@ -17,7 +18,7 @@ const DefaultInput = React.createClass({
         </p>
         <FormControl
           className='input'
-          type='text'
+          type={this.props.type}
           value={this.props.value}
           placeholder={this.props.placeholder}
           onChange={this.props.onChange} />
