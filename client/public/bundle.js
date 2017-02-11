@@ -51487,7 +51487,7 @@
 	            { className: 'input-title' },
 	            'Desde'
 	          ),
-	          React.createElement(DP, { id: 'example-datepicker', value: this.props.beginning, onChange: this.props.handleBeginingChange })
+	          React.createElement(DP, { id: 'example-datepicker', value: this.props.beginning, onChange: this.props.handleBeginningChange })
 	        )
 	      ),
 	      React.createElement(

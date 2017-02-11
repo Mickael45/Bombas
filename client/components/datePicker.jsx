@@ -18,7 +18,7 @@ const DatePicker = React.createClass({
             <p className='input-title'>
               Desde
             </p>
-            <DP id='example-datepicker' value={this.props.beginning} onChange={this.props.handleBeginingChange} />
+            <DP id='example-datepicker' value={this.props.beginning} onChange={this.props.handleBeginningChange} />
           </FormGroup>
         </Col>
         <Col md={3} xs={3}>
