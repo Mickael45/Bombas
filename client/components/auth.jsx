@@ -43,7 +43,8 @@ const AuthComponent = React.createClass({
     validateCode: func,
     error: object,
     resendCode: func,
-    status: string
+    status: string,
+    vehicleId: string
   },
   getInitialState () {
     return {
@@ -63,7 +64,7 @@ const AuthComponent = React.createClass({
       this.state.birthDate)
   },
   onSignInSubmit () {
-    this.props.signMeInByPhone(this.state.phoneNumber, this.state.password)
+    this.props.signMeInByPhone(this.state.phoneNumber, this.state.password, this.props.vehicleId)
   },
   onValidationCodeSubmit () {
     this.props.validateCode(this.state.validationCode)

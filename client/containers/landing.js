@@ -5,14 +5,14 @@ import Landing from './../components/landing'
 
 const mapDispatchToProps = (dispatch) => ({
   loadUserFromToken (token, vehicleId) {
+    if (vehicleId) {
+      dispatch(saveVehicleId(vehicleId))
+    }
     if (!token || token === '' || token === 'undefined') {
       if (browserHistory) {
         browserHistory.push('/auth')
       }
       return
-    }
-    if (vehicleId) {
-      dispatch(saveVehicleId(vehicleId))
     }
     dispatch(meFromToken(token))
     .then((response) => {

@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch) => ({
       }
     })
   },
-  signMeInByPhone (phoneNumber, password) {
+  signMeInByPhone (phoneNumber, password, vehicleId) {
     var user = {
       phoneNumber,
       password
@@ -47,7 +47,9 @@ const mapDispatchToProps = (dispatch) => ({
     .then((response) => {
       if (!response.error) {
         dispatch(signUpUserSuccess(response.payload))
-        browserHistory.push('/info')
+        if (vehicleId) {
+          browserHistory.push('/info')
+        }
       } else {
         dispatch(signUpUserFailure(response.payload.response.data))
       }
@@ -56,13 +58,16 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state) => {
+  var vehicleId = state.authReducer.vehicleId
+  console.log(vehicleId)
   if (state.authReducer.user) {
     userId = state.authReducer.user._id
   }
   return {
     loading: state.authReducer.loading,
     status: state.authReducer.status,
-    error: state.authReducer.error
+    error: state.authReducer.error,
+    vehicleId: vehicleId
   }
 }
 
