@@ -14,6 +14,7 @@ const fillSupply = (supply, cb, info, res) => {
   supply.cartaoProfissional = info.proCard
   supply.station_id = info.stationId
   supply.veiculo_id = info.vehicleId
+  supply.km = info.km
   cb(supply, res)
 }
 
@@ -22,7 +23,7 @@ exports.updateLastSupply = (req, res) => {
     if (err) {
       return res.status(424).json({ message: 'Failed to find supplies', error: err })
     } else if (supply.length === 0) {
-      return res.status(400).json({ message: 'There is no supply to register' })
+      return res.status(400).json({ message: 'Supply already registered' })
     }
     fillSupply(supply[0], saveSupply, req.body, res)
   })

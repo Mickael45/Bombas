@@ -35,13 +35,15 @@ const mapDispatchToProps = (dispatch) => ({
       }
     })
   },
-  sendInfo (obj) {
+  sendInfo (obj, cb) {
     dispatch(sendInfo(obj))
     .then((response) => {
       if (response.error) {
         dispatch(sendInfoFailure(response.payload.response.data))
+        cb()
       } else {
         dispatch(sendInfoSuccess())
+        cb()
       }
     })
   },

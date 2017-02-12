@@ -29,16 +29,23 @@ const InfoComponent = React.createClass({
       distance: '',
       isPinBoxVisible: false,
       pin: '',
-      isButtonDisabled: true
+      isButtonDisabled: true,
+      options: [
+        <option key='0' value='select'>select</option>
+      ],
+      optionIndex: 0
+    }
+  },
+  checkForButtonDisability () {
+    if (this.state.distance.length > 0 && this.state.optionIndex > 0) {
+      this.setState({ isButtonDisabled: false })
+    } else {
+      this.setState({ isButtonDisabled: true })
     }
   },
   onDistanceChangeEvent (e) {
     this.setState({ distance: e.target.value }, () => {
-      if (this.state.distance.length > 0) {
-        this.setState({ isButtonDisabled: false })
-      } else {
-        this.setState({ isButtonDisabled: true })
-      }
+      this.checkForButtonDisability()
     })
   },
   onPinDelChangeEvent () {
@@ -54,22 +61,30 @@ const InfoComponent = React.createClass({
   onCloseEvent () {
     this.setState({ isPinBoxVisible: false })
     this.setState({ pin: '' })
+    if (this.props.error) {
+      this.props.resetInfo()
+    }
   },
   onSendEvent () {
     this.props.verifyPin(this.props.vehicleId, this.state.pin, () => {
       if (this.props.isPinVerified) {
         var obj = {
-          bombaId: '2',
+          bombaId: this.state.optionIndex,
           stationId: this.props.stationId,
           vehicleId: this.props.vehicleId,
           km: this.state.distance
         }
-        this.props.sendInfo(obj)
-        this.setState({ isPinBoxVisible: false })
-        this.props.resetInfo()
+        this.props.sendInfo(obj, () => {
+          this.props.resetInfo()
+        })
       } else {
         this.setState({ pin: '' })
       }
+    })
+  },
+  onSelectChange (e) {
+    this.setState({ optionIndex: e.target.value }, () => {
+      this.checkForButtonDisability()
     })
   },
   render () {
@@ -94,6 +109,7 @@ const InfoComponent = React.createClass({
               <div>
                 <Col md={3} xs={8} xsOffset={2}>
                   <StationInfoTile
+                    onChange={this.onSelectChange}
                     {...this.props.data.station} />
                 </Col>
                 <Col md={3} xs={8} xsOffset={2}>

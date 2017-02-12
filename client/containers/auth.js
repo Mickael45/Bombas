@@ -59,7 +59,6 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => {
   var vehicleId = state.authReducer.vehicleId
-  console.log(vehicleId)
   if (state.authReducer.user) {
     userId = state.authReducer.user._id
   }
