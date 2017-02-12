@@ -1,6 +1,6 @@
 const axios = require('axios')
-const strings = require('./constantStrings')
-const config = require('./../config/config')
+const strings = require('./constants/xml')
+const config = require('./../config/server')
 
 export function sendXmlToServer (obj) {
   var request = axios.post(`${config.SERVER_URL}/auth/xml`, obj)
@@ -11,7 +11,7 @@ export function sendXmlToServer (obj) {
   }
 }
 
-export function getClientIds (vehicles, cb) {
+export function getClientIds (vehicles) {
   var clientsIds = []
 
   vehicles.forEach(function (vehicle) {
@@ -25,7 +25,7 @@ export function getClientIds (vehicles, cb) {
   }
 }
 
-export function getVehiclesByIds (supplies, cb) {
+export function getVehiclesByIds (supplies) {
   var vehicleIds = []
 
   supplies.forEach(function (supply) {
@@ -39,14 +39,17 @@ export function getVehiclesByIds (supplies, cb) {
   }
 }
 
-export function getSupplierByIds (stations, cb) {
-  var stationsIds = []
-
-  stations.forEach(function (station) {
-    stationsIds.push({ _id: station.Abastecimento })
+export function getSupplierByIds (stations, startingDate, endingDate) {
+  var suppliesIds = {}
+  var i = 0
+  stations.forEach((station) => {
+    station.Abastecimento.forEach((abastecimento) => {
+      suppliesIds['key' + i++] = abastecimento
+    })
   })
-  var request = axios.get(`${config.SERVER_URL}/auth/supplies`, stationsIds)
-
+  suppliesIds.startingDate = startingDate
+  suppliesIds.endingDate = endingDate
+  var request = axios.get(`${config.SERVER_URL}/auth/supplies`, { params: suppliesIds })
   return {
     type: strings.GETTING_XML,
     payload: request

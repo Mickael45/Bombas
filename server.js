@@ -10,7 +10,7 @@ const ReactRedux = require('react-redux')
 const Provider = ReactRedux.Provider
 const store = require('./client/store/store')
 const fs = require('fs')
-const baseTemplate = fs.readFileSync('./client/index.html')
+const baseTemplate = fs.readFileSync('./index.html')
 const template = _.template(baseTemplate)
 const Client = require('./client/client.js')
 const Routes = Client.Routes
@@ -32,11 +32,11 @@ app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.use('/client/public', express.static('./client/public'))
+
 for (var route in routes) {
   app.use('/', routes[route])
 }
-
-app.use(express.static('./client'))
 
 app.use((req, res) => {
   match({ routes: Routes(), location: req.url }, (err, redirectLocation, renderProps) => {
