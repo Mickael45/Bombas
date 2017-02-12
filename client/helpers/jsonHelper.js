@@ -23,7 +23,7 @@ const findVehicleById = (obj, vehicleId) => {
   }
 }
 
-const createVehicleObject = (obj, vehicleId) => {
+const createVehicleObject = (obj, vehicleId, km) => {
   var foundVehicle = findVehicleById(obj, vehicleId)
 
   var vehicle = {
@@ -31,7 +31,7 @@ const createVehicleObject = (obj, vehicleId) => {
       pais: foundVehicle.pais,
       matricula: foundVehicle.matricula,
       combustivel: foundVehicle.combustivel,
-      km: foundVehicle.km
+      km: km
     },
     client_id: foundVehicle.cliente_id
   }
@@ -64,7 +64,7 @@ const createSupplyObj = (obj, stationId) => {
       volumeAbastecimento: supply.volumeAbastecimento,
       cartaoProfissional: supply.cartaoProfissional
     })
-    var vehicle = createVehicleObject(obj, supply.veiculo_id)
+    var vehicle = createVehicleObject(obj, supply.veiculo_id, supply.km)
     stationSupplies[supplyIndex].veiculo = vehicle.vehicle
     stationSupplies[supplyIndex++].sujeitoPassivo = createClientObject(obj, vehicle.client_id)
   })

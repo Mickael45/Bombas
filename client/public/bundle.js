@@ -21540,9 +21540,9 @@
 	var Landing = __webpack_require__(227);
 	var Auth = __webpack_require__(565);
 	var Info = __webpack_require__(572);
-	var Xml = __webpack_require__(583);
+	var Xml = __webpack_require__(585);
 
-	var store = __webpack_require__(591);
+	var store = __webpack_require__(592);
 
 	var _require = __webpack_require__(259),
 	    Router = _require.Router,
@@ -50246,7 +50246,6 @@
 
 	var mapStateToProps = function mapStateToProps(state) {
 	  var vehicleId = state.authReducer.vehicleId;
-	  console.log(vehicleId);
 	  if (state.authReducer.user) {
 	    userId = state.authReducer.user._id;
 	  }
@@ -50650,12 +50649,14 @@
 	        }
 	      });
 	    },
-	    sendInfo: function sendInfo(obj) {
+	    sendInfo: function sendInfo(obj, cb) {
 	      dispatch((0, _info.sendInfo)(obj)).then(function (response) {
 	        if (response.error) {
 	          dispatch((0, _info.sendInfoFailure)(response.payload.response.data));
+	          cb();
 	        } else {
 	          dispatch((0, _info.sendInfoSuccess)());
+	          cb();
 	        }
 	      });
 	    },
@@ -50716,7 +50717,7 @@
 	exports.gettingPinVerifyFailure = gettingPinVerifyFailure;
 	exports.resetInfo = resetInfo;
 	var axios = __webpack_require__(231);
-	var strings = __webpack_require__(586);
+	var strings = __webpack_require__(575);
 	var config = __webpack_require__(256);
 
 	function getUsersStation(stationId) {
@@ -50765,7 +50766,7 @@
 	}
 
 	function sendInfo(obj) {
-	  var request = axios.post(config.SERVER_URL + '/auth/info', obj);
+	  var request = axios.post(config.SERVER_URL + '/auth/supplies', obj);
 	  return {
 	    type: strings.SENDING_INFO,
 	    payload: request
@@ -50778,10 +50779,14 @@
 	  };
 	}
 
-	function sendInfoFailure(err) {
+	function sendInfoFailure(error) {
+	  var formattedError = {
+	    title: 'Error',
+	    body: error.message
+	  };
 	  return {
 	    type: strings.SENDING_INFO_FAILURE,
-	    payload: err
+	    payload: formattedError
 	  };
 	}
 
@@ -50818,7 +50823,29 @@
 	}
 
 /***/ },
-/* 575 */,
+/* 575 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = {
+	  GETTING_INFO: 'GETTING_INFO',
+	  GETTING_INFO_SUCCESS: 'GETTING_INFO_SUCCESS',
+	  GETTING_INFO_FAILURE: 'GETTING_INFO_FAILURE',
+	  GETTING_XML: 'GETTING_XML',
+	  GETTING_XML_SUCCESS: 'GETTING_XML_SUCCESS',
+	  GETTING_XML_FAILURE: 'GETTING_XML_FAILURE',
+	  SENDING_INFO: 'SENDING_INFO',
+	  SENDING_INFO_FAILURE: 'SENDING_INFO_FAILURE',
+	  SENDING_INFO_SUCCESS: 'SENDING_INFO_SUCCESS',
+	  GETTING_PIN_VERIFIED: 'GETTING_PIN_VERIFIED',
+	  GETTING_PIN_VERIFIED_FAILURE: 'GETTING_PIN_VERIFIED_FAILURE',
+	  GETTING_PIN_VERIFIED_SUCCESS: 'GETTING_PIN_VERIFIED_SUCCESS',
+	  RESET_INFO: 'RESET_INFO',
+	  INITIAL_STATE: { data: null, status: null, isPinVerified: false, error: null, loading: null }
+	};
+
+/***/ },
 /* 576 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -50828,11 +50855,11 @@
 
 	var React = __webpack_require__(1);
 	var StationInfoTile = __webpack_require__(577);
-	var VehicleInfoTile = __webpack_require__(579);
-	var ClientInfoTile = __webpack_require__(580);
+	var VehicleInfoTile = __webpack_require__(581);
+	var ClientInfoTile = __webpack_require__(582);
 	var Button = __webpack_require__(570);
 	var AlertTile = __webpack_require__(571);
-	var NumPad = __webpack_require__(581);
+	var NumPad = __webpack_require__(583);
 
 	var _require = __webpack_require__(312),
 	    Col = _require.Col;
@@ -50867,18 +50894,27 @@
 	      distance: '',
 	      isPinBoxVisible: false,
 	      pin: '',
-	      isButtonDisabled: true
+	      isButtonDisabled: true,
+	      options: [React.createElement(
+	        'option',
+	        { key: '0', value: 'select' },
+	        'select'
+	      )],
+	      optionIndex: 0
 	    };
+	  },
+	  checkForButtonDisability: function checkForButtonDisability() {
+	    if (this.state.distance.length > 0 && this.state.optionIndex > 0) {
+	      this.setState({ isButtonDisabled: false });
+	    } else {
+	      this.setState({ isButtonDisabled: true });
+	    }
 	  },
 	  onDistanceChangeEvent: function onDistanceChangeEvent(e) {
 	    var _this = this;
 
 	    this.setState({ distance: e.target.value }, function () {
-	      if (_this.state.distance.length > 0) {
-	        _this.setState({ isButtonDisabled: false });
-	      } else {
-	        _this.setState({ isButtonDisabled: true });
-	      }
+	      _this.checkForButtonDisability();
 	    });
 	  },
 	  onPinDelChangeEvent: function onPinDelChangeEvent() {
@@ -50894,6 +50930,9 @@
 	  onCloseEvent: function onCloseEvent() {
 	    this.setState({ isPinBoxVisible: false });
 	    this.setState({ pin: '' });
+	    if (this.props.error) {
+	      this.props.resetInfo();
+	    }
 	  },
 	  onSendEvent: function onSendEvent() {
 	    var _this2 = this;
@@ -50901,17 +50940,24 @@
 	    this.props.verifyPin(this.props.vehicleId, this.state.pin, function () {
 	      if (_this2.props.isPinVerified) {
 	        var obj = {
-	          bombaId: '2',
+	          bombaId: _this2.state.optionIndex,
 	          stationId: _this2.props.stationId,
 	          vehicleId: _this2.props.vehicleId,
 	          km: _this2.state.distance
 	        };
-	        _this2.props.sendInfo(obj);
-	        _this2.setState({ isPinBoxVisible: false });
-	        _this2.props.resetInfo();
+	        _this2.props.sendInfo(obj, function () {
+	          _this2.props.resetInfo();
+	        });
 	      } else {
 	        _this2.setState({ pin: '' });
 	      }
+	    });
+	  },
+	  onSelectChange: function onSelectChange(e) {
+	    var _this3 = this;
+
+	    this.setState({ optionIndex: e.target.value }, function () {
+	      _this3.checkForButtonDisability();
 	    });
 	  },
 	  render: function render() {
@@ -50937,7 +50983,9 @@
 	          React.createElement(
 	            Col,
 	            { md: 3, xs: 8, xsOffset: 2 },
-	            React.createElement(StationInfoTile, this.props.data.station)
+	            React.createElement(StationInfoTile, _extends({
+	              onChange: this.onSelectChange
+	            }, this.props.data.station))
 	          ),
 	          React.createElement(
 	            Col,
@@ -50975,12 +51023,18 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Box = __webpack_require__(578);
+	var Box = __webpack_require__(580);
 
 	var _require = __webpack_require__(312),
-	    Col = _require.Col;
+	    Col = _require.Col,
+	    FormGroup = _require.FormGroup,
+	    FormControl = _require.FormControl,
+	    ControlLabel = _require.ControlLabel;
 
-	var string = React.PropTypes.string;
+	var _React$PropTypes = React.PropTypes,
+	    string = _React$PropTypes.string,
+	    func = _React$PropTypes.func,
+	    number = _React$PropTypes.number;
 
 
 	var GasStationInfoTile = React.createClass({
@@ -50990,7 +51044,28 @@
 	    city: string,
 	    adress: string,
 	    name: string,
-	    zipCode: string
+	    zipCode: string,
+	    onChange: func,
+	    pumpNumber: number
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      options: [React.createElement(
+	        'option',
+	        { key: '0', value: 'select' },
+	        'select'
+	      )]
+	    };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    for (var i = 0; i < this.props.pumpNumber; i++) {
+	      var key = i + 1;
+	      this.state.options.push(React.createElement(
+	        'option',
+	        { key: key.toString() },
+	        key
+	      ));
+	    }
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -51024,10 +51099,28 @@
 	      ),
 	      React.createElement(
 	        Col,
-	        { md: 6, mdOffset: 3, xs: 6, xsOffset: 3 },
+	        { md: 6, xs: 6 },
 	        React.createElement(Box, {
 	          title: 'C\xF3digo Postal',
 	          value: this.props.zipCode })
+	      ),
+	      React.createElement(
+	        Col,
+	        { md: 6, xs: 6 },
+	        React.createElement(
+	          FormGroup,
+	          { controlId: 'formControlsSelect' },
+	          React.createElement(
+	            ControlLabel,
+	            null,
+	            'Select'
+	          ),
+	          React.createElement(
+	            FormControl,
+	            { onChange: this.props.onChange, componentClass: 'select', placeholder: 'select' },
+	            this.state.options
+	          )
+	        )
 	      )
 	    );
 	  }
@@ -51036,7 +51129,9 @@
 	module.exports = GasStationInfoTile;
 
 /***/ },
-/* 578 */
+/* 578 */,
+/* 579 */,
+/* 580 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51083,13 +51178,13 @@
 	module.exports = GenericBox;
 
 /***/ },
-/* 579 */
+/* 581 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Box = __webpack_require__(578);
+	var Box = __webpack_require__(580);
 	var Input = __webpack_require__(569);
 
 	var _require = __webpack_require__(312),
@@ -51173,13 +51268,13 @@
 	module.exports = VehicleInfoTile;
 
 /***/ },
-/* 580 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Box = __webpack_require__(578);
+	var Box = __webpack_require__(580);
 
 	var _require = __webpack_require__(312),
 	    Col = _require.Col;
@@ -51232,7 +51327,7 @@
 	module.exports = ClientInfoTile;
 
 /***/ },
-/* 581 */
+/* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51241,7 +51336,7 @@
 
 	var React = __webpack_require__(1);
 	var DefaultInput = __webpack_require__(569);
-	var Number = __webpack_require__(582);
+	var Number = __webpack_require__(584);
 	var _React$PropTypes = React.PropTypes,
 	    func = _React$PropTypes.func,
 	    string = _React$PropTypes.string;
@@ -51311,7 +51406,7 @@
 	module.exports = NumPad;
 
 /***/ },
-/* 582 */
+/* 584 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51345,13 +51440,13 @@
 	module.exports = Number;
 
 /***/ },
-/* 583 */
+/* 585 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var XmlContainer = __webpack_require__(584);
+	var XmlContainer = __webpack_require__(586);
 
 	var XmlPage = React.createClass({
 	  displayName: 'XmlPage',
@@ -51363,22 +51458,22 @@
 	module.exports = XmlPage;
 
 /***/ },
-/* 584 */
+/* 586 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _reactRedux = __webpack_require__(179);
 
-	var _xml = __webpack_require__(585);
+	var _xml = __webpack_require__(587);
 
-	var _xml2 = __webpack_require__(587);
+	var _xml2 = __webpack_require__(588);
 
 	var _xml3 = _interopRequireDefault(_xml2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var jsonHelper = __webpack_require__(590);
+	var jsonHelper = __webpack_require__(591);
 
 
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
@@ -51429,7 +51524,7 @@
 	module.exports = (0, _reactRedux.connect)(null, mapDispatchToProps)(_xml3.default);
 
 /***/ },
-/* 585 */
+/* 587 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51445,7 +51540,7 @@
 	exports.getXmlSuccess = getXmlSuccess;
 	exports.getXmlFailure = getXmlFailure;
 	var axios = __webpack_require__(231);
-	var strings = __webpack_require__(586);
+	var strings = __webpack_require__(575);
 	var config = __webpack_require__(256);
 
 	function sendXmlToServer(obj) {
@@ -51530,30 +51625,7 @@
 	}
 
 /***/ },
-/* 586 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = {
-	  GETTING_INFO: 'GETTING_INFO',
-	  GETTING_INFO_SUCCESS: 'GETTING_INFO_SUCCESS',
-	  GETTING_INFO_FAILURE: 'GETTING_INFO_FAILURE',
-	  GETTING_XML: 'GETTING_XML',
-	  GETTING_XML_SUCCESS: 'GETTING_XML_SUCCESS',
-	  GETTING_XML_FAILURE: 'GETTING_XML_FAILURE',
-	  SENDING_INFO: 'SENDING_INFO',
-	  SENDING_INFO_FAILURE: 'SENDING_INFO_FAILURE',
-	  SENDING_INFO_SUCCESS: 'SENDING_INFO_SUCCESS',
-	  GETTING_PIN_VERIFIED: 'GETTING_PIN_VERIFIED',
-	  GETTING_PIN_VERIFIED_FAILURE: 'GETTING_PIN_VERIFIED_FAILURE',
-	  GETTING_PIN_VERIFIED_SUCCESS: 'GETTING_PIN_VERIFIED_SUCCESS',
-	  RESET_INFO: 'RESET_INFO',
-	  INITIAL_STATE: { data: null, status: null, isPinVerified: false, error: null, loading: null }
-	};
-
-/***/ },
-/* 587 */
+/* 588 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51561,7 +51633,7 @@
 	var _reactBootstrap = __webpack_require__(312);
 
 	var React = __webpack_require__(1);
-	var DatePicker = __webpack_require__(588);
+	var DatePicker = __webpack_require__(589);
 	var Button = __webpack_require__(570);
 	var func = React.PropTypes.func;
 
@@ -51612,13 +51684,13 @@
 	module.exports = XmlContainer;
 
 /***/ },
-/* 588 */
+/* 589 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DatePicker = __webpack_require__(589);
+	var DatePicker = __webpack_require__(590);
 	var _React$PropTypes = React.PropTypes,
 	    func = _React$PropTypes.func,
 	    string = _React$PropTypes.string;
@@ -51675,7 +51747,7 @@
 	module.exports = GenericDatePicker;
 
 /***/ },
-/* 589 */
+/* 590 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52185,7 +52257,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 590 */
+/* 591 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -52215,7 +52287,7 @@
 	  }
 	};
 
-	var createVehicleObject = function createVehicleObject(obj, vehicleId) {
+	var createVehicleObject = function createVehicleObject(obj, vehicleId, km) {
 	  var foundVehicle = findVehicleById(obj, vehicleId);
 
 	  var vehicle = {
@@ -52223,7 +52295,7 @@
 	      pais: foundVehicle.pais,
 	      matricula: foundVehicle.matricula,
 	      combustivel: foundVehicle.combustivel,
-	      km: foundVehicle.km
+	      km: km
 	    },
 	    client_id: foundVehicle.cliente_id
 	  };
@@ -52256,7 +52328,7 @@
 	      volumeAbastecimento: supply.volumeAbastecimento,
 	      cartaoProfissional: supply.cartaoProfissional
 	    });
-	    var vehicle = createVehicleObject(obj, supply.veiculo_id);
+	    var vehicle = createVehicleObject(obj, supply.veiculo_id, supply.km);
 	    stationSupplies[supplyIndex].veiculo = vehicle.vehicle;
 	    stationSupplies[supplyIndex++].sujeitoPassivo = createClientObject(obj, vehicle.client_id);
 	  });
@@ -52285,7 +52357,7 @@
 	};
 
 /***/ },
-/* 591 */
+/* 592 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52294,15 +52366,15 @@
 
 	var _redux = __webpack_require__(190);
 
-	var _reduxPromise = __webpack_require__(592);
+	var _reduxPromise = __webpack_require__(593);
 
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 
-	var _reducers = __webpack_require__(599);
+	var _reducers = __webpack_require__(600);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _localStorage = __webpack_require__(603);
+	var _localStorage = __webpack_require__(604);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -52323,7 +52395,7 @@
 	module.exports = store;
 
 /***/ },
-/* 592 */
+/* 593 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52342,7 +52414,7 @@
 
 	exports['default'] = promiseMiddleware;
 
-	var _fluxStandardAction = __webpack_require__(593);
+	var _fluxStandardAction = __webpack_require__(594);
 
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -52369,7 +52441,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 593 */
+/* 594 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52382,7 +52454,7 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 
-	var _lodashIsplainobject = __webpack_require__(594);
+	var _lodashIsplainobject = __webpack_require__(595);
 
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 
@@ -52401,7 +52473,7 @@
 	}
 
 /***/ },
-/* 594 */
+/* 595 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52416,9 +52488,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(595),
-	    isArguments = __webpack_require__(596),
-	    keysIn = __webpack_require__(597);
+	var baseFor = __webpack_require__(596),
+	    isArguments = __webpack_require__(597),
+	    keysIn = __webpack_require__(598);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -52512,7 +52584,7 @@
 	module.exports = isPlainObject;
 
 /***/ },
-/* 595 */
+/* 596 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -52567,7 +52639,7 @@
 	module.exports = baseFor;
 
 /***/ },
-/* 596 */
+/* 597 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -52803,7 +52875,7 @@
 	module.exports = isArguments;
 
 /***/ },
-/* 597 */
+/* 598 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52818,8 +52890,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(596),
-	    isArray = __webpack_require__(598);
+	var isArguments = __webpack_require__(597),
+	    isArray = __webpack_require__(599);
 
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -52942,7 +53014,7 @@
 	module.exports = keysIn;
 
 /***/ },
-/* 598 */
+/* 599 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -53128,20 +53200,20 @@
 	module.exports = isArray;
 
 /***/ },
-/* 599 */
+/* 600 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _auth = __webpack_require__(600);
+	var _auth = __webpack_require__(601);
 
 	var _auth2 = _interopRequireDefault(_auth);
 
-	var _info = __webpack_require__(601);
+	var _info = __webpack_require__(602);
 
 	var _info2 = _interopRequireDefault(_info);
 
-	var _xml = __webpack_require__(602);
+	var _xml = __webpack_require__(603);
 
 	var _xml2 = _interopRequireDefault(_xml);
 
@@ -53158,7 +53230,7 @@
 	module.exports = rootReducer;
 
 /***/ },
-/* 600 */
+/* 601 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53205,12 +53277,12 @@
 	module.exports = authReducer;
 
 /***/ },
-/* 601 */
+/* 602 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var strings = __webpack_require__(586);
+	var strings = __webpack_require__(575);
 
 	var infoReducer = function infoReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : strings.INITIAL_STATE;
@@ -53245,12 +53317,12 @@
 	module.exports = infoReducer;
 
 /***/ },
-/* 602 */
+/* 603 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _xml = __webpack_require__(586);
+	var _xml = __webpack_require__(575);
 
 	var _xml2 = _interopRequireDefault(_xml);
 
@@ -53275,7 +53347,7 @@
 	module.exports = xmlReducer;
 
 /***/ },
-/* 603 */
+/* 604 */
 /***/ function(module, exports) {
 
 	'use strict';

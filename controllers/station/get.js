@@ -1,4 +1,5 @@
 const Station = require('./../../models/station')
+const Pump = require('./../../models/pump')
 
 exports.getStations = (req, res) => {
   Station.find({}, function (err, stations) {
@@ -12,8 +13,13 @@ exports.getStations = (req, res) => {
 exports.getStationById = (req, res) => {
   Station.findOne({ _idPosto: req.params.id }, function (err, station) {
     if (err) {
-      return res.status(400).json({ message: 'Client not found', error: err })
+      return res.status(400).json({ message: 'Station not found', error: err })
     }
-    return res.send(station)
+    Pump.find({ station_id: station._idPosto }, function (err, pump) {
+      if (err) {
+        return res.status(400).json({ message: 'Station not found', error: err })
+      }
+      return res.json({ station, pumpNumber: pump.length })
+    })
   })
 }

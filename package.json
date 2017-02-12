@@ -29,6 +29,7 @@
     "node-static": "^0.7.9",
     "nodemon": "^1.11.0",
     "react": "^15.4.2",
+    "react-addons-create-fragment": "^15.4.2",
     "react-date-picker": "^5.3.28",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.2",

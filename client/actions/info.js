@@ -48,7 +48,7 @@ export function getInfoFailure (error) {
 }
 
 export function sendInfo (obj) {
-  var request = axios.post(`${config.SERVER_URL}/auth/info`, obj)
+  var request = axios.post(`${config.SERVER_URL}/auth/supplies`, obj)
   return {
     type: strings.SENDING_INFO,
     payload: request
@@ -61,10 +61,14 @@ export function sendInfoSuccess () {
   }
 }
 
-export function sendInfoFailure (err) {
+export function sendInfoFailure (error) {
+  var formattedError = {
+    title: 'Error',
+    body: error.message
+  }
   return {
     type: strings.SENDING_INFO_FAILURE,
-    payload: err
+    payload: formattedError
   }
 }
 

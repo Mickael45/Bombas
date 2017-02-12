@@ -15,13 +15,13 @@ const UserSchema = new mongoose.Schema({
   verified: { type: Boolean, default: false, select: false }
 })
 
-UserSchema.pre('save', function (next) {
+/* UserSchema.pre('save', function (next) {
   var user = this
   if (!user.isModified('password')) {
     return next()
   }
 
-  bcrypt.hash(user.password, null, null, function (err, hash) {
+  /* bcrypt.hash(user.password, null, null, function (err, hash) {
     if (err) {
       return next(err)
     }
@@ -29,12 +29,16 @@ UserSchema.pre('save', function (next) {
     user.password = hash
     next(user)
   })
-})
+}) */
 
 UserSchema.methods.comparePassword = function (password) {
   var user = this
 
-  return bcrypt.compareSync(password, user.password)
+  if (password === user.password) {
+    return true
+  }
+  return false
+//  return bcrypt.compareSync(password, user.password)
 }
 
 UserSchema.methods.sendAuthyToken = userTokenController.sendAuthyToken
