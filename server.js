@@ -19,14 +19,14 @@ const app = express()
 const morgan = require('morgan')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const appController = require('./controllers/appController')
+const headerSetter = require('./config/headers')
 const routes = require('./routes')
-const config = require('./config/config')
+const env = require('./config/env')
 
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use('/*', appController.setHeaders)
+app.use('/*', headerSetter.setHeaders)
 
-mongoose.connect(config.MONGOLAB_URI)
+mongoose.connect(env.MONGOLAB_URI)
 
 app.use(morgan('dev'))
 app.use(bodyParser.json())
@@ -57,6 +57,6 @@ app.use((req, res) => {
   })
 })
 
-app.listen(config.PORT)
+app.listen(env.PORT)
 
 console.log('Ready')

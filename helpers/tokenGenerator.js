@@ -1,4 +1,4 @@
-const config = require('./../config/config')
+const config = require('./../config/env')
 const jwt = require('jsonwebtoken')
 
 exports.generateToken = (user) => {

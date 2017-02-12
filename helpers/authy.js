@@ -1,4 +1,4 @@
-const config = require('./../../config/config')
+const config = require('./../config/env')
 const authy = require('authy')(config.AUTHY_API_KEY)
 
 exports.sendAuthyToken = (user, cb) => {

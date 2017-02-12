@@ -1,5 +1,4 @@
 const fs = require('fs')
-const path = require('path')
 const xmlify = require('xmlify')
 
 exports.generateXml = (req, res) => {
@@ -10,8 +9,4 @@ exports.generateXml = (req, res) => {
     }
     return res.json({ messsage: 'file created' })
   })
-}
-
-exports.getXml = (req, res) => {
-  return res.download(path.join(__dirname, '../test.xml'), 'test.xml')
 }

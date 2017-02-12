@@ -1,5 +1,5 @@
 const axios = require('axios')
-const strings = require('./constants/info')
+const strings = require('./constants/xml')
 const config = require('./../config/server')
 
 export function getUsersStation (stationId) {
