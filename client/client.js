@@ -1,7 +1,7 @@
 const React = require('react')
-const App = require('./pages/app')
+const Landing = require('./pages/landing')
 const Auth = require('./pages/auth')
-const Profile = require('./pages/profile')
+const Info = require('./pages/info')
 const Xml = require('./pages/xml')
 import { Provider } from 'react-redux'
 const store = require('./store/store')
@@ -26,10 +26,10 @@ const requireAdmin = (nextState, replace) => {
 } */
 
 const myRoutes = () => (
-  <Route path='/' component={App}>
+  <Route path='/' component={Landing}>
     <Route path='/auth' component={Auth} />
     <Route path='/xml' component={Xml} onEnter={requireAdmin} />
-    <Route path='/profile' component={Profile} />
+    <Route path='/info' component={Info} />
   </Route>
 )
 

@@ -1,7 +1,7 @@
 const React = require('react')
-const XmlContainer = require('./../containers/xmlContainer')
+const XmlContainer = require('./../containers/xml')
 
-const Xml = React.createClass({
+const XmlPage = React.createClass({
   render () {
     return (
       <XmlContainer />
@@ -9,4 +9,4 @@ const Xml = React.createClass({
   }
 })
 
-module.exports = Xml
+module.exports = XmlPage

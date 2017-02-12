@@ -2,12 +2,28 @@ const Supply = require('./../models/supply')
 const Station = require('./../models/station')
 const Vehicle = require('./../models/vehicle')
 const Client = require('./../models/client')
+const mongoose = require('mongoose')
+
+const formatIds = (queryObj, cb) => {
+  var formattedIds = []
+  var myBreak = false
+
+  for (var i = 0; !myBreak; i++) {
+    if (queryObj['key' + i]) {
+      formattedIds.push(mongoose.Types.ObjectId(queryObj['key' + i]))
+    } else {
+      myBreak = true
+    }
+  }
+  cb(formattedIds)
+}
 
 exports.getSupplies = (req, res) => {
-  Supply.find(req.body.stationsIds, function (err, supplies) {
+  Supply.find({dataAbastecimento: { '$gte': req.query.startingDate, '$lt': req.query.endingDate }}, function (err, supplies) {
     if (err) {
       return res.status(404).json({ message: 'Supplies not found', error: err })
     }
+    console.log(supplies)
     return res.send(supplies)
   })
 }

@@ -1,6 +1,6 @@
 const axios = require('axios')
-const strings = require('./constantStrings')
-const config = require('./../config/config')
+const strings = require('./constants/info')
+const config = require('./../config/server')
 
 export function getUsersStation (stationId) {
   var request = axios.get(`${config.SERVER_URL}/auth/station/${stationId}`)
