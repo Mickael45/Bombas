@@ -10,7 +10,7 @@ const ReactRedux = require('react-redux')
 const Provider = ReactRedux.Provider
 const store = require('./client/store/store')
 const fs = require('fs')
-const baseTemplate = fs.readFileSync('./client/index.html')
+const baseTemplate = fs.readFileSync('./index.html')
 const template = _.template(baseTemplate)
 const Client = require('./client/client.js')
 const Routes = Client.Routes
@@ -19,24 +19,27 @@ const app = express()
 const morgan = require('morgan')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const appController = require('./controllers/appController')
+const headerSetter = require('./config/headers')
 const routes = require('./routes')
-const config = require('./config/config')
+const env = require('./config/env')
+const tokenHelper = require('./helpers/tokenGenerator')
 
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use('/*', appController.setHeaders)
+app.use('/*', headerSetter.setHeaders)
 
-mongoose.connect(config.MONGOLAB_URI)
+mongoose.connect(env.MONGOLAB_URI)
 
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.use('/client/public', express.static('./client/public'))
+
 for (var route in routes) {
   app.use('/', routes[route])
 }
 
-app.use(express.static('./client'))
+app.use('/auth', tokenHelper.tokenValidator)
 
 app.use((req, res) => {
   match({ routes: Routes(), location: req.url }, (err, redirectLocation, renderProps) => {
@@ -57,6 +60,6 @@ app.use((req, res) => {
   })
 })
 
-app.listen(config.PORT)
+app.listen(env.PORT)
 
 console.log('Ready')
