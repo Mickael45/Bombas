@@ -6,8 +6,8 @@ const ClientSchema = new mongoose.Schema({
   codigoPostal: String,
   localidade: String,
   pais: String,
-  vat: String,
-  data_registo: Date
+  nif: String,
+  dataRegisto: Date
 })
 
 module.exports = mongoose.model('clientes', ClientSchema)

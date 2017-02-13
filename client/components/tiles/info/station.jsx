@@ -1,26 +1,27 @@
 const React = require('react')
 const Box = require('./../../input/box')
 const { Col, FormGroup, FormControl, ControlLabel } = require('react-bootstrap')
-const { string, func, number } = React.PropTypes
+const { string, func, array } = React.PropTypes
 
 const GasStationInfoTile = React.createClass({
   propTypes: {
-    city: string,
-    adress: string,
-    name: string,
-    zipCode: string,
+    cidade: string,
+    morada: string,
+    nome: string,
+    codigoPostal: string,
     onChange: func,
-    pumpNumber: number
+    bombas: array
   },
   getInitialState () {
     return {
+      pumpNumber: this.props.bombas.length,
       options: [
         <option key='0' value='select'>select</option>
       ]
     }
   },
   componentWillMount () {
-    for (var i = 0; i < this.props.pumpNumber; i++) {
+    for (var i = 0; i < this.state.pumpNumber; i++) {
       var key = i + 1
       this.state.options.push(
         <option key={key.toString()}>
@@ -36,26 +37,28 @@ const GasStationInfoTile = React.createClass({
         <Col md={4} xs={4}>
           <Box
             title='Nome'
-            value={this.props.name} />
+            value={this.props.nome} />
         </Col>
         <Col md={4} xs={4}>
           <Box
             title='Cidade'
-            value={this.props.city} />
+            value={this.props.cidade} />
         </Col>
         <Col md={4} xs={4}>
           <Box
             title='Morada'
-            value={this.props.adress} />
+            value={this.props.morada} />
         </Col>
         <Col md={6} xs={6}>
           <Box
             title='Código Postal'
-            value={this.props.zipCode} />
+            value={this.props.codigoPostal} />
         </Col>
         <Col md={6} xs={6}>
           <FormGroup controlId='formControlsSelect'>
-            <ControlLabel>Select</ControlLabel>
+            <ControlLabel className='input-title'>
+              Bomba
+            </ControlLabel>
             <FormControl onChange={this.props.onChange} componentClass='select' placeholder='select'>
               {this.state.options}
             </FormControl>

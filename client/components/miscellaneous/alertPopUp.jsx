@@ -1,11 +1,12 @@
 const React = require('react')
-const { string } = React.PropTypes
+const { string, func } = React.PropTypes
 import { Modal, Button } from 'react-bootstrap'
 
 const GenericAlertPopUp = React.createClass({
   propTypes: {
     title: string,
-    body: string
+    body: string,
+    onClick: func
   },
   getInitialState () {
     return {
@@ -14,6 +15,9 @@ const GenericAlertPopUp = React.createClass({
   },
   onButtonClickEvent () {
     this.setState({ isVisible: false })
+    if (this.props.onClick) {
+      this.props.onClick()
+    }
   },
   render () {
     return (

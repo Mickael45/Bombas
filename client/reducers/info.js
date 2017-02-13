@@ -11,9 +11,9 @@ const infoReducer = (state = strings.INITIAL_STATE, action) => {
     case strings.SENDING_INFO:
       return Object.assign({}, state, { data: null, status: 'waiting', error: null, loading: true })
     case strings.SENDING_INFO_SUCCESS:
-      return Object.assign({}, state, { data: null, isPinVerified: false, status: 'data', error: null, loading: false })
+      return Object.assign({}, state, { isPinVerified: false, status: 'data', error: null, loading: false })
     case strings.SENDING_INFO_FAILURE:
-      return Object.assign({}, state, { data: null, status: 'no data', isPinVerified: false, error: action.payload, loading: false })
+      return Object.assign({}, state, { status: 'data', isPinVerified: false, error: action.payload, loading: false })
     case strings.GETTING_PIN_VERIFIED:
       return Object.assign({}, state, { isPinVerified: false, status: 'waiting', error: null, loading: true })
     case strings.GETTING_PIN_VERIFIED_SUCCESS:

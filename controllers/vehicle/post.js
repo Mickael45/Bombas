@@ -1,8 +1,8 @@
 const Vehicle = require('./../../models/vehicle')
 
 exports.verify = (req, res) => {
-  Vehicle.findById(req.params.id, function (err, vehicle) {
-    if (err) {
+  Vehicle.findOne({ idVeiculo: req.params.id }, function (err, vehicle) {
+    if (err || !vehicle) {
       return res.status(400).json({ message: 'Vehicle not found', error: err })
     } else {
       if (vehicle.pin !== req.body.pin) {

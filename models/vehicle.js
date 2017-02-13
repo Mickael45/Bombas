@@ -2,14 +2,13 @@ const mongoose = require('mongoose')
 
 const VehicleSchema = new mongoose.Schema({
   activo: { type: Boolean, default: true },
-  cliente_id: String,
+  idVeiculo: String,
+  idCliente: String,
   matricula: String,
   pais: String,
-  combustivel: String,
-  km: String,
   pesoBruto: String,
   pin: String,
-  data_registo: Date
+  dataRegisto: Date
 })
 
 module.exports = mongoose.model('viaturas', VehicleSchema)
