@@ -1,14 +1,14 @@
 const mongoose = require('mongoose')
 
 const StationSchema = new mongoose.Schema({
-  _idPosto: String,
-  name: String,
-  adress: String,
-  zipCode: String,
-  city: String,
+  idPosto: String,
+  nome: String,
+  morada: String,
+  codigoPostal: String,
+  cidade: String,
   nif: String,
   enmc: String,
-  Abastecimento: Array
+  bombas: Array
 })
 
-module.exports = mongoose.model('Postos', StationSchema)
+module.exports = mongoose.model('postos', StationSchema)

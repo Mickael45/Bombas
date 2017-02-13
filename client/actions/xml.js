@@ -11,11 +11,20 @@ export function sendXmlToServer (obj) {
   }
 }
 
+export function getPumpsByIds () {
+  var request = axios.get(`${config.SERVER_URL}/auth/pumps`)
+
+  return {
+    type: strings.GETTING_XML,
+    payload: request
+  }
+}
+
 export function getClientIds (vehicles) {
   var clientsIds = []
 
   vehicles.forEach(function (vehicle) {
-    clientsIds.push({ _id: vehicle.cliente_id })
+    clientsIds.push({ _id: vehicle.idCliente })
   })
   var request = axios.get(`${config.SERVER_URL}/auth/clients`, clientsIds)
 
@@ -29,7 +38,7 @@ export function getVehiclesByIds (supplies) {
   var vehicleIds = []
 
   supplies.forEach(function (supply) {
-    vehicleIds.push({ _id: supply.veiculo_id })
+    vehicleIds.push({ _id: supply.idVeiculo })
   })
   var request = axios.get(`${config.SERVER_URL}/auth/vehicles`, vehicleIds)
 
@@ -39,11 +48,11 @@ export function getVehiclesByIds (supplies) {
   }
 }
 
-export function getSupplierByIds (stations, startingDate, endingDate) {
+export function getSuppliesByIds (pumps, startingDate, endingDate) {
   var suppliesIds = {}
   var i = 0
-  stations.forEach((station) => {
-    station.Abastecimento.forEach((abastecimento) => {
+  pumps.forEach((pump) => {
+    pump.abastecimentos.forEach((abastecimento) => {
       suppliesIds['key' + i++] = abastecimento
     })
   })

@@ -5,8 +5,8 @@ const { string } = React.PropTypes
 
 const SupplyInfoTile = React.createClass({
   propTypes: {
-    date: string,
-    liters: string,
+    dataAbastecimento: string,
+    volumeAbastecimento: string,
     price: string
   },
   render () {

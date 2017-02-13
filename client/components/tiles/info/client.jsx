@@ -5,7 +5,7 @@ const { string } = React.PropTypes
 
 const ClientInfoTile = React.createClass({
   propTypes: {
-    vat: string,
+    nif: string,
     nome: string,
     pais: string
   },
@@ -26,7 +26,7 @@ const ClientInfoTile = React.createClass({
         <Col md={4} xs={4}>
           <Box
             title='NIF'
-            value={this.props.vat} />
+            value={this.props.nif} />
         </Col>
       </div>
     )

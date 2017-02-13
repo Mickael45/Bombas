@@ -1,15 +1,15 @@
 const mongoose = require('mongoose')
 
 const SupplySchema = new mongoose.Schema({
-  _registo: String,
-  _transacao: String,
+  registo: String,
+  transacao: String,
   volumeAbastecimento: String,
   cartaoProfissional: String,
-  station_id: String,
-  veiculo_id: String,
+  idPosto: String,
+  idVeiculo: String,
   km: String,
-  bomba_id: String,
+  idBomba: String,
   dataAbastecimento: Date
 })
 
-module.exports = mongoose.model('Abastecimentos', SupplySchema)
+module.exports = mongoose.model('abastecimentos', SupplySchema)

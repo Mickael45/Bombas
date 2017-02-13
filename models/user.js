@@ -1,11 +1,9 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt-nodejs')
+// const bcrypt = require('bcrypt-nodejs')
 const userTokenController = require('./../helpers/authy')
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, unique: true },
-  firstname: { type: String },
-  lastname: { type: String },
   password: String,
   isAdmin: { type: Boolean, default: false },
   authyId: String,

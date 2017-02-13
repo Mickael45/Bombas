@@ -9,21 +9,18 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(getVehicle(vehicleId, stationId))
     .then((response) => {
       if (response.error) {
-        browserHistory.push('/auth')
         dispatch(getInfoFailure(response.payload.response.data))
       } else {
         obj.vehicle = response.payload.data
-        dispatch(getVehiclesOwner(obj.vehicle.cliente_id))
+        dispatch(getVehiclesOwner(obj.vehicle.idCliente))
         .then((response) => {
           if (response.error) {
-            browserHistory.push('/auth')
             dispatch(getInfoFailure(response.payload.response.data))
           } else {
             obj.client = response.payload.data
             dispatch(getUsersStation(stationId))
             .then((response) => {
               if (response.error) {
-                browserHistory.push('/auth')
                 dispatch(getInfoFailure(response.payload.response.data))
               } else {
                 obj.station = response.payload.data
@@ -60,8 +57,8 @@ const mapDispatchToProps = (dispatch) => ({
     })
   },
   resetInfo () {
-    dispatch(resetInfo())
     browserHistory.push('/auth')
+    dispatch(resetInfo())
   }
 })
 

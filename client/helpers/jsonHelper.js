@@ -1,23 +1,23 @@
-const findClientById = (obj, clientId) => {
+const findClientById = (obj, idCliente) => {
   for (var i = 0; i < obj.clients.length; i++) {
-    if (obj.clients[i]._id === clientId) {
+    if (obj.clients[i]._id === idCliente) {
       return obj.clients[i]
     }
   }
 }
 
-const createClientObject = (obj, vehicle) => {
-  var client = findClientById(obj, vehicle)
+const createClientObject = (obj, idCliente) => {
+  var client = findClientById(obj, idCliente)
 
   return {
     pais: client.pais,
-    vat: client.vat
+    vat: client.nif
   }
 }
 
 const findVehicleById = (obj, vehicleId) => {
   for (var i = 0; i < obj.vehicles.length; i++) {
-    if (obj.vehicles[i]._id === vehicleId) {
+    if (obj.vehicles[i].idVeiculo === vehicleId) {
       return obj.vehicles[i]
     }
   }
@@ -33,10 +33,10 @@ const createVehicleObject = (obj, vehicleId, km) => {
       combustivel: foundVehicle.combustivel,
       km: km
     },
-    client_id: foundVehicle.cliente_id
+    idCliente: foundVehicle.idCliente
   }
-  if (vehicle.pais !== 'PT') {
-    vehicle.pesoBruto = foundVehicle.pesoBruto
+  if (vehicle.vehicle.pais !== 'PT') {
+    vehicle.vehicle.pesoBruto = foundVehicle.pesoBruto
   }
   return vehicle
 }
@@ -44,7 +44,7 @@ const createVehicleObject = (obj, vehicleId, km) => {
 const filterSupplyByStationId = (obj, stationId) => {
   var supplies = []
   obj.supplies.forEach(function (supply) {
-    if (supply.station_id === stationId) {
+    if (supply.idPosto === stationId) {
       supplies.push(supply)
     }
   })
@@ -58,15 +58,15 @@ const createSupplyObj = (obj, stationId) => {
 
   supplies.forEach(function (supply) {
     stationSupplies.push({
-      _registo: supply._registo,
-      _transacao: supply._transacao,
+      _registo: supply.registo,
+      _transacao: supply.transacao,
       dataAbastecimento: supply.dataAbastecimento,
       volumeAbastecimento: supply.volumeAbastecimento,
       cartaoProfissional: supply.cartaoProfissional
     })
-    var vehicle = createVehicleObject(obj, supply.veiculo_id, supply.km)
+    var vehicle = createVehicleObject(obj, supply.idVeiculo, supply.km)
     stationSupplies[supplyIndex].veiculo = vehicle.vehicle
-    stationSupplies[supplyIndex++].sujeitoPassivo = createClientObject(obj, vehicle.client_id)
+    stationSupplies[supplyIndex++].sujeitoPassivo = createClientObject(obj, vehicle.idCliente)
   })
   return stationSupplies
 }
@@ -74,13 +74,14 @@ const createSupplyObj = (obj, stationId) => {
 const populateStations = (obj, proSupply) => {
   obj.stations.forEach(function (station) {
     proSupply.Abastecimentos.push({
-      _idPosto: station._idPosto,
-      Abastecimento: createSupplyObj(obj, station._id)
+      _idPosto: station.idPosto,
+      Abastecimento: createSupplyObj(obj, station.idPosto)
     })
   })
 }
 
 exports.createJson = (obj) => {
+  console.log('obj', obj)
   var proSupply = {
     '_xmlns': 'http://www.at.gov.pt/2016/AbastecimentoProfissional',
     '_xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',

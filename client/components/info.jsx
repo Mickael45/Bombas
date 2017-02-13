@@ -30,9 +30,6 @@ const InfoComponent = React.createClass({
       isPinBoxVisible: false,
       pin: '',
       isButtonDisabled: true,
-      options: [
-        <option key='0' value='select'>select</option>
-      ],
       optionIndex: 0
     }
   },
@@ -59,9 +56,14 @@ const InfoComponent = React.createClass({
     this.setState({ pin: '' })
   },
   onCloseEvent () {
-    this.setState({ isPinBoxVisible: false })
     this.setState({ pin: '' })
     if (this.props.error) {
+      this.props.resetInfo()
+    }
+    this.setState({ isPinBoxVisible: false })
+  },
+  onErrorReturn () {
+    if (!this.state.isPinBoxVisible) {
       this.props.resetInfo()
     }
   },
@@ -75,7 +77,9 @@ const InfoComponent = React.createClass({
           km: this.state.distance
         }
         this.props.sendInfo(obj, () => {
-          this.props.resetInfo()
+          if (!this.props.error) {
+            this.props.resetInfo()
+          }
         })
       } else {
         this.setState({ pin: '' })
@@ -92,7 +96,7 @@ const InfoComponent = React.createClass({
       <div>
         {
           (this.props.error)
-          ? <AlertTile {...this.props.error} />
+          ? <AlertTile {...this.props.error} onClick={this.onErrorReturn} />
         : <div />
         }
         {
@@ -103,7 +107,7 @@ const InfoComponent = React.createClass({
           onSendEvent={this.onSendEvent}
           onPinChangeEvent={this.onPinChangeEvent}
           onPinDelChangeEvent={this.onPinDelChangeEvent} />
-      : (this.props.status !== 'data'
+        : (this.props.status !== 'data')
             ? <h1>Loading</h1>
             : <div>
               <div>
@@ -132,7 +136,7 @@ const InfoComponent = React.createClass({
                   disabled={this.state.isButtonDisabled} />
               </Col>
             </div>
-          )
+          }
         }
       </div>
     )

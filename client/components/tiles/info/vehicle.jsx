@@ -7,7 +7,6 @@ const { string, func, bool } = React.PropTypes
 const VehicleInfoTile = React.createClass({
   propTypes: {
     activo: bool,
-    combustivel: string,
     pesoBruto: string,
     matricula: string,
     distance: string,
@@ -33,12 +32,7 @@ const VehicleInfoTile = React.createClass({
             title='Activo'
             boolValue={this.props.activo} />
         </Col>
-        <Col md={6} xs={6}>
-          <Box
-            title='Combustível'
-            value={this.props.combustivel} />
-        </Col>
-        <Col md={6} xs={6}>
+        <Col md={6} mdOffset={3} xs={6} xsOffset={3}>
           <Input
             title='Quilometragem'
             type='text'
