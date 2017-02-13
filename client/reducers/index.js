@@ -1,10 +1,12 @@
-import authReducer from './users/authReducer'
-import infoReducer from './infoReducer'
+import authReducer from './auth'
+import infoReducer from './info'
+import xmlReducer from './xml'
 import { combineReducers } from 'redux'
 
 const rootReducer = combineReducers({
   authReducer,
-  infoReducer
+  infoReducer,
+  xmlReducer
 })
 
 module.exports = rootReducer

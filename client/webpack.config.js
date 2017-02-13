@@ -3,7 +3,7 @@ const webpack = require('webpack')
 
 module.exports = {
   context: __dirname,
-  entry: './BrowserEntry.js',
+  entry: './browserEntry.js',
   output: {
     path: path.join(__dirname, '/public'),
     filename: 'bundle.js'

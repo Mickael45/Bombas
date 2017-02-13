@@ -1,10 +1,10 @@
 const React = require('react')
-const AuthContainer = require('./../containers/auth/authContainer')
+const AuthContainer = require('./../containers/auth')
 
-const Auth = () => (
+const AuthPage = () => (
   <div>
     <AuthContainer />
   </div>
 )
 
-module.exports = Auth
+module.exports = AuthPage

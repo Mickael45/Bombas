@@ -1,31 +1,105 @@
 const axios = require('axios')
-const strings = require('./constantStrings')
-const config = require('./../config/config')
+const strings = require('./constants/xml')
+const config = require('./../config/server')
 
-export function getInfo () {
-  var request = axios.get(`${config.SERVER_URL}/auth/info`)
+export function getUsersStation (stationId) {
+  var request = axios.get(`${config.SERVER_URL}/auth/station/${stationId}`)
+
   return {
     type: strings.GETTING_INFO,
     payload: request
   }
 }
 
-export function getInfoSuccess (user) {
+export function getVehiclesOwner (clientId) {
+  var request = axios.get(`${config.SERVER_URL}/auth/client/${clientId}`)
+
+  return {
+    type: strings.GETTING_INFO,
+    payload: request
+  }
+}
+
+export function getVehicle (vehicleId) {
+  var request = axios.get(`${config.SERVER_URL}/auth/vehicle/${vehicleId}`)
+
+  return {
+    type: strings.GETTING_INFO,
+    payload: request
+  }
+}
+
+export function getInfoSuccess (obj) {
   return {
     type: strings.GETTING_INFO_SUCCESS,
-    payload: user
+    payload: obj
   }
 }
 
 export function getInfoFailure (error) {
+  var formattedError = {
+    title: 'Error',
+    body: error.message
+  }
   return {
     type: strings.GETTING_INFO_FAILURE,
-    payload: error
+    payload: formattedError
   }
 }
 
-export function reinitState () {
+export function sendInfo (obj) {
+  var request = axios.post(`${config.SERVER_URL}/auth/supplies`, obj)
   return {
-    type: strings.REINIT_STATE
+    type: strings.SENDING_INFO,
+    payload: request
+  }
+}
+
+export function sendInfoSuccess () {
+  return {
+    type: strings.SENDING_INFO_SUCCESS
+  }
+}
+
+export function sendInfoFailure (error) {
+  var formattedError = {
+    title: 'Error',
+    body: error.message
+  }
+  return {
+    type: strings.SENDING_INFO_FAILURE,
+    payload: formattedError
+  }
+}
+
+export function gettingPinVerify (vehicleId, pin) {
+  var request = axios.post(`${config.SERVER_URL}/auth/vehicle/${vehicleId}/verify`, {pin})
+
+  return {
+    type: strings.GETTING_PIN_VERIFIED,
+    payload: request
+  }
+}
+
+export function gettingPinVerifySuccess () {
+  return {
+    type: strings.GETTING_PIN_VERIFIED_SUCCESS
+  }
+}
+
+export function gettingPinVerifyFailure (error) {
+  var formattedError = {
+    title: 'Error',
+    body: error.message
+  }
+  return {
+    type: strings.GETTING_PIN_VERIFIED_FAILURE,
+    payload: formattedError
+  }
+}
+
+export function resetInfo () {
+  return {
+    type: strings.RESET_INFO
   }
 }
