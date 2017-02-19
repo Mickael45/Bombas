@@ -21,7 +21,7 @@ const GenericAlertPopUp = React.createClass({
   },
   render () {
     return (
-      <div className='static-modal'>
+      <div>
         {
           (this.state.isVisible)
           ? <Modal.Dialog>

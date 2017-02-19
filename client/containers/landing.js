@@ -1,44 +1,44 @@
 import { connect } from 'react-redux'
-import { meFromToken, meFromTokenSuccess, meFromTokenFailure, resetToken, saveVehicleId } from '../actions/token'
+const token = require('../actions/signIn/token')
+const vehicle = require('../actions/vehicle/saveId')
 import { browserHistory } from 'react-router'
 import Landing from './../components/landing'
 
 const mapDispatchToProps = (dispatch) => ({
-  loadUserFromToken (token, vehicleId) {
+  loadUserFromToken (userToken, vehicleId) {
     if (vehicleId) {
-      dispatch(saveVehicleId(vehicleId))
+      dispatch(vehicle.saveId(vehicleId))
     }
-    if (!token || token === '' || token === 'undefined') {
+    if (!userToken) {
       if (browserHistory) {
         browserHistory.push('/auth')
       }
       return
     }
-    dispatch(meFromToken(token))
+    dispatch(token.meFromToken(userToken))
     .then((response) => {
-      if (response.type !== 'ME_FROM_TOKEN') {
-        browserHistory.push('/auth')
-        return
-      }
       if (!response.error) {
-        dispatch(meFromTokenSuccess(response.payload))
+        dispatch(token.meFromTokenSuccess(response.payload))
         if (vehicleId) {
-          browserHistory.push('/info')
+          browserHistory.push('/supplyInfo')
         } else {
-          browserHistory.push('/auth')
+          browserHistory.push('/waiting')
         }
       } else {
-        dispatch(meFromTokenFailure(response.payload))
+        dispatch(token.meFromTokenFailure(response.payload))
       }
     })
-  },
-  resetMe (dispatch) {
-    dispatch(resetToken())
   }
 })
 
-const mapStateToProps = (state) => ({
-  token: state.authReducer.token
-})
+const mapStateToProps = (state) => {
+  var token
+  if (state.authReducer.user) {
+    token = state.authReducer.user.token
+  }
+  return {
+    token
+  }
+}
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Landing)

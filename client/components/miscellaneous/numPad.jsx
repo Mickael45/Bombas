@@ -1,8 +1,8 @@
 const React = require('react')
-const DefaultInput = require('./../input/input')
+const Box = require('./../input/box')
 const Number = require('./number')
-import { Col } from 'react-bootstrap'
-const { func, string } = React.PropTypes
+const Button = require('./../buttons/button')
+const { func, string, bool } = React.PropTypes
 
 const NumPad = React.createClass({
   propTypes: {
@@ -10,35 +10,96 @@ const NumPad = React.createClass({
     onSendEvent: func,
     onPinChangeEvent: func,
     onPinDelChangeEvent: func,
-    value: string
+    value: string,
+    isPinValidationButtonDisabled: bool
   },
   render () {
     return (
-      <div className='container'>
-        <h3>Entrar PIN</h3>
-        <DefaultInput title='Pin' type='text' placeholder='Entra seu codigo PIN' value={this.props.value} onChange={this.props.onPinChangeEvent} />
-        <Col md={6} mdOffset={3} xs={6} xsOffset={3}>
-          <div id='container'>
-            <ul id='keyboard'>
-              <Number classToUse='letter' number='1' onClick={this.props.onPinChangeEvent} />
-              <Number classToUse='letter' number='2' onClick={this.props.onPinChangeEvent} />
-              <Number classToUse='letter' number='3' onClick={this.props.onPinChangeEvent} />
-              <Number classToUse='letter clearl' number='4' onClick={this.props.onPinChangeEvent} />
-              <Number classToUse='letter' number='5' onClick={this.props.onPinChangeEvent} />
-              <Number classToUse='letter' number='6' onClick={this.props.onPinChangeEvent} />
-              <Number classToUse='letter clearl' number='7' onClick={this.props.onPinChangeEvent} />
-              <Number classToUse='letter ' number='8' onClick={this.props.onPinChangeEvent} />
-              <Number classToUse='letter' number='9' onClick={this.props.onPinChangeEvent} />
-              <Number classToUse='letter zero clearl' number='0' onClick={this.props.onPinChangeEvent} />
-              <li className='delete lastitem' onClick={this.props.onPinDelChangeEvent}>Del</li>
-              <li className='letter zero clearl' onClick={this.props.onCloseEvent}>Fechar</li>
-              <li className='delete lastitem' onClick={this.props.onSendEvent}>Enviar</li>
-            </ul>
+      <div>
+        <div className='valign-wrapper row login-box'>
+          <div className='col card hoverable s10 pull-s1 m6 pull-m3 l4 pull-l4'>
+            <form>
+              <div className='card-content'>
+                <span className='card-title'>Confirmar</span>
+                <Box
+                  title='Pin'
+                  value={this.props.value}
+                  />
+                <div className='row center-align'>
+                  <ul id='keyboard'>
+                    <div className='row'>
+                      <div className='but col s4 m4 l4'>
+                        <Number classToUse='letter' number='1' onClick={this.props.onPinChangeEvent} />
+                      </div>
+                      <div className='but col s4 m4 l4'>
+                        <Number classToUse='letter' number='2' onClick={this.props.onPinChangeEvent} />
+                      </div>
+                      <div className='but col s4 m4 l4'>
+                        <Number classToUse='letter' number='3' onClick={this.props.onPinChangeEvent} />
+                      </div>
+                    </div>
+                    <div className='row'>
+                      <div className='but col s4 m4 l4'>
+                        <Number classToUse='letter clearl' number='4' onClick={this.props.onPinChangeEvent} />
+                      </div>
+                      <div className='but col s4 m4 l4'>
+                        <Number classToUse='letter' number='5' onClick={this.props.onPinChangeEvent} />
+                      </div>
+                      <div className='but col s4 m4 l4'>
+                        <Number classToUse='letter' number='6' onClick={this.props.onPinChangeEvent} />
+                      </div>
+                    </div>
+                    <div className='row'>
+                      <div className='but col s4 m4 l4'>
+                        <Number classToUse='letter clearl' number='7' onClick={this.props.onPinChangeEvent} />
+                      </div>
+                      <div className='but col s4 m4 l4'>
+                        <Number classToUse='letter ' number='8' onClick={this.props.onPinChangeEvent} />
+                      </div>
+                      <div className='but col s4 m4 l4'>
+                        <Number classToUse='letter' number='9' onClick={this.props.onPinChangeEvent} />
+                      </div>
+                    </div>
+                    <div className='row'>
+                      <div className='but col s6 m6 l6'>
+                        <Number classToUse='letter zero clearl' number='0' onClick={this.props.onPinChangeEvent} />
+                      </div>
+                      <div className='but col s6 m6 l6'>
+                        <li className='delete lastitem' onClick={this.props.onPinDelChangeEvent}>C</li>
+                      </div>
+                    </div>
+                  </ul>
+                </div>
+                <div className='card-action'>
+                  <Button
+                    class='button'
+                    title='Fechar'
+                    onSubmit={this.props.onCloseEvent}
+                     />
+                  <Button
+                    class='button'
+                    title='Enviar'
+                    onSubmit={this.props.onSendEvent}
+                    disabled={this.props.isPinValidationButtonDisabled}
+                   />
+                </div>
+              </div>
+            </form>
           </div>
-        </Col>
+        </div>
       </div>
     )
   }
 })
+
+/* <Number classToUse='letter' number='1' onClick={this.props.onPinChangeEvent} />
+<Number classToUse='letter' number='2' onClick={this.props.onPinChangeEvent} />
+<Number classToUse='letter' number='3' onClick={this.props.onPinChangeEvent} />
+<Number classToUse='letter clearl' number='4' onClick={this.props.onPinChangeEvent} />
+<Number classToUse='letter' number='5' onClick={this.props.onPinChangeEvent} />
+<Number classToUse='letter' number='6' onClick={this.props.onPinChangeEvent} />
+<Number classToUse='letter clearl' number='7' onClick={this.props.onPinChangeEvent} />
+<Number classToUse='letter ' number='8' onClick={this.props.onPinChangeEvent} />
+<Number classToUse='letter' number='9' onClick={this.props.onPinChangeEvent} /> */
 
 module.exports = NumPad

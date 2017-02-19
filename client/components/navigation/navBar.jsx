@@ -1,6 +1,5 @@
 const React = require('react')
 const { browserHistory } = require('react-router')
-const { Navbar, Nav, NavItem } = require('react-bootstrap')
 const { func, string, bool } = React.PropTypes
 
 const NavBar = React.createClass({
@@ -18,33 +17,23 @@ const NavBar = React.createClass({
   },
   render () {
     return (
-      <div>
-        <Navbar inverse collapseOnSelect>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <a className='navBar-title'>React-Bootstrap</a>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
+      <nav>
+        <div className='nav-wrapper'>
+          <a className='brand-logo center'>GPFrota</a>
+          <ul className='right'>
             {
-              (this.props.status === 'authenticated'
-              ? <Nav pullRight>
-                <NavItem onClick={this.props.logout} className='navBar-link'>Sair</NavItem>
-              </Nav>
-            : <div />
-              )
+              (this.props.status === 'authenticated')
+              ? <li><a onClick={this.props.logout}>Sair</a></li>
+              : <div />
             }
             {
               (this.props.isUserAdmin)
-              ? <Nav pullRight>
-                <NavItem onClick={this.onClickEvent} className='navBar-link'>xml</NavItem>
-              </Nav>
+              ? <li><a onClick={this.onClickEvent}>Xml</a></li>
               : <div />
             }
-          </Navbar.Collapse>
-        </Navbar>
-      </div>
+          </ul>
+        </div>
+      </nav>
     )
   }
 })

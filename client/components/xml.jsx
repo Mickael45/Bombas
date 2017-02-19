@@ -1,43 +1,48 @@
 const React = require('react')
 const DatePicker = require('./miscellaneous/datePicker')
 const Button = require('./buttons/button')
-import { Row } from 'react-bootstrap'
-const { func } = React.PropTypes
+const moment = require('moment')
+const AlertPopUp = require('./miscellaneous/alertPopUp')
+const { func, object } = React.PropTypes
 
 const XmlContainer = React.createClass({
   propTypes: {
-    createXmlFile: func
+    createXmlFile: func,
+    error: object,
+    resetError: func
   },
   getInitialState () {
-    var value = new Date().toISOString()
     return {
-      beginning: value,
-      ending: value
+      beginning: moment().subtract(1, 'month'),
+      ending: moment()
     }
   },
-  handleBeginningChange (value) {
-    this.setState({ beginning: value })
-  },
-  handleEndingChange (value) {
-    this.setState({ ending: value })
+  handleDateChange (value) {
+    this.setState({ beginning: value.startDate })
+    this.setState({ ending: value.endDate })
   },
   onValidationEvent () {
-    this.props.createXmlFile(this.state.beginning, this.state.ending)
+    this.props.createXmlFile(this.state.beginning._d, this.state.ending._d)
   },
   render () {
     return (
       <div>
-        <Row>
+        {
+          (this.props.error)
+          ? <AlertPopUp {...this.props.error} onClick={this.props.resetError} />
+        : <div className='center-align'>
           <DatePicker
             beginning={this.state.beginning}
             ending={this.state.ending}
-            handleBeginningChange={this.handleBeginningChange}
-            handleEndingChange={this.handleEndingChange} />
-        </Row>
-        <Button
-          class='validation-button'
-          onSubmit={this.onValidationEvent}
-          title='Crear xml' />
+            handleDateChange={this.handleDateChange} />
+          <div className='row'>
+            <Button
+              class='validation-button'
+              onSubmit={this.onValidationEvent}
+              title='Crear xml' />
+          </div>
+        </div>
+        }
       </div>
     )
   }

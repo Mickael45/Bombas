@@ -49,19 +49,18 @@ exports.verify = (req, res) => {
   }
 }
 
-
 exports.signIn = (req, res) => {
   User.findOne({'phone': req.body.phoneNumber}, function (err, user) {
     if (err || !user) {
-      return res.status(400).json({ message: 'User not found', error: err })
+      return res.status(400).json({ message: 'O utilizador não foi encontrado', error: err })
     }
     var result = user.comparePassword(req.body.password)
     if (!result) {
-      return res.status(400).json({ message: 'Bad password', error: err })
+      return res.status(400).json({ message: 'Senha errada', error: err })
     }
     return res.json({
       message: 'User successfully found',
-      user: user,
+      user,
       token: tokenGenerator.generateToken(user)
     })
   })

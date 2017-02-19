@@ -1,11 +1,13 @@
 import authReducer from './auth'
-import infoReducer from './info'
+import supplyInfoReducer from './supplyInfo'
 import xmlReducer from './xml'
+import vehicleReducer from './vehicle'
 import { combineReducers } from 'redux'
 
 const rootReducer = combineReducers({
   authReducer,
-  infoReducer,
+  supplyInfoReducer,
+  vehicleReducer,
   xmlReducer
 })
 

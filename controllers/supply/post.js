@@ -4,7 +4,7 @@ const Pump = require('./../../models/pump')
 const saveSupply = (supply, res) => {
   supply.save(function (err, doc) {
     if (err) {
-      return res.status(424).json({ message: 'Failed to update supply', error: err })
+      return res.status(424).json({ message: 'O abastecimento não foi atualizado', error: err })
     }
     return res.json({ message: 'supply updated' })
   })
@@ -23,9 +23,9 @@ const fillSupply = (supply, cb, info, res, pumpCount, totalCount) => {
 exports.updateLastSupply = (req, res) => {
   Supply.find({ idPosto: req.body.stationId, idBomba: req.body.bombaId, transacao: '' }).sort({ dataAbastecimento: -1 }).exec(function (err, supply) {
     if (err) {
-      return res.status(424).json({ message: 'Failed to find supplies', error: err })
+      return res.status(424).json({ message: 'Um erro occureu durante enquanto estava a atualizar as informações do abastecimento', error: err })
     } else if (supply.length === 0) {
-      return res.status(400).json({ message: 'Supply already registered' })
+      return res.status(400).json({ message: 'Este abastecimento ja foi registado' })
     }
     Supply.count({}, (err, totalCount) => {
       if (err) {
@@ -64,16 +64,16 @@ exports.registerSupply = (req, res) => {
     supply.registo = supplies.length
     supply.save(function (err) {
       if (err) {
-        return res.status(400).json({ message: 'Error while saving supply', error: err })
+        return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a guardar as informações do abastecimento', error: err })
       }
       Pump.findOne({ idPosto: req.query.stationId }, (err, pump) => {
         if (err) {
-          return res.status(400).json({ message: 'Error while retreiving station', error: err })
+          return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a recuperar as informações do posto', error: err })
         }
         pump.abastecimentos.push(supply._id)
         pump.save(function (err) {
           if (err) {
-            return res.status(400).json({ message: 'Error while saving station modifications', error: err })
+            return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a fazer ligação entro o abasteciment e a bomba', error: err })
           }
           return res.json(supply)
         })

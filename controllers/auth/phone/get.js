@@ -22,17 +22,17 @@ exports.resend = (req, res) => {
 exports.getByToken = (req, res) => {
   jwt.verify(req.params.token, config.JWT_SECRET, function (err, user) {
     if (err) {
-      return res.status(400).json({ message: 'Invalid token', error: err })
+      return res.status(400).json({ message: 'Token invalido', error: err })
     }
     User.findById({
       '_id': user._id
     }, function (err, user) {
       if (err) {
-        return res.status(400).json({ message: 'User not found', error: err })
+        return res.status(400).json({ message: 'O utilizador não foi encontrado', error: err })
       }
       return res.json({
         message: 'User successfully found',
-        user: user,
+        user,
         token: tokenGenerator.generateToken(user)
       })
     })

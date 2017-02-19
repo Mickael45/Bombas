@@ -8,7 +8,8 @@ const VehicleSchema = new mongoose.Schema({
   pais: String,
   pesoBruto: String,
   pin: String,
-  dataRegisto: Date
+  dataRegisto: Date,
+  dataValidade: Date
 })
 
 module.exports = mongoose.model('viaturas', VehicleSchema)

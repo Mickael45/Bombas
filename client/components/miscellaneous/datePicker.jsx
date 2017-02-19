@@ -1,37 +1,23 @@
 const React = require('react')
-const DatePicker = require('react-bootstrap-date-picker')
-const { func, string } = React.PropTypes
-const { FormGroup, Col } = require('react-bootstrap')
+const { func, object } = React.PropTypes
+import { DateRange } from 'react-date-range'
 
 const GenericDatePicker = React.createClass({
   propTypes: {
-    beginning: string,
-    ending: string,
-    handleBeginningChange: func,
-    handleEndingChange: func
+    beginning: object,
+    ending: object,
+    handleDateChange: func
   },
   render () {
     return (
       <div>
-        <Col md={3} mdOffset={3} xs={3} xsOffset={3}>
-          <FormGroup>
-            <p className='input-title'>
-              Desde
-            </p>
-            <DatePicker id='example-datepicker' value={this.props.beginning} onChange={this.props.handleBeginningChange} />
-          </FormGroup>
-        </Col>
-        <Col md={3} xs={3}>
-          <FormGroup>
-            <p className='input-title'>
-              Até
-            </p>
-            <DatePicker id='example-datepicker' value={this.props.ending} onChange={this.props.handleEndingChange} />
-          </FormGroup>
-        </Col>
+        <DateRange
+          startDate={this.props.beginning}
+          endDate={this.props.ending}
+          onChange={this.props.handleDateChange}
+        />
       </div>
     )
   }
 })
-
 module.exports = GenericDatePicker

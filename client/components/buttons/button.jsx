@@ -1,6 +1,5 @@
 const React = require('react')
 const { string, func, bool } = React.PropTypes
-const { Button } = require('react-bootstrap')
 
 const GenericButton = React.createClass({
   propTypes: {
@@ -11,12 +10,11 @@ const GenericButton = React.createClass({
   },
   render () {
     return (
-      <Button className={this.props.class}
-        bsStyle='primary'
+      <a className='waves-effect waves-light btn'
         onClick={this.props.onSubmit}
         disabled={this.props.disabled}>
         {this.props.title}
-      </Button>
+      </a>
     )
   }
 })

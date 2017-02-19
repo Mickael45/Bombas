@@ -1,28 +1,19 @@
 const React = require('react')
-import { FormGroup, FormControl } from 'react-bootstrap'
 const { string, func } = React.PropTypes
 
 const GenericInput = React.createClass({
   propTypes: {
     title: string,
     value: string,
-    placeholder: string,
-    onChange: func,
-    type: string
+    type: string,
+    onChange: func
   },
   render () {
     return (
-      <FormGroup controlId='formBasicText'>
-        <p className='input-title'>
-          {this.props.title}
-        </p>
-        <FormControl
-          className='input'
-          type={this.props.type}
-          value={this.props.value}
-          placeholder={this.props.placeholder}
-          onChange={this.props.onChange} />
-      </FormGroup>
+      <div className='input-field'>
+        <input id={this.props.type} type={this.props.type} className='validate' onChange={this.props.onChange} value={this.props.value} />
+        <label htmlFor={this.props.type} className='active'>{this.props.title}</label>
+      </div>
     )
   }
 })

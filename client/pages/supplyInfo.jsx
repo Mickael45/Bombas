@@ -1,10 +1,10 @@
 const React = require('react')
-const InfoContainer = require('./../containers/info')
+const SupplyInfoContainer = require('./../containers/supplyinfo')
 
 const InfoPage = React.createClass({
   render () {
     return (
-      <InfoContainer />
+      <SupplyInfoContainer />
     )
   }
 })

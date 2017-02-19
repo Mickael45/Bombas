@@ -1,6 +1,6 @@
 const axios = require('axios')
-const strings = require('./constants/xml')
-const config = require('./../config/server')
+const strings = require('./../constants/xml')
+const config = require('./../../config/server')
 
 export function sendXmlToServer (obj) {
   var request = axios.post(`${config.SERVER_URL}/auth/xml`, obj)
@@ -89,5 +89,17 @@ export function getXmlFailure (error) {
   return {
     type: strings.GETTING_XML_FAILURE,
     payload: formatterError
+  }
+}
+
+export function resetData () {
+  return {
+    type: strings.RESET_DATA
+  }
+}
+
+export function resetError () {
+  return {
+    type: strings.RESET_ERROR
   }
 }

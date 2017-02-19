@@ -1,72 +1,39 @@
 import { connect } from 'react-redux'
-import { phoneSignInUser, phoneSignUpUser, phoneValidateUser, phoneResendCode, signUpUserSuccess, signUpUserFailure } from './../actions/phoneSignUp'
+const phone = require('./../actions/signIn/phone')
 import Auth from './../components/auth'
 import { browserHistory } from 'react-router'
 
-let userId
-
 const mapDispatchToProps = (dispatch) => ({
-  signMeUpByPhone (phoneNumber, countryCode, birthDate) {
-    var user = {
-      countryCode,
-      phoneNumber,
-      password: birthDate.split('/').join('')
-    }
-    dispatch(phoneSignUpUser(user))
-    .then((response) => {
-      if (response.error) {
-        dispatch(signUpUserFailure(response.payload.response.data))
-      }
-    })
-  },
-  validateCode (code) {
-    dispatch(phoneValidateUser(code, userId))
-    .then((response) => {
-      if (!response.error) {
-        dispatch(signUpUserSuccess(response.payload))
-        browserHistory.push('/info')
-      } else {
-        dispatch(signUpUserFailure(response.payload.response.data))
-      }
-    })
-  },
-  resendCode () {
-    dispatch(phoneResendCode(userId))
-    .then((response) => {
-      if (response.error) {
-        dispatch(signUpUserFailure(response.payload.response.data))
-      }
-    })
-  },
   signMeInByPhone (phoneNumber, password, vehicleId) {
     var user = {
       phoneNumber,
       password
     }
-    dispatch(phoneSignInUser(user))
+    dispatch(phone.signInUser(user))
     .then((response) => {
-      if (!response.error) {
-        dispatch(signUpUserSuccess(response.payload))
-        if (vehicleId) {
-          browserHistory.push('/info')
-        }
+      if (response.error) {
+        dispatch(phone.signInFailure(response.payload.response.data))
       } else {
-        dispatch(signUpUserFailure(response.payload.response.data))
+        dispatch(phone.signInSuccess(response.payload))
+        if (vehicleId) {
+          browserHistory.push('/supplyInfo')
+        } else {
+          browserHistory.push('/waiting')
+        }
       }
     })
+  },
+  resetError () {
+    dispatch(phone.resetError())
   }
 })
 
 const mapStateToProps = (state) => {
-  var vehicleId = state.authReducer.vehicleId
-  if (state.authReducer.user) {
-    userId = state.authReducer.user._id
-  }
   return {
+    vehicleId: state.vehicleReducer.vehicleId,
     loading: state.authReducer.loading,
     status: state.authReducer.status,
-    error: state.authReducer.error,
-    vehicleId: vehicleId
+    error: state.authReducer.error
   }
 }
 

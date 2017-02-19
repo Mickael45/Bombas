@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { token } from './constants/auth'
-const config = require('./../config/server')
+import { token } from './../constants/auth'
+const config = require('./../../config/server')
 
 export function meFromToken (tokenFromStorage) {
   const request = axios({
@@ -15,13 +15,6 @@ export function meFromToken (tokenFromStorage) {
   return {
     type: token.ME_FROM_TOKEN,
     payload: request
-  }
-}
-
-export function saveVehicleId (vehicleId) {
-  return {
-    type: token.SAVE_VEHICLE_ID,
-    payload: vehicleId
   }
 }
 
@@ -40,11 +33,5 @@ export function meFromTokenFailure (error) {
   return {
     type: token.ME_FROM_TOKEN_FAILURE,
     payload: formatterError
-  }
-}
-
-export function resetToken () {
-  return {
-    type: token.RESET_TOKEN
   }
 }
