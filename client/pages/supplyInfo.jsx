@@ -1,5 +1,5 @@
 const React = require('react')
-const SupplyInfoContainer = require('./../containers/supplyinfo')
+const SupplyInfoContainer = require('./../containers/supplyInfo')
 
 const InfoPage = React.createClass({
   render () {
