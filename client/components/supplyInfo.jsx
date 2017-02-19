@@ -70,12 +70,13 @@ const SupplyInfoComponent = React.createClass({
   },
   onCloseEvent () {
     this.setState({ isPinBoxVisible: false })
+    this.setState({ isPinValidationButtonDisabled: true })
   },
   onErrorClose () {
     if (this.props.error.type === 'vehicle') {
       this.props.resetVehicleError()
     } else {
-      this.props.resetSupplyInfoError()
+      this.props.resetSupplyInfoError(this.props.error.error)
       this.setState({ optionIndex: '0' })
       this.setState({ isButtonDisabled: true })
     }

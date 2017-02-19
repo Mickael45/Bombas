@@ -79,10 +79,10 @@ const mapDispatchToProps = (dispatch) => ({
   resetVehicleError () {
     dispatch(vehicle.resetError())
   },
-  resetSupplyInfoError () {
-    var errorMessage = 'Este veiculo não esta activo'
+  resetSupplyInfoError (error) {
+    var errorMessage = error.body
     dispatch(supply.resetError())
-    if (errorMessage) {
+    if (errorMessage === 'Este veiculo não esta activo') {
       browserHistory.push('/waiting')
     }
   }

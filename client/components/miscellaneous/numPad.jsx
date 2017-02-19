@@ -92,14 +92,4 @@ const NumPad = React.createClass({
   }
 })
 
-/* <Number classToUse='letter' number='1' onClick={this.props.onPinChangeEvent} />
-<Number classToUse='letter' number='2' onClick={this.props.onPinChangeEvent} />
-<Number classToUse='letter' number='3' onClick={this.props.onPinChangeEvent} />
-<Number classToUse='letter clearl' number='4' onClick={this.props.onPinChangeEvent} />
-<Number classToUse='letter' number='5' onClick={this.props.onPinChangeEvent} />
-<Number classToUse='letter' number='6' onClick={this.props.onPinChangeEvent} />
-<Number classToUse='letter clearl' number='7' onClick={this.props.onPinChangeEvent} />
-<Number classToUse='letter ' number='8' onClick={this.props.onPinChangeEvent} />
-<Number classToUse='letter' number='9' onClick={this.props.onPinChangeEvent} /> */
-
 module.exports = NumPad
