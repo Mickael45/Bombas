@@ -4,7 +4,7 @@ const liters = require('./../actions/supply/getLiters')
 const vehicle = require('./../actions/vehicle/verifyPin')
 const update = require('./../actions/supply/update')
 const supplyInfo = require('./../components/supplyInfo')
-const { browserHistory } = require('react-router')
+const { hashHistory } = require('react-router')
 
 const mapDispatchToProps = (dispatch) => ({
   getInfo (vehicleId, stationId) {
@@ -60,7 +60,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(update.sendInfoFailure(response.payload.response.data))
       } else {
         dispatch(update.sendInfoSuccess())
-        browserHistory.push('/waiting')
+        hashHistory.push('/')
       }
     })
   },
@@ -83,7 +83,7 @@ const mapDispatchToProps = (dispatch) => ({
     var errorMessage = error.body
     dispatch(supply.resetError())
     if (errorMessage === 'Este veiculo não esta activo') {
-      browserHistory.push('/waiting')
+      hashHistory.push('/')
     }
   }
 })
@@ -103,6 +103,10 @@ const mapStateToProps = (state) => {
   } else if (state.vehicleReducer.loading) {
     loading = state.vehicleReducer.loading
   }
+  var postoId
+  if (state.authReducer.user) {
+    postoId = state.authReducer.user.posto_id
+  }
   return {
     data: state.supplyInfoReducer.data,
     loading: loading,
@@ -110,7 +114,7 @@ const mapStateToProps = (state) => {
     vehicleId: state.vehicleReducer.vehicleId,
     error: obj,
     isPinVerified: state.vehicleReducer.isPinVerified,
-    stationId: state.authReducer.user.posto_id,
+    stationId: postoId,
     liters: state.supplyInfoReducer.liters
   }
 }

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 const phone = require('./../actions/signIn/phone')
 import Auth from './../components/auth'
-import { browserHistory } from 'react-router'
+import { hashHistory } from 'react-router'
 
 const mapDispatchToProps = (dispatch) => ({
   signMeInByPhone (phoneNumber, password, vehicleId) {
@@ -16,9 +16,7 @@ const mapDispatchToProps = (dispatch) => ({
       } else {
         dispatch(phone.signInSuccess(response.payload))
         if (vehicleId) {
-          browserHistory.push('/supplyInfo')
-        } else {
-          browserHistory.push('/waiting')
+          hashHistory.push('/supplyInfo')
         }
       }
     })

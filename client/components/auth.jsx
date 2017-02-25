@@ -9,7 +9,8 @@ const AuthComponent = React.createClass({
     resetError: func,
     loading: bool,
     vehicleId: string,
-    error: object
+    error: object,
+    status: string
   },
   getInitialState () {
     return {
@@ -52,6 +53,14 @@ const AuthComponent = React.createClass({
         {
           (this.props.error)
           ? <AlertTile {...this.props.error} onClick={this.onErrorClose} />
+        : (this.props.status === 'authenticated')
+        ? <div className='valign-wrapper row login-box'>
+          <div className='col card hoverable s10 pull-s1 m6 pull-m3 l4 pull-l4'>
+            <div className='card-content'>
+              <span className='card-title'>Utilize o cartão do veiculo para finalizar o abastecimento</span>
+            </div>
+          </div>
+        </div>
         : <SignInForm
           phoneNumber={this.state.phoneNumber}
           onPhoneNumberChangeEvent={this.onPhoneNumberChangeEvent}

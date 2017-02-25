@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
-const config = require('../config/config')
+const env = require('./env')
 
 exports.connect = () => {
   var options = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
     replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } } }
 
-  mongoose.connect(config.MONGOLAB_URI, options)
+  mongoose.connect(env.MONGOLAB_URI, options)
   var conn = mongoose.connection
 
   conn.on('error', console.error.bind(console, 'connection error:'))

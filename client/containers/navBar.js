@@ -1,12 +1,12 @@
 import { connect } from 'react-redux'
 const actions = require('./../actions/logout/logout')
 import NavBar from './../components/navigation/navBar'
-const { browserHistory } = require('react-router')
+const { hashHistory } = require('react-router')
 
 const mapDispatchToProps = (dispatch) => ({
   logout () {
     dispatch(actions.logoutUser())
-    browserHistory.push('/auth')
+    hashHistory.push('/')
   }
 })
 

@@ -14,7 +14,8 @@ const store = finalCreateStore(rootReducer, persistedState)
 
 store.subscribe(() => {
   saveState({
-    authReducer: store.getState().authReducer
+    authReducer: store.getState().authReducer,
+    vehicleReducer: store.getState().vehicleReducer
   })
 })
 

@@ -1,5 +1,5 @@
 const React = require('react')
-const { browserHistory } = require('react-router')
+const { hashHistory } = require('react-router')
 const { func, string, bool } = React.PropTypes
 
 const NavBar = React.createClass({
@@ -11,8 +11,8 @@ const NavBar = React.createClass({
     isUserAdmin: bool
   },
   onClickEvent () {
-    if (browserHistory) {
-      browserHistory.push('/xml')
+    if (hashHistory) {
+      hashHistory.push('/xml')
     }
   },
   render () {

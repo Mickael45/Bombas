@@ -1,17 +1,17 @@
 import { connect } from 'react-redux'
 const token = require('../actions/signIn/token')
 const vehicle = require('../actions/vehicle/saveId')
-import { browserHistory } from 'react-router'
+import { hashHistory } from 'react-router'
 import Landing from './../components/landing'
 
 const mapDispatchToProps = (dispatch) => ({
-  loadUserFromToken (userToken, vehicleId) {
+  loadUserFromToken (userToken, vehicleId, location) {
     if (vehicleId) {
       dispatch(vehicle.saveId(vehicleId))
     }
     if (!userToken) {
-      if (browserHistory) {
-        browserHistory.push('/auth')
+      if (hashHistory) {
+        hashHistory.push('/')
       }
       return
     }
@@ -19,10 +19,10 @@ const mapDispatchToProps = (dispatch) => ({
     .then((response) => {
       if (!response.error) {
         dispatch(token.meFromTokenSuccess(response.payload))
-        if (vehicleId) {
-          browserHistory.push('/supplyInfo')
-        } else {
-          browserHistory.push('/waiting')
+        if (location !== '/') {
+          return
+        } else if (vehicleId) {
+          hashHistory.push('/supplyInfo')
         }
       } else {
         dispatch(token.meFromTokenFailure(response.payload))
