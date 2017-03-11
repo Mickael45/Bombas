@@ -9,6 +9,7 @@ const SupplySchema = new mongoose.Schema({
   idVeiculo: String,
   km: String,
   idBomba: String,
+  signal: String,
   dataAbastecimento: Date
 })
 

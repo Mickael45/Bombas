@@ -44,13 +44,15 @@ exports.updateLastSupply = (req, res) => {
 exports.registerSupply = (req, res) => {
   var supply = new Supply({
     transacao: '',
-    volumeAbastecimento: req.query.litros,
+    volumeAbastecimento: req.query.l,
     cartaoProfissional: '',
-    idPosto: req.query.stationId,
-    idBomba: req.query.idBomba,
+    idPosto: req.query.postoId,
+    idBomba: req.query.id,
+    signal: req.query.s,
     dataAbastecimento: Date.now()
   })
-  Supply.find({ idPost: req.query.stationId, idBomba: req.query.idBomba }).sort({ dataAbastecimento: -1 }).exec(function (err, supplies) {
+  console.log(supply)
+  Supply.find({ idPost: req.query.postoId, idBomba: req.query.id }).sort({ dataAbastecimento: -1 }).exec(function (err, supplies) {
     if (err) {
       console.log('err')
     }
@@ -66,7 +68,7 @@ exports.registerSupply = (req, res) => {
       if (err) {
         return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a guardar as informações do abastecimento', error: err })
       }
-      Pump.findOne({ idPosto: req.query.stationId }, (err, pump) => {
+      Pump.findOne({ idPosto: req.query.postoId }, (err, pump) => {
         if (err) {
           return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a recuperar as informações do posto', error: err })
         }
