@@ -10,7 +10,6 @@ const tokenHelper = require('./helpers/tokenGenerator')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/*', headerSetter.setHeaders)
-
 mongooseConfig.connect()
 
 app.use(morgan('dev'))

@@ -5,7 +5,6 @@ const GenericButton = React.createClass({
   propTypes: {
     title: string,
     onSubmit: func,
-    class: string,
     disabled: bool
   },
   render () {

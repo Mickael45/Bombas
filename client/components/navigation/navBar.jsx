@@ -6,8 +6,6 @@ const NavBar = React.createClass({
   propTypes: {
     logout: func,
     status: string,
-    toSignInStatus: func,
-    toSignUpStatus: func,
     isUserAdmin: bool
   },
   onClickEvent () {
