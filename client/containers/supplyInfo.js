@@ -78,11 +78,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   resetVehicleError () {
     dispatch(vehicle.resetError())
+    hashHistory.push('/')
   },
   resetSupplyInfoError (error) {
     var errorMessage = error.body
     dispatch(supply.resetError())
-    if (errorMessage === 'Este veiculo não esta activo') {
+    if (errorMessage === 'Este veiculo não esta activo' || errorMessage === 'Não foi encontrado nehum veiculo para esse id') {
       hashHistory.push('/')
     }
   }
@@ -107,12 +108,17 @@ const mapStateToProps = (state) => {
   if (state.authReducer.user) {
     postoId = state.authReducer.user.posto_id
   }
+  var vehicleProCard
+  if (state.supplyInfoReducer.data) {
+    vehicleProCard = state.supplyInfoReducer.data.vehicle.cartaoProfissional
+  }
   return {
     data: state.supplyInfoReducer.data,
     loading: loading,
     status: state.supplyInfoReducer.status,
     vehicleId: state.vehicleReducer.vehicleId,
     error: obj,
+    vehicleProCard: vehicleProCard,
     isPinVerified: state.vehicleReducer.isPinVerified,
     stationId: postoId,
     liters: state.supplyInfoReducer.liters

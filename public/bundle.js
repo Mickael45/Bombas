@@ -50860,11 +50860,12 @@
 	    },
 	    resetVehicleError: function resetVehicleError() {
 	      dispatch(vehicle.resetError());
+	      hashHistory.push('/');
 	    },
 	    resetSupplyInfoError: function resetSupplyInfoError(error) {
 	      var errorMessage = error.body;
 	      dispatch(supply.resetError());
-	      if (errorMessage === 'Este veiculo não esta activo') {
+	      if (errorMessage === 'Este veiculo não esta activo' || errorMessage === 'Não foi encontrado nehum veiculo para esse id') {
 	        hashHistory.push('/');
 	      }
 	    }
@@ -50890,12 +50891,17 @@
 	  if (state.authReducer.user) {
 	    postoId = state.authReducer.user.posto_id;
 	  }
+	  var vehicleProCard;
+	  if (state.supplyInfoReducer.data) {
+	    vehicleProCard = state.supplyInfoReducer.data.vehicle.cartaoProfissional;
+	  }
 	  return {
 	    data: state.supplyInfoReducer.data,
 	    loading: loading,
 	    status: state.supplyInfoReducer.status,
 	    vehicleId: state.vehicleReducer.vehicleId,
 	    error: obj,
+	    vehicleProCard: vehicleProCard,
 	    isPinVerified: state.vehicleReducer.isPinVerified,
 	    stationId: postoId,
 	    liters: state.supplyInfoReducer.liters
@@ -51194,6 +51200,7 @@
 	    status: string,
 	    loading: bool,
 	    vehicleId: string,
+	    vehicleProCard: string,
 	    stationId: string,
 	    verifyPin: func,
 	    isPinVerified: bool,
@@ -51276,6 +51283,7 @@
 	          bombaId: _this4.state.optionIndex,
 	          stationId: _this4.props.stationId,
 	          vehicleId: _this4.props.vehicleId,
+	          proCard: _this4.props.vehicleProCard,
 	          km: _this4.state.distance
 	        };
 	        _this4.props.sendInfo(obj);
@@ -68439,14 +68447,14 @@
 	  }
 	};
 
-	var createVehicleObject = function createVehicleObject(obj, vehicleId, km) {
+	var createVehicleObject = function createVehicleObject(obj, vehicleId, km, combustivel) {
 	  var foundVehicle = findVehicleById(obj, vehicleId);
 
 	  var vehicle = {
 	    vehicle: {
 	      pais: foundVehicle.pais,
 	      matricula: foundVehicle.matricula,
-	      combustivel: foundVehicle.combustivel,
+	      combustivel: combustivel,
 	      km: km
 	    },
 	    idCliente: foundVehicle.idCliente
@@ -68480,7 +68488,7 @@
 	      volumeAbastecimento: supply.volumeAbastecimento,
 	      cartaoProfissional: supply.cartaoProfissional
 	    });
-	    var vehicle = createVehicleObject(obj, supply.idVeiculo, supply.km);
+	    var vehicle = createVehicleObject(obj, supply.idVeiculo, supply.km, supply.combustivel);
 	    stationSupplies[supplyIndex].veiculo = vehicle.vehicle;
 	    stationSupplies[supplyIndex++].sujeitoPassivo = createClientObject(obj, vehicle.idCliente);
 	  });

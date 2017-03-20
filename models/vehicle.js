@@ -6,6 +6,7 @@ const VehicleSchema = new mongoose.Schema({
   idCliente: String,
   matricula: String,
   pais: String,
+  cartaoProfissional: String,
   pesoBruto: String,
   pin: String,
   dataRegisto: Date,

@@ -5,6 +5,7 @@ const SupplySchema = new mongoose.Schema({
   transacao: String,
   volumeAbastecimento: String,
   cartaoProfissional: String,
+  combustivel: String,
   idPosto: String,
   idVeiculo: String,
   km: String,

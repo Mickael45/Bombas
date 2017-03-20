@@ -14,6 +14,7 @@ const SupplyInfoComponent = React.createClass({
     status: string,
     loading: bool,
     vehicleId: string,
+    vehicleProCard: string,
     stationId: string,
     verifyPin: func,
     isPinVerified: bool,
@@ -88,6 +89,7 @@ const SupplyInfoComponent = React.createClass({
           bombaId: this.state.optionIndex,
           stationId: this.props.stationId,
           vehicleId: this.props.vehicleId,
+          proCard: this.props.vehicleProCard,
           km: this.state.distance
         }
         this.props.sendInfo(obj)
