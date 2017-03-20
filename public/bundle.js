@@ -68332,12 +68332,13 @@
 	}
 
 	function getVehiclesByIds(supplies) {
-	  var vehicleIds = [];
+	  var vehicleIds = {};
 
+	  var i = 0;
 	  supplies.forEach(function (supply) {
-	    vehicleIds.push({ _id: supply.idVeiculo });
+	    vehicleIds['key' + i++] = supply.idVeiculo;
 	  });
-	  var request = axios.get(config.SERVER_URL + '/auth/vehicles', vehicleIds);
+	  var request = axios.get(config.SERVER_URL + '/auth/vehicles', { params: vehicleIds });
 
 	  return {
 	    type: strings.GETTING_XML,
@@ -68346,16 +68347,10 @@
 	}
 
 	function getSuppliesByIds(pumps, startingDate, endingDate) {
-	  var suppliesIds = {};
-	  var i = 0;
-	  pumps.forEach(function (pump) {
-	    pump.abastecimentos.forEach(function (abastecimento) {
-	      suppliesIds['key' + i++] = abastecimento;
-	    });
-	  });
-	  suppliesIds.startingDate = startingDate;
-	  suppliesIds.endingDate = endingDate;
-	  var request = axios.get(config.SERVER_URL + '/auth/supplies', { params: suppliesIds });
+	  var supplies = {};
+	  supplies.startingDate = startingDate;
+	  supplies.endingDate = endingDate;
+	  var request = axios.get(config.SERVER_URL + '/auth/supplies', { params: supplies });
 	  return {
 	    type: strings.GETTING_XML,
 	    payload: request

@@ -35,12 +35,13 @@ export function getClientIds (vehicles) {
 }
 
 export function getVehiclesByIds (supplies) {
-  var vehicleIds = []
+  var vehicleIds = {}
 
-  supplies.forEach(function (supply) {
-    vehicleIds.push({ _id: supply.idVeiculo })
+  var i = 0
+  supplies.forEach((supply) => {
+    vehicleIds['key' + i++] = supply.idVeiculo
   })
-  var request = axios.get(`${config.SERVER_URL}/auth/vehicles`, vehicleIds)
+  var request = axios.get(`${config.SERVER_URL}/auth/vehicles`, { params: vehicleIds })
 
   return {
     type: strings.GETTING_XML,
@@ -49,16 +50,10 @@ export function getVehiclesByIds (supplies) {
 }
 
 export function getSuppliesByIds (pumps, startingDate, endingDate) {
-  var suppliesIds = {}
-  var i = 0
-  pumps.forEach((pump) => {
-    pump.abastecimentos.forEach((abastecimento) => {
-      suppliesIds['key' + i++] = abastecimento
-    })
-  })
-  suppliesIds.startingDate = startingDate
-  suppliesIds.endingDate = endingDate
-  var request = axios.get(`${config.SERVER_URL}/auth/supplies`, { params: suppliesIds })
+  var supplies = {}
+  supplies.startingDate = startingDate
+  supplies.endingDate = endingDate
+  var request = axios.get(`${config.SERVER_URL}/auth/supplies`, { params: supplies })
   return {
     type: strings.GETTING_XML,
     payload: request

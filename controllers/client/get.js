@@ -1,11 +1,14 @@
 const Client = require('./../../models/client')
+const requestIdExtractor = require('./../../helpers/requestIdExtractor')
 
 exports.getClients = (req, res) => {
-  Client.find(req.body.clientIds, function (err, clients) {
-    if (err) {
-      return res.status(400).json({ message: 'Os clientes não foram encontrados', error: err })
-    }
-    return res.send(clients)
+  requestIdExtractor.formatIds(req.query, (formattedIds) => {
+    Client.find(req.body.clientIds, function (err, clients) {
+      if (err) {
+        return res.status(400).json({ message: 'Os clientes não foram encontrados', error: err })
+      }
+      return res.send(clients)
+    })
   })
 }
 

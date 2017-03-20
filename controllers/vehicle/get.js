@@ -1,11 +1,14 @@
 const Vehicle = require('./../../models/vehicle')
+const requestIdExtractor = require('./../../helpers/requestIdExtractor')
 
 exports.getVehicles = (req, res) => {
-  Vehicle.find(req.body.vehicleIds, function (err, vehicles) {
-    if (err) {
-      return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a recuperar as informações do vehiculo', error: err })
-    }
-    return res.send(vehicles)
+  requestIdExtractor.formatIds(req.query, (formattedIds) => {
+    Vehicle.find({ idVeiculo: formattedIds }, function (err, vehicles) {
+      if (err) {
+        return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a recuperar as informações do vehiculo', error: err })
+      }
+      return res.send(vehicles)
+    })
   })
 }
 
