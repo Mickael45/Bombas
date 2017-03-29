@@ -59,13 +59,13 @@ const linkSupplyToPumpById = (newSupply, res, postoId, bombaId, cb) => {
   })
 }
 
-const getSupplyCountPerStationId = (body, newSupply, res, cb) => {
-  Supply.count({ idPosto: body.postoId }, (err, suppliesNumber) => {
+const getSupplyCountPerStationId = (query, newSupply, res, cb) => {
+  Supply.count({ idPosto: query.postoId }, (err, suppliesNumber) => {
     if (err) {
       return res.status(424).json({ message: 'Could not get supplies number', error: err })
     }
     newSupply.registo = suppliesNumber + 1
-    cb(newSupply, res, body.postoId, body.id, saveSupply)
+    cb(newSupply, res, query.postoId, query.id, saveSupply)
   })
 }
 
@@ -93,34 +93,34 @@ const deleteLastSupplyIfEmpty = (req, res, supplies, newSupply, cb) => {
       if (err) {
         console.log('not deleted')
       } else {
-        deleteSupplyEntryFromPump(supplyId, req.body.postoId, req.body.id, (err) => {
+        deleteSupplyEntryFromPump(supplyId, req.query.postoId, req.query.id, (err) => {
           if (err) {
-            return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a recuperar as informações do posto ' + req.body.id, error: err })
+            return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a recuperar as informações do posto ' + req.query.id, error: err })
           }
-          cb(req.body, newSupply, res, linkSupplyToPumpById)
+          cb(req.query, newSupply, res, linkSupplyToPumpById)
         })
       }
     })
   } else {
-    cb(req.body, newSupply, res, linkSupplyToPumpById)
+    cb(req.query, newSupply, res, linkSupplyToPumpById)
   }
 }
 
 exports.registerSupply = (req, res) => {
   var supply = new Supply({
     transacao: '',
-    volumeAbastecimento: req.body.l,
+    volumeAbastecimento: req.query.l,
     cartaoProfissional: '',
-    idPosto: req.body.postoId,
-    idBomba: req.body.id,
-    signal: req.body.s,
+    idPosto: req.query.postoId,
+    idBomba: req.query.id,
+    signal: req.query.s,
     dataAbastecimento: Date.now()
   })
   console.log('body', req.body)
   console.log('query', req.query)
-  Supply.find({ idPosto: req.body.postoId, idBomba: req.body.id }).sort({ dataAbastecimento: -1 }).exec(function (err, supplies) {
+  Supply.find({ idPosto: req.query.postoId, idBomba: req.query.id }).sort({ dataAbastecimento: -1 }).exec(function (err, supplies) {
     if (err) {
-      return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a recuperar os abastecimentos relativos a bomba' + req.body.id, error: err })
+      return res.status(400).json({ message: 'Um erro occureu durante enquanto estava a recuperar os abastecimentos relativos a bomba' + req.query.id, error: err })
     }
     deleteLastSupplyIfEmpty(req, res, supplies, supply, getSupplyCountPerStationId)
   })
