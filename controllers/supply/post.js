@@ -87,7 +87,7 @@ const deleteSupplyEntryFromPump = (supplyId, postoId, bombaId, cb) => {
 }
 
 const deleteLastSupplyIfEmpty = (req, res, supplies, newSupply, cb) => {
-  if (supplies.length > 0 && !supplies[0]._transacao) {
+  if (supplies.length > 0 && !supplies[0].transacao) {
     var supplyId = supplies[0]._id
     supplies[0].remove(function (err, doc) {
       if (err) {
