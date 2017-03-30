@@ -31,12 +31,12 @@ const InfoTile = React.createClass({
       if (name === this.props.optionIndex) {
         option = <p key={key.toString()} className='col s3 m3 l3'>
           <input name='group1' type='radio' id={name} onChange={this.onRadioClick} checked />
-          <label htmlFor={name}>{key}</label>
+          <label htmlFor={name}>{this.props.station.bombas[i].idBomba}</label>
         </p>
       } else {
         option = <p key={key.toString()} className='col s3 m3 l3'>
           <input name='group1' type='radio' id={name} onChange={this.onRadioClick} />
-          <label htmlFor={name}>{key}</label>
+          <label htmlFor={name}>{this.props.station.bombas[i].idBomba}</label>
         </p>
       }
       this.state.options.push(option)

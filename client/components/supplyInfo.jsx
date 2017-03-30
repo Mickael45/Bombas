@@ -86,12 +86,13 @@ const SupplyInfoComponent = React.createClass({
     this.props.verifyPin(this.props.vehicleId, this.state.pin, () => {
       if (this.props.isPinVerified) {
         var obj = {
-          bombaId: this.state.optionIndex,
+          bombaId: this.props.data.station.bombas[this.state.optionIndex - 1].idBomba,
           stationId: this.props.stationId,
           vehicleId: this.props.vehicleId,
           proCard: this.props.vehicleProCard,
           km: this.state.distance
         }
+        console.log(obj)
         this.props.sendInfo(obj)
       } else {
         this.setState({ pin: '' })
@@ -100,7 +101,7 @@ const SupplyInfoComponent = React.createClass({
   },
   onSelectChangeEvent (value, cb) {
     this.setState({ optionIndex: value }, () => {
-      this.props.getSupplyLiters(this.state.optionIndex, this.props.stationId, () => {
+      this.props.getSupplyLiters(this.props.data.station.bombas[this.state.optionIndex - 1].idBomba, this.props.stationId, () => {
         if (this.props.liters) {
           this.checkForButtonDisability()
         }

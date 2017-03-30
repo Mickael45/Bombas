@@ -51280,12 +51280,13 @@
 	    this.props.verifyPin(this.props.vehicleId, this.state.pin, function () {
 	      if (_this4.props.isPinVerified) {
 	        var obj = {
-	          bombaId: _this4.state.optionIndex,
+	          bombaId: _this4.props.data.station.bombas[_this4.state.optionIndex - 1].idBomba,
 	          stationId: _this4.props.stationId,
 	          vehicleId: _this4.props.vehicleId,
 	          proCard: _this4.props.vehicleProCard,
 	          km: _this4.state.distance
 	        };
+	        console.log(obj);
 	        _this4.props.sendInfo(obj);
 	      } else {
 	        _this4.setState({ pin: '' });
@@ -51296,7 +51297,7 @@
 	    var _this5 = this;
 
 	    this.setState({ optionIndex: value }, function () {
-	      _this5.props.getSupplyLiters(_this5.state.optionIndex, _this5.props.stationId, function () {
+	      _this5.props.getSupplyLiters(_this5.props.data.station.bombas[_this5.state.optionIndex - 1].idBomba, _this5.props.stationId, function () {
 	        if (_this5.props.liters) {
 	          _this5.checkForButtonDisability();
 	        }
@@ -51387,7 +51388,7 @@
 	          React.createElement(
 	            'label',
 	            { htmlFor: name },
-	            key
+	            this.props.station.bombas[i].idBomba
 	          )
 	        );
 	      } else {
@@ -51398,7 +51399,7 @@
 	          React.createElement(
 	            'label',
 	            { htmlFor: name },
-	            key
+	            this.props.station.bombas[i].idBomba
 	          )
 	        );
 	      }
