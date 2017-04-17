@@ -7,8 +7,7 @@
     "build": "atool-build",
     "lint": "eslint --ext .js,.jsx src/",
     "start": "dora --plugins webpack",
-    "watch": "webpack --watch",
-    "test": "atool-test-mocha ./**/__tests__/*-test.js"
+    "watch": "webpack --watch"
   },
   "repository": {
     "type": "git",
